@@ -19,16 +19,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={cn(
-          "bg-background h-screen w-screen font-sans antialiased",
+          "bg-background h-screen w-screen overflow-hidden font-sans antialiased",
           fontSans.variable,
         )}
       >
         <main className="flex h-full w-full flex-col overflow-hidden">
-          <div className="flex w-full flex-1 flex-row flex-nowrap">
+          <div className="flex h-full w-full flex-1 flex-row flex-nowrap">
             <Sidebar />
-            <div className="flex-1">
+            <div className="flex h-full flex-1 flex-col">
               <Nav />
-              <section className="p-5">{children}</section>
+              <section className="overflow-y-auto overflow-x-hidden p-5">
+                {children}
+              </section>
             </div>
           </div>
         </main>

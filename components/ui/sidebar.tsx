@@ -42,8 +42,10 @@ export const Sidebar = () => {
               Projects
             </Link>
           </Button>
-          <Button size="icon" variant="secondary">
-            <LucidePlus className="h-4 w-4" />
+          <Button asChild size="icon" variant="secondary">
+            <Link href="/projects/create">
+              <LucidePlus className="h-4 w-4" />
+            </Link>
           </Button>
         </li>
         <li className="flex w-full flex-row gap-2">
@@ -52,13 +54,15 @@ export const Sidebar = () => {
             variant="ghost"
             className="flex flex-1 flex-row justify-start gap-4"
           >
-            <Link href="/blog">
+            <Link href="/articles">
               <LucidePenLine className="h-4 w-4" />
-              Blog
+              Articles
             </Link>
           </Button>
-          <Button size="icon" variant="secondary">
-            <LucidePlus className="h-4 w-4" />
+          <Button asChild size="icon" variant="secondary">
+            <Link href="/articles/create">
+              <LucidePlus className="h-4 w-4" />
+            </Link>
           </Button>
         </li>
       </ul>

@@ -150,7 +150,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
   }
 
   return (
-    <Card>
+    <Card className="max-w-3xl">
       <CardHeader>
         <CardTitle>Information</CardTitle>
       </CardHeader>

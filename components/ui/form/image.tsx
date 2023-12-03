@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ENDPOINT, PORTFOLIO_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
 import { LucidePlus } from "lucide-react";
@@ -36,18 +37,20 @@ export const ImageInput = ({ form }: ImageInputProps) => {
 
   return (
     <div>
-      <Label className="cursor-pointer">
-        Icon
-        <input
-          className="hidden"
-          type="file"
-          accept="image/*"
-          {...form.register("image", {
-            onChange: (e: React.FormEvent<HTMLInputElement>) =>
-              handleUploadedFile(e),
-          })}
-        />
-        <div className="pt-2">
+      <Label>
+        <p className="pb-3">Icon</p>
+      </Label>
+      <Card className="p-2">
+        <Label className="cursor-pointer">
+          <input
+            className="hidden"
+            type="file"
+            accept="image/*"
+            {...form.register("image", {
+              onChange: (e: React.FormEvent<HTMLInputElement>) =>
+                handleUploadedFile(e),
+            })}
+          />
           {preview ? (
             <img src={preview} className="h-24 w-24 rounded-lg" />
           ) : (
@@ -55,8 +58,8 @@ export const ImageInput = ({ form }: ImageInputProps) => {
               <LucidePlus className="h-4 w-4" />
             </div>
           )}
-        </div>
-      </Label>
+        </Label>
+      </Card>
     </div>
   );
 };

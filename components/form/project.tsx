@@ -14,32 +14,27 @@ import { ArrayInput } from "@/components/ui/form/array";
 import { ImageArrayInput } from "@/components/ui/form/image_array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  PROJECTS_BUCKET_ID,
+  PROJECTS_COLLECTION_ID,
+  database_service,
+  storage_service,
+} from "@/lib/appwrite";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LucideLoader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  title: z.optional(
-    z.string().max(128, { message: "Title must be less than 128 characters." }),
-  ),
-  short_description: z.optional(
-    z.string().max(128, {
-      message: "Short Description must be less than 128 characters.",
+  title: z.string().min(1).max(128),
+  short_description: z.string().min(1).max(128),
+  description: z.string().min(1).max(1024),
+  images: z.array(
+    z.object({
+      value: z.any(),
     }),
   ),
-  description: z.optional(
-    z
-      .string()
-      .max(1024, { message: "Description must be less than 1024 characters." }),
-  ),
-  images: z.optional(
-    z.array(
-      z.object({
-        value: z.any(),
-      }),
-    ),
-  ),
-  position: z.optional(z.coerce.number()),
+  position: z.coerce.number().min(1),
   tags: z.optional(
     z.array(
       z.object({
@@ -56,9 +51,7 @@ const formSchema = z.object({
       }),
     ),
   ),
-  color: z.optional(
-    z.string().max(128, { message: "Color must be less than 128 characters." }),
-  ),
+  color: z.string().min(1).max(128),
 });
 
 interface CreateProjectFormProps {
@@ -82,8 +75,32 @@ export const CreateProjectForm = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    let images = [];
+
+    if (values.images) {
+      for (let i = 0; i < values.images.length; i++) {
+        const response = await storage_service.upload(
+          PROJECTS_BUCKET_ID,
+          values.images[i].value[0],
+        );
+
+        images.push(response.$id);
+      }
+    }
+
+    const project = {
+      title: values.title,
+      short_description: values.short_description,
+      description: values.description,
+      images: images,
+      position: values.position,
+      tags: values.tags?.map((x) => x.value),
+      links: values.links?.map((x) => x.value),
+      color: values.color,
+    };
+
+    await database_service.create(PROJECTS_COLLECTION_ID, project);
   }
 
   return (
@@ -169,8 +186,14 @@ export const CreateProjectForm = ({
               )}
             />
             <div className="flex=row flex gap-2">
-              <Button type="submit">Save</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Save
+              </Button>
               <Button
+                disabled={form.formState.isSubmitting}
                 type="button"
                 variant="destructive"
                 onClick={() => form.reset()}

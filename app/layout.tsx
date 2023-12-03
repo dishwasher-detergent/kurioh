@@ -15,11 +15,11 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head />
       <body
         className={cn(
-          "bg-background h-screen w-screen overflow-hidden font-sans antialiased",
+          "h-screen w-screen overflow-hidden bg-white font-sans text-slate-950 antialiased dark:bg-slate-950 dark:text-white",
           fontSans.variable,
         )}
       >

@@ -30,8 +30,8 @@ export default async function Projects() {
         <Badge variant="secondary">{projects.total}</Badge>
       </h3>
       {projects.documents.length === 0 && (
-        <div className="space-y-4 rounded-lg border bg-slate-100 p-4">
-          <p className="flex flex-row items-center text-sm font-semibold text-slate-500">
+        <div className="space-y-4 rounded-lg border bg-slate-100 p-4 dark:border-slate-600 dark:bg-slate-700">
+          <p className="flex flex-row items-center text-sm font-semibold text-slate-500 dark:text-slate-300">
             <LucideGhost className="mr-2 h-4 w-4" />
             No Projects!
           </p>

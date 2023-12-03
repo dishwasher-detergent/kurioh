@@ -41,7 +41,7 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
                 href={crumb.path}
                 className={`${
                   index !== crumbs!.length - 1
-                    ? "text-slate-500"
+                    ? "text-slate-500 dark:text-slate-300"
                     : "text-primary"
                 } flex flex-row items-center gap-2 capitalize`}
               >

@@ -67,7 +67,7 @@ export const ImageArrayInput = ({
         <p className="pb-3">{title}</p>
       </Label>
       <Card className="p-2">
-        <ul className="mb-2 flex flex-row flex-wrap gap-2 rounded-lg border bg-slate-100 p-4">
+        <ul className="mb-2 flex flex-row flex-wrap gap-2 rounded-lg border bg-slate-100 p-4 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
           {fields.map((item, index) => {
             return (
               <li key={item.id} className="relative h-24 w-24 rounded-lg">
@@ -107,7 +107,7 @@ export const ImageArrayInput = ({
             );
           })}
           {fields.length === 0 && (
-            <li className="flex flex-row items-center text-sm font-semibold text-slate-500">
+            <li className="flex flex-row items-center text-sm font-semibold text-slate-500 dark:text-slate-300">
               <LucideGhost className="mr-2 h-4 w-4" />
               No {title}
             </li>

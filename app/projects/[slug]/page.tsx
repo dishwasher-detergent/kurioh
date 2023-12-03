@@ -24,7 +24,9 @@ export default async function ProjectsCreate({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="font-semibold text-slate-600">Project</p>
+        <p className="font-semibold text-slate-600 dark:text-slate-300">
+          Project
+        </p>
         <h3 className="text-2xl font-bold">{slug}</h3>
       </div>
       <CreateProjectForm title="Edit" data={project} />

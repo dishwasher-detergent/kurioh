@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export const Sidebar = () => {
   return (
-    <aside className="flex w-60 flex-col border-r">
+    <aside className="flex w-60 flex-col border-r dark:border-slate-800">
       <div className="flex h-16 w-full flex-none flex-row gap-4 px-5">
         <h1 className="flex flex-row items-center gap-4">
           <LucideWrench className="h-4 w-4" />

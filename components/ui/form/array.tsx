@@ -31,13 +31,13 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
         <p className="pb-3">{title}</p>
       </Label>
       <Card className="p-2">
-        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4">
+        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
           {fields.map((item, index) => {
             return (
               <li key={item.id} className="flex flex-row gap-2">
                 <Input
                   {...register(`${name}.${index}.value`)}
-                  className="bg-background"
+                  className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
                 />
                 <Button
                   variant="destructive"
@@ -52,7 +52,7 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
             );
           })}
           {fields.length === 0 && (
-            <li className="flex flex-row items-center text-sm font-semibold text-slate-500">
+            <li className="flex flex-row items-center text-sm font-semibold text-slate-500 dark:text-slate-300">
               <LucideGhost className="mr-2 h-4 w-4" />
               No {title}
             </li>

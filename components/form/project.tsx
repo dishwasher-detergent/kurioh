@@ -1,10 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,6 +31,7 @@ import { ArrayInput } from "@/components/ui/form/array";
 import { ImageArrayInput } from "@/components/ui/form/image_array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 import { Projects } from "@/interfaces/projects";
 import {
   PROJECTS_BUCKET_ID,
@@ -41,16 +59,14 @@ const formSchema = z.object({
   tags: z.optional(
     z.array(
       z.object({
-        value: z
-          .string()
-          .max(128, { message: "Tag must be less than 128 characters." }),
+        value: z.string().min(1).max(128),
       }),
     ),
   ),
   links: z.optional(
     z.array(
       z.object({
-        value: z.string(),
+        value: z.string().min(1).max(128),
       }),
     ),
   ),
@@ -66,7 +82,9 @@ export const CreateProjectForm = ({
   title = "Create",
   data,
 }: CreateProjectFormProps) => {
+  const edit = data ? true : false;
   const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,6 +100,29 @@ export const CreateProjectForm = ({
     },
   });
 
+  async function deleteProject() {
+    if (!data) return;
+
+    try {
+      await database_service.delete(PROJECTS_COLLECTION_ID, data?.$id);
+
+      toast({
+        title: "Project Deleted.",
+        description: `Project ${data.title} deleted successfully.`,
+      });
+
+      router.push(`/projects`);
+    } catch (err) {
+      const error = err as Error;
+
+      toast({
+        variant: "destructive",
+        title: "An error occurred while deleting your project.",
+        description: error.message,
+      });
+    }
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let images = [];
 
@@ -90,20 +131,35 @@ export const CreateProjectForm = ({
         .filter((x) => typeof x.value == "string")
         .map((x) => x.value) ?? [];
 
-    if (values.images) {
-      for (let i = 0; i < values.images.length; i++) {
-        if (
-          values.images[i].value &&
-          typeof values.images[i].value !== "string"
-        ) {
-          const response = await storage_service.upload(
-            PROJECTS_BUCKET_ID,
-            values.images[i].value[0],
-          );
+    try {
+      if (values.images) {
+        for (let i = 0; i < values.images.length; i++) {
+          if (
+            values.images[i].value &&
+            typeof values.images[i].value !== "string"
+          ) {
+            const response = await storage_service.upload(
+              PROJECTS_BUCKET_ID,
+              values.images[i].value[0],
+            );
 
-          images.push(response.$id);
+            images.push(response.$id);
+
+            toast({
+              title: "Uploaded.",
+              description: `Image ${response.name} uploaded successfully.`,
+            });
+          }
         }
       }
+    } catch (err) {
+      const error = err as Error;
+
+      toast({
+        variant: "destructive",
+        title: "An error occurred while uploading your images.",
+        description: error.message,
+      });
     }
 
     images = [...existing_images, ...images];
@@ -129,6 +185,11 @@ export const CreateProjectForm = ({
           project,
           slug,
         );
+
+        toast({
+          title: "Project Updated.",
+          description: `Project ${values.title} updated successfully.`,
+        });
       } else {
         await database_service.create<Projects>(
           PROJECTS_COLLECTION_ID,
@@ -136,10 +197,21 @@ export const CreateProjectForm = ({
           slug,
         );
 
+        toast({
+          title: "Project Created.",
+          description: `Project ${values.title} created successfully.`,
+        });
+
         router.push(`/projects/${slug}`);
       }
     } catch (err) {
       const error = err as Error;
+
+      toast({
+        variant: "destructive",
+        title: "An error occurred while creating your project.",
+        description: error.message,
+      });
 
       if (
         error.message.includes("Document with the requested ID already exists.")
@@ -157,18 +229,24 @@ export const CreateProjectForm = ({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
             <FormField
               control={form.control}
               name="title"
+              disabled={edit}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input placeholder="Sample Project" {...field} />
                   </FormControl>
+                  {edit && (
+                    <FormDescription>
+                      The title cannot be updated.
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -234,6 +312,8 @@ export const CreateProjectForm = ({
                 </FormItem>
               )}
             />
+          </CardContent>
+          <CardFooter className="flex flex-row justify-between">
             <div className="flex=row flex gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting && (
@@ -250,9 +330,49 @@ export const CreateProjectForm = ({
                 Reset
               </Button>
             </div>
-          </form>
-        </Form>
-      </CardContent>
+            {edit && (
+              <div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      disabled={form.formState.isSubmitting}
+                      type="button"
+                      variant="destructive"
+                    >
+                      Delete
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete this project.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="sm:justify-start">
+                      <DialogClose asChild>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => deleteProject()}
+                        >
+                          Yes
+                        </Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          No
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 };

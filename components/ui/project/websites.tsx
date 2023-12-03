@@ -29,7 +29,7 @@ export const ProjectWebsites = ({ websites }: ProjectWebsitesProps) => {
   return (
     websites &&
     websites.length > 0 && (
-      <div className="flex flex-row flex-wrap gap-1 rounded-lg border bg-slate-100 p-1 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
+      <div className="flex flex-row flex-wrap gap-1 rounded-lg border bg-slate-100 p-1 dark:bg-slate-800 dark:text-slate-300">
         {websites.map((website, index) => {
           if (!isValidUrl(website)) return null;
 

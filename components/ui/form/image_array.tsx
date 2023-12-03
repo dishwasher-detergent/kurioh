@@ -86,7 +86,7 @@ export const ImageArrayInput = ({
         <p className="pb-3">{title}</p>
       </Label>
       <Card className="p-2">
-        <ul className="mb-2 flex flex-row flex-wrap gap-2 rounded-lg border bg-slate-100 p-4 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
+        <ul className="mb-2 flex flex-row flex-wrap gap-2 rounded-lg border bg-slate-100 p-4 dark:bg-slate-800 dark:text-slate-300">
           {fields.map((item, index) => {
             return (
               <li key={item.id} className="relative h-24 w-24 rounded-lg">
@@ -108,7 +108,7 @@ export const ImageArrayInput = ({
                       />
                     </div>
                   ) : (
-                    <div className="grid h-full w-full place-items-center rounded-lg border border-slate-300 bg-slate-200">
+                    <div className="grid h-full w-full place-items-center rounded-lg border bg-slate-200 dark:bg-slate-700">
                       <LucidePlus className="h-4 w-4" />
                     </div>
                   )}
@@ -117,7 +117,7 @@ export const ImageArrayInput = ({
                   variant="destructive"
                   size="icon"
                   type="button"
-                  className="absolute right-2 top-2"
+                  className="absolute right-2 top-2 h-6 w-6"
                   onClick={() => remove(index)}
                 >
                   <LucideTrash className="h-4 w-4" />
@@ -136,7 +136,6 @@ export const ImageArrayInput = ({
           variant="default"
           size="sm"
           type="button"
-          className="bg-blue-600"
           onClick={() => {
             append({ value: null });
           }}

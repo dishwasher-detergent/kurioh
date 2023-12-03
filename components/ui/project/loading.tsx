@@ -15,7 +15,7 @@ export const ProjectLoading = () => {
         </div>
         <Skeleton className="h-12 w-full" />
       </CardContent>
-      <CardFooter className="flex flex-row justify-end gap-2 border-t p-4 dark:border-slate-800">
+      <CardFooter className="flex flex-row justify-end gap-2 border-t p-4">
         <Button variant="destructive" disabled={true}>
           <LucideTrash className="mr-2 h-4 w-4" />
           Delete

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
+import { Badge } from "../badge";
 
 interface ArrayInputProps {
   title: string;
@@ -31,10 +32,13 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
         <p className="pb-3">{title}</p>
       </Label>
       <Card className="p-2">
-        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
+        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4 dark:bg-slate-800 dark:text-slate-300">
           {fields.map((item, index) => {
             return (
-              <li key={item.id} className="flex flex-row gap-2">
+              <li key={item.id} className="flex flex-row items-center gap-2">
+                <Badge className="grid h-8 w-8 place-items-center">
+                  {index + 1}
+                </Badge>
                 <Input
                   {...register(`${name}.${index}.value`)}
                   className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
@@ -62,7 +66,6 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
           variant="default"
           size="sm"
           type="button"
-          className="bg-blue-600"
           onClick={() => {
             append({ value: null });
           }}

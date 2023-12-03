@@ -29,7 +29,7 @@ export const ProjectImages = ({ images }: ImagesProjectProps) => {
       )}
     </div>
   ) : (
-    <div className="grid aspect-square w-full place-items-center rounded-lg border bg-slate-100 text-slate-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
+    <div className="grid aspect-square w-full place-items-center rounded-lg border bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
       <LucideImageOff className="h-6 w-6" />
     </div>
   );

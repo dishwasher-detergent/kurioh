@@ -12,7 +12,7 @@ import { ModeToggle } from "./theme-toggle";
 
 export const Sidebar = () => {
   return (
-    <aside className="flex w-60 flex-col border-r dark:border-slate-800">
+    <aside className="flex w-60 flex-col border-r shadow">
       <div className="flex h-16 w-full flex-none flex-row gap-4 px-5">
         <h1 className="flex flex-row items-center gap-4">
           <LucideWrench className="h-4 w-4" />
@@ -67,10 +67,10 @@ export const Sidebar = () => {
           </Button>
         </li>
       </ul>
-      <div className="border-t p-2 dark:border-slate-800">
+      <div className="border-t p-2">
         <ModeToggle />
       </div>
-      <div className="border-t p-2 dark:border-slate-800">
+      <div className="border-t p-2">
         <Profile />
       </div>
     </aside>

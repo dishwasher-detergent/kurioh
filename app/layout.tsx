@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import { Nav } from "@/components/ui/nav";
 import { Sidebar } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Inter as FontSans } from "next/font/google";
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex h-full w-full flex-col overflow-hidden bg-white text-slate-950 dark:bg-slate-950 dark:text-white">
+          <main className="text-foreground bg-background flex h-full w-full flex-col overflow-hidden">
             <div className="flex h-full w-full flex-1 flex-row flex-nowrap">
               <Sidebar />
               <div className="flex h-full flex-1 flex-col">
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
             </div>
           </main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

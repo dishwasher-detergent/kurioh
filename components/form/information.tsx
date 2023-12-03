@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -35,31 +41,15 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  title: z
-    .string()
-    .max(128, { message: "Title must be less than 128 characters" }),
-  description: z
-    .string()
-    .max(512, { message: "Description must be less than 512 characters" }),
+  title: z.string().min(1).max(128),
+  description: z.string().min(1).max(512),
   image: z.any(),
-  github: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  gitlab: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  bitbucket: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  codepen: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  twitter: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  linkedin: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
+  github: z.string().max(128),
+  gitlab: z.string().max(128),
+  bitbucket: z.string().max(128),
+  codepen: z.string().max(128),
+  twitter: z.string().max(128),
+  linkedin: z.string().max(128),
 });
 
 interface InformationFormProps {
@@ -154,9 +144,9 @@ export const InformationForm = ({ data }: InformationFormProps) => {
       <CardHeader>
         <CardTitle>Information</CardTitle>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
             <FormField
               control={form.control}
               name="title"
@@ -197,7 +187,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                   <FormLabel>GitHub</FormLabel>
                   <FormControl>
                     <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border border-slate-700 bg-slate-900 px-2 text-sm font-bold text-white">
+                      <p className="grid h-9 place-items-center rounded-l-md border bg-slate-900 px-2 text-sm font-bold text-white">
                         https://github.com/
                       </p>
                       <Input
@@ -220,7 +210,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                   <FormLabel>BitBucket</FormLabel>
                   <FormControl>
                     <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border border-slate-700 bg-slate-900 px-2 text-sm font-bold text-white">
+                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
                         https://bitbucket.org/
                       </p>
                       <Input
@@ -243,7 +233,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                   <FormLabel>GitLab</FormLabel>
                   <FormControl>
                     <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border border-slate-700 bg-slate-900 px-2 text-sm font-bold text-white">
+                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
                         https://gitlab.com/
                       </p>
                       <Input
@@ -266,7 +256,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                   <FormLabel>CodePen</FormLabel>
                   <FormControl>
                     <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border border-slate-700 bg-slate-900 px-2 text-sm font-bold text-white">
+                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
                         https://codepen.com/
                       </p>
                       <Input
@@ -289,7 +279,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                   <FormLabel>Twitter</FormLabel>
                   <FormControl>
                     <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border border-slate-700 bg-slate-900 px-2 text-sm font-bold text-white">
+                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
                         https://twitter.com/
                       </p>
                       <Input
@@ -312,7 +302,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                   <FormLabel>LinkedIn</FormLabel>
                   <FormControl>
                     <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border border-slate-700 bg-slate-900 px-2 text-sm font-bold text-white">
+                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
                         https://linkedin.com/in/
                       </p>
                       <Input
@@ -329,25 +319,25 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                 </FormItem>
               )}
             />
-            <div className="flex=row flex gap-2">
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && (
-                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save
-              </Button>
-              <Button
-                disabled={form.formState.isSubmitting}
-                type="button"
-                variant="destructive"
-                onClick={() => form.reset()}
-              >
-                Reset
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
+          </CardContent>
+          <CardFooter className="flex=row flex gap-2">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && (
+                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Save
+            </Button>
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="button"
+              variant="destructive"
+              onClick={() => form.reset()}
+            >
+              Reset
+            </Button>
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 };

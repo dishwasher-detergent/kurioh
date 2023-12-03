@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { LoadingInput } from "@/components/ui/form/loading/input";
 import { Separator } from "@/components/ui/separator";
 import { LucideLoader2 } from "lucide-react";
@@ -22,16 +28,16 @@ export const InformationFormLoading = () => {
         <LoadingInput title="CodePen" />
         <LoadingInput title="Twitter" />
         <LoadingInput title="LinkedIn" />
-        <div className="flex flex-row gap-2">
-          <Button disabled={true}>
-            <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-            Save
-          </Button>
-          <Button disabled={true} type="button" variant="destructive">
-            Reset
-          </Button>
-        </div>
       </CardContent>
+      <CardFooter className="flex flex-row gap-2">
+        <Button disabled={true}>
+          <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+          Save
+        </Button>
+        <Button disabled={true} type="button" variant="destructive">
+          Reset
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

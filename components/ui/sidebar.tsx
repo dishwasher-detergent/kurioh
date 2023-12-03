@@ -8,6 +8,7 @@ import {
   LucideWrench,
 } from "lucide-react";
 import Link from "next/link";
+import { ModeToggle } from "./theme-toggle";
 
 export const Sidebar = () => {
   return (
@@ -66,7 +67,10 @@ export const Sidebar = () => {
           </Button>
         </li>
       </ul>
-      <div className="p-2">
+      <div className="border-t p-2 dark:border-slate-800">
+        <ModeToggle />
+      </div>
+      <div className="border-t p-2 dark:border-slate-800">
         <Profile />
       </div>
     </aside>

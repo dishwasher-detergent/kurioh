@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ArrayInput } from "@/components/ui/form/array";
+import { ImageArrayInput } from "@/components/ui/form/image_array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,22 +20,22 @@ import * as z from "zod";
 
 const formSchema = z.object({
   title: z.optional(
-    z.string().max(128, { message: "Title must be less than 128 characters" }),
+    z.string().max(128, { message: "Title must be less than 128 characters." }),
   ),
   short_description: z.optional(
     z.string().max(128, {
-      message: "Short Description must be less than 128 characters",
+      message: "Short Description must be less than 128 characters.",
     }),
   ),
   description: z.optional(
     z
       .string()
-      .max(1024, { message: "Description must be less than 1024 characters" }),
+      .max(1024, { message: "Description must be less than 1024 characters." }),
   ),
   images: z.optional(
     z.array(
       z.object({
-        value: z.string(),
+        value: z.any(),
       }),
     ),
   ),
@@ -42,7 +43,9 @@ const formSchema = z.object({
   tags: z.optional(
     z.array(
       z.object({
-        value: z.string(),
+        value: z
+          .string()
+          .max(128, { message: "Tag must be less than 128 characters." }),
       }),
     ),
   ),
@@ -53,10 +56,18 @@ const formSchema = z.object({
       }),
     ),
   ),
-  color: z.optional(z.string()),
+  color: z.optional(
+    z.string().max(128, { message: "Color must be less than 128 characters." }),
+  ),
 });
 
-export const CreateProjectForm = () => {
+interface CreateProjectFormProps {
+  title?: string;
+}
+
+export const CreateProjectForm = ({
+  title = "Create",
+}: CreateProjectFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,7 +89,7 @@ export const CreateProjectForm = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Project</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -128,7 +139,7 @@ export const CreateProjectForm = () => {
                 </FormItem>
               )}
             />
-            <ArrayInput form={form} title="Images" name="images" />
+            <ImageArrayInput form={form} title="Images" name="images" />
             <FormField
               control={form.control}
               name="position"

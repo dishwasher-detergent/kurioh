@@ -17,13 +17,15 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  title: z
-    .string()
-    .max(128, { message: "Title must be less than 128 characters" }),
-  description: z
-    .string()
-    .max(512, { message: "Description must be less than 512 characters" }),
-  image: z.any(),
+  title: z.optional(
+    z.string().max(128, { message: "Title must be less than 128 characters" }),
+  ),
+  description: z.optional(
+    z
+      .string()
+      .max(512, { message: "Description must be less than 512 characters" }),
+  ),
+  image: z.optional(z.any()),
 });
 
 export const InformationForm = () => {

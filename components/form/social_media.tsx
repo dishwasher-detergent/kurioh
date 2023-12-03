@@ -17,24 +17,36 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  github: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  gitlab: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  bitbucket: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  codepen: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  twitter: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
-  linkedin: z
-    .string()
-    .max(128, { message: "Username must be less than 128 characters" }),
+  github: z.optional(
+    z
+      .string()
+      .max(128, { message: "Username must be less than 128 characters" }),
+  ),
+  gitlab: z.optional(
+    z
+      .string()
+      .max(128, { message: "Username must be less than 128 characters" }),
+  ),
+  bitbucket: z.optional(
+    z
+      .string()
+      .max(128, { message: "Username must be less than 128 characters" }),
+  ),
+  codepen: z.optional(
+    z
+      .string()
+      .max(128, { message: "Username must be less than 128 characters" }),
+  ),
+  twitter: z.optional(
+    z
+      .string()
+      .max(128, { message: "Username must be less than 128 characters" }),
+  ),
+  linkedin: z.optional(
+    z
+      .string()
+      .max(128, { message: "Username must be less than 128 characters" }),
+  ),
 });
 
 export const SocialMediaForm = () => {

@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LucidePlus, LucideTrash } from "lucide-react";
+import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 
 interface ArrayInputProps {
@@ -26,8 +27,10 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
 
   return (
     <div>
-      <Label className="cursor-pointer">
+      <Label>
         <p className="pb-3">{title}</p>
+      </Label>
+      <Card className="p-2">
         <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4">
           {fields.map((item, index) => {
             return (
@@ -49,21 +52,25 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
             );
           })}
           {fields.length === 0 && (
-            <li className="text-slate-500">No {title}</li>
+            <li className="flex flex-row items-center text-sm font-semibold text-slate-500">
+              <LucideGhost className="mr-2 h-4 w-4" />
+              No {title}
+            </li>
           )}
         </ul>
         <Button
           variant="default"
-          size="icon"
+          size="sm"
           type="button"
           className="bg-blue-600"
           onClick={() => {
             append({ value: null });
           }}
         >
-          <LucidePlus className="h-4 w-4" />
+          <LucidePlus className="mr-2 h-4 w-4" />
+          Add
         </Button>
-      </Label>
+      </Card>
       <p className="text-red-500 dark:text-red-900">
         {fieldState.error?.message}
       </p>

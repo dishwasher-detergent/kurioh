@@ -1,10 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { ProjectImages } from "@/components/ui/project//images";
+import { ProjectWebsites } from "@/components/ui/project//websites";
+import { ProjectBadges } from "@/components/ui/project/badges";
 import { LucidePencil, LucideTrash } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../button";
-import { Card, CardContent, CardFooter } from "../card";
-import { ProjectBadges } from "./badges";
-import { ProjectImages } from "./images";
-import { ProjectWebsites } from "./websites";
 
 interface ProjectCardProps {
   images: string[];

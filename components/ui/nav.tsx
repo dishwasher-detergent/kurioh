@@ -1,4 +1,4 @@
-import { BreadCrumb } from "./breadcrumb";
+import { BreadCrumb } from "@/components/ui/breadcrumb";
 
 export const Nav = () => {
   return (

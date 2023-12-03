@@ -8,7 +8,6 @@ export const ImageInput = ({ register }: any) => {
   const [preview, setPreview] = useState<any>(null);
 
   const handleUploadedFile = (event: React.FormEvent<HTMLInputElement>) => {
-    console.log("test");
     const inputElement = event.target as HTMLInputElement;
     const file = inputElement.files?.[0];
 
@@ -27,7 +26,7 @@ export const ImageInput = ({ register }: any) => {
         <input
           className="hidden"
           type="file"
-          name="image"
+          accept="image/*"
           {...register("image", {
             onChange: (e: React.FormEvent<HTMLInputElement>) =>
               handleUploadedFile(e),

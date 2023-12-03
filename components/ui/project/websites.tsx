@@ -15,8 +15,6 @@ interface ProjectWebsitesProps {
 }
 
 const renderSiteIcon = (param: string) => {
-  console.log(param);
-
   switch (param) {
     case "github":
       return LucideGithub;

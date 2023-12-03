@@ -1,18 +1,30 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { LucidePlus, LucideTrash } from "lucide-react";
+import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
+import { useState } from "react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 
-interface ArrayInputProps {
+interface ImageArrayInputProps {
   title: string;
   name: string;
   form: UseFormReturn<any>;
 }
 
-export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
+interface Preview {
+  id: string;
+  url: string;
+}
+
+export const ImageArrayInput = ({
+  title,
+  name,
+  form,
+}: ImageArrayInputProps) => {
+  const imageName = name;
+
   const { control, register } = form;
 
   const { getFieldState, formState } = useFormContext();
@@ -24,23 +36,69 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
     name: name,
   });
 
+  const [preview, setPreview] = useState<Preview[]>([]);
+
+  const handleUploadedFile = (
+    event: React.FormEvent<HTMLInputElement>,
+    id: string,
+  ) => {
+    const inputElement = event.target as HTMLInputElement;
+    const file = inputElement.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const urlImage = URL.createObjectURL(file);
+
+    const index = preview.findIndex((x) => x.id === id);
+
+    if (index !== -1) {
+      preview[index] = { id: id, url: urlImage };
+      setPreview(preview);
+    } else {
+      setPreview([...preview, { id: id, url: urlImage }]);
+    }
+  };
+
   return (
     <div>
-      <Label className="cursor-pointer">
+      <Label>
         <p className="pb-3">{title}</p>
-        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4">
+      </Label>
+      <Card className="p-2">
+        <ul className="mb-2 flex flex-row flex-wrap gap-2 rounded-lg border bg-slate-100 p-4">
           {fields.map((item, index) => {
             return (
-              <li key={item.id} className="flex flex-row gap-2">
-                <Input
-                  {...register(`${name}.${index}.value`)}
-                  className="bg-background"
-                />
+              <li key={item.id} className="relative h-24 w-24 rounded-lg">
+                <Label className="cursor-pointer">
+                  <input
+                    className="hidden"
+                    type="file"
+                    accept="image/*"
+                    {...register(`${name}.${index}.value`, {
+                      onChange: (e: React.FormEvent<HTMLInputElement>) =>
+                        handleUploadedFile(e, item.id),
+                    })}
+                  />
+                  {preview.find((x) => x.id === item.id) ? (
+                    <div className="h-full w-full overflow-hidden rounded-lg">
+                      <img
+                        className="h-full w-full object-cover"
+                        src={preview.find((x) => x.id === item.id)?.url}
+                      />
+                    </div>
+                  ) : (
+                    <div className="grid h-full w-full place-items-center rounded-lg border border-slate-300 bg-slate-200">
+                      <LucidePlus className="h-4 w-4" />
+                    </div>
+                  )}
+                </Label>
                 <Button
                   variant="destructive"
                   size="icon"
                   type="button"
-                  className="flex-none"
+                  className="absolute right-2 top-2"
                   onClick={() => remove(index)}
                 >
                   <LucideTrash className="h-4 w-4" />
@@ -49,21 +107,25 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
             );
           })}
           {fields.length === 0 && (
-            <li className="text-slate-500">No {title}</li>
+            <li className="flex flex-row items-center text-sm font-semibold text-slate-500">
+              <LucideGhost className="mr-2 h-4 w-4" />
+              No {title}
+            </li>
           )}
         </ul>
         <Button
           variant="default"
-          size="icon"
+          size="sm"
           type="button"
           className="bg-blue-600"
           onClick={() => {
             append({ value: null });
           }}
         >
-          <LucidePlus className="h-4 w-4" />
+          <LucidePlus className="mr-2 h-4 w-4" />
+          Add
         </Button>
-      </Label>
+      </Card>
       <p className="text-red-500 dark:text-red-900">
         {fieldState.error?.message}
       </p>

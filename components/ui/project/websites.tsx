@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -12,35 +14,46 @@ interface ProjectWebsitesProps {
   websites: string[];
 }
 
-const Icons: { [key: string]: any } = {
-  github: LucideGithub,
-  gitlab: LucideGithub,
-  website: LucideExternalLink,
+const renderSiteIcon = (param: string) => {
+  console.log(param);
+
+  switch (param) {
+    case "github":
+      return LucideGithub;
+    case "gitlab":
+      return LucideGithub;
+    default:
+      return LucideExternalLink;
+  }
 };
 
 export const ProjectWebsites = ({ websites }: ProjectWebsitesProps) => {
   return (
-    <div className="flex flex-row flex-wrap gap-1">
-      {websites.map((website) => {
-        // const Icon = Icons[extractWebsiteName(website.toLowerCase())];
+    websites && (
+      <div className="flex flex-row flex-wrap gap-1">
+        {websites.map((website) => {
+          const Icon = renderSiteIcon(
+            extractWebsiteName(website.toLowerCase()),
+          );
 
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button asChild size="icon" variant="ghost">
-                  <a target="_blank" href={website}>
-                    {/* {<Icon />} */}
-                  </a>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="capitalize">{extractWebsiteName(website)}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
-      })}
-    </div>
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button asChild size="icon" variant="ghost">
+                    <a target="_blank" href={website}>
+                      {<Icon className="h-4 w-4" />}
+                    </a>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="capitalize">{extractWebsiteName(website)}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
+      </div>
+    )
   );
 };

@@ -16,7 +16,6 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
 
   if (crumbs == undefined) {
     const temp = pathname.split("/");
-    temp.shift();
 
     crumbs = temp.map((crumb, index) => {
       return {
@@ -36,21 +35,23 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
       <ul className="flex flex-row gap-2 text-sm">
         {crumbs.map((crumb, index) => {
           return (
-            <li key={index}>
-              <Link
-                href={crumb.path}
-                className={`${
-                  index !== crumbs!.length - 1
-                    ? "text-slate-500 dark:text-slate-300"
-                    : "text-primary"
-                } flex flex-row items-center gap-2 capitalize`}
-              >
-                {crumb.name}
-                {index !== (crumbs?.length ?? 0) - 1 && (
-                  <LucideChevronRight size={16} />
-                )}
-              </Link>
-            </li>
+            crumb.name != "" && (
+              <li key={index}>
+                <Link
+                  href={crumb.path}
+                  className={`${
+                    index !== crumbs!.length - 1
+                      ? "text-slate-500 dark:text-slate-300"
+                      : "text-primary"
+                  } flex flex-row items-center gap-2 capitalize`}
+                >
+                  {crumb.name}
+                  {index !== (crumbs?.length ?? 0) - 1 && (
+                    <LucideChevronRight size={16} />
+                  )}
+                </Link>
+              </li>
+            )
           );
         })}
       </ul>

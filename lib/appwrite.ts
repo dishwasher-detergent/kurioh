@@ -1,176 +1,180 @@
-import { Information } from "@/interfaces/information";
-import { Projects } from "@/interfaces/projects";
-import { Client, Databases, ID, Query } from "appwrite";
+import { Client, Databases, ID, Models, Storage } from "appwrite";
 
 export const ENDPOINT =
   process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
 export const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID as string;
 export const DATABASE_ID = process.env.NEXT_PUBLIC_DATABASE_ID as string;
+
+// Collections
 export const INFORMATION_COLLECTION_ID = process.env
-  .NEXT_PUBLIC_DATABASE_ID as string;
+  .NEXT_PUBLIC_INFORMATION_COLLECTION_ID as string;
 export const PROJECTS_COLLECTION_ID = process.env
   .NEXT_PUBLIC_PROJECTS_COLLECTION_ID as string;
 export const ARTICLES_COLLECTION_ID = process.env
   .NEXT_PUBLIC_ARTICLES_COLLECTION_ID as string;
 
+// Buckets
+export const PORTFOLIO_BUCKET_ID = process.env
+  .NEXT_PUBLIC_PORTFOLIO_BUCKET_ID as string;
+export const PROJECTS_BUCKET_ID = process.env
+  .NEXT_PUBLIC_PROJECTS_BUCKET_ID as string;
+export const ARTICLES_BUCKET_ID = process.env
+  .NEXT_PUBLIC_ARTICLES_BUCKET_ID as string;
+
 const client = new Client();
 client.setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
-const db = new Databases(client);
+const database = new Databases(client);
+const storage = new Storage(client);
 
-export const AppwriteService = {
-  // Information
+export const database_service = {
   /**
-   * Retrieves information from the database based on the provided ID.
-   * @param id The ID of the information to retrieve.
-   * @returns A Promise that resolves to the retrieved information.
+   * Retrieves information from the database based on the provided document ID and collection ID.
+   *
+   * @template {T} - The type of the document to retrieve.
+   * @param {string} id - The ID of the document to retrieve.
+   * @param {string} collectionId - The ID of the collection where the document is stored.
+   * @returns A promise that resolves to the retrieved document.
    */
-  async getInformation(id: string) {
-    const documents = await db.getDocument<Information>(
+  async get<T extends Models.Document>(id: string, collectionId: string) {
+    const response = await database.getDocument<T>(
       DATABASE_ID,
-      INFORMATION_COLLECTION_ID,
-      "1",
+      collectionId,
+      id,
     );
 
-    return documents;
+    return response;
   },
 
   /**
-   * Retrieves a list of information documents from the database.
-   * @returns A promise that resolves to an array of information documents.
+   * Retrieves a list of documents from a specific collection.
+   *
+   * @template {T} - The type of the documents to retrieve.
+   * @param {string} collectionId - The ID of the collection to retrieve documents from.
+   * @returns A promise that resolves to an array of documents of type T.
    */
-  async listInformation() {
-    const documents = await db.listDocuments<Information>(
-      DATABASE_ID,
-      INFORMATION_COLLECTION_ID,
-    );
+  async list<T extends Models.Document>(collectionId: string) {
+    const response = await database.listDocuments<T>(DATABASE_ID, collectionId);
 
-    return documents;
+    return response;
   },
 
   /**
-   * Creates a new information document in the database.
-   * @param information The information object to be created.
+   * Creates a new document in the specified collection.
+   *
+   * @template {T} - The type of the document.
+   * @param {string} collectionId - The ID of the collection.
+   * @param {T} data - The data of the document.
+   * @param {string} [id=ID.unique()] - The ID of the document (optional).
    * @returns A promise that resolves to the created document.
    */
-  async createInformation(information: Information) {
-    const documents = await db.createDocument<Information>(
+  async create<T extends Models.Document>(
+    collectionId: string,
+    data: Omit<T, keyof Models.Document>,
+    id: string = ID.unique(),
+  ) {
+    const response = await database.createDocument<T>(
       DATABASE_ID,
-      INFORMATION_COLLECTION_ID,
-      ID.unique(),
-      information,
+      collectionId,
+      id,
+      data,
     );
 
-    return documents;
+    return response;
   },
 
   /**
-   * Updates the information in the database.
-   * @param information The updated information object.
-   * @returns A promise that resolves to the updated documents.
+   * Updates the information of a document in a collection.
+   *
+   * @template {T} - The type of the document.
+   * @param {string} collectionId - The ID of the collection.
+   * @param {T} data - The updated data for the document.
+   * @param {string} [id=data.$id] - The ID of the document. Defaults to the ID specified in the data object.
+   * @returns A promise that resolves to the updated document.
    */
-  async updateInformation(information: Information) {
-    const documents = await db.updateDocument<Information>(
+  async update<T extends Models.Document>(
+    collectionId: string,
+    data: Omit<T, keyof Models.Document>,
+    id: string,
+  ) {
+    const response = await database.updateDocument<T>(
       DATABASE_ID,
-      INFORMATION_COLLECTION_ID,
-      information.$id,
-      information,
+      collectionId,
+      id,
+      data,
     );
 
-    return documents;
+    return response;
   },
 
   /**
-   * Deletes information with the specified ID.
-   * @param id - The ID of the information to delete.
-   * @returns A Promise that resolves to the deleted documents.
+   * Deletes a document from a collection.
+   *
+   * @param {string} collectionId - The ID of the collection.
+   * @param {string} id - The ID of the document to delete.
+   * @returns A promise that resolves to the deleted document.
    */
-  async deleteInformation(id: string) {
-    const documents = await db.deleteDocument(
+  async delete(collectionId: string, id: string) {
+    const response = await database.deleteDocument(
       DATABASE_ID,
-      INFORMATION_COLLECTION_ID,
+      collectionId,
       id,
     );
 
-    return documents;
+    return response;
   },
+};
 
-  // Projects
+export const storage_service = {
   /**
-   * Retrieves a project by its ID.
-   * @param id The ID of the project to retrieve.
-   * @returns A Promise that resolves to the retrieved project.
+   * Retrieves a file from the specified storage bucket.
+   *
+   * @param {string} bucketId - The ID of the bucket where the file is stored.
+   * @param {string} id - The ID of the file to retrieve.
+   * @returns A promise that resolves to the retrieved file.
    */
-  async getProject(id: string) {
-    const documents = await db.getDocument<Projects>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      id,
-    );
+  async get(bucketId: string, id: string) {
+    const response = await storage.getFile(bucketId, id);
 
-    return documents;
-  },
-
-  /**
-   * Retrieves a list of projects from the database.
-   * @returns A promise that resolves to an array of projects.
-   */
-  async listProjects() {
-    const documents = await db.listDocuments<Projects>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      [Query.orderAsc("position")],
-    );
-
-    return documents;
+    return response;
   },
 
   /**
-   * Creates a new project in the database.
-   * @param project The project object to be created.
-   * @returns A promise that resolves to the created project document.
+   * Retrieves a list of files from the specified storage bucket.
+   *
+   * @param {string} bucketId - The ID of the bucket to retrieve files from.
+   * @returns A promise that resolves to an array of files.
    */
-  async createProject(project: Projects) {
-    const documents = await db.createDocument<Projects>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      ID.unique(),
-      project,
-    );
+  async list(bucketId: string) {
+    const response = await storage.listFiles(bucketId);
 
-    return documents;
+    return response;
   },
 
   /**
-   * Updates a project in the database.
-   * @param project The project object to be updated.
-   * @returns A promise that resolves to the updated project documents.
+   * Uploads a file to the specified bucket.
+   *
+   * @param {string} bucketId - The ID of the bucket to upload the file to.
+   * @param {File} file - The file to upload.
+   * @param {string} [id] - The ID to assign to the uploaded file. If not provided, a unique ID will be generated.
+   * @returns A promise that resolves to the response from the server.
    */
-  async updateProject(project: Projects) {
-    const documents = await db.updateDocument<Projects>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      project.$id,
-      project,
-    );
+  async upload(bucketId: string, file: File, id: string = ID.unique()) {
+    const response = await storage.createFile(bucketId, id, file);
 
-    return documents;
+    return response;
   },
 
   /**
-   * Deletes a project from the database.
-   * @param {string} id - The ID of the project to delete.
-   * @returns - A promise that resolves to the deleted documents.
+   * Deletes a file from the specified storage bucket.
+   *
+   * @param {string} bucketId - The ID of the bucket where the file is stored.
+   * @param {string} id - The ID of the file to delete.
+   * @returns A promise that resolves to the deleted file.
    */
-  async deleteProject(id: string) {
-    const documents = await db.deleteDocument(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      id,
-    );
+  async delete(bucketId: string, id: string) {
+    const response = await storage.deleteFile(bucketId, id);
 
-    return documents;
+    return response;
   },
-
-  // Articles
 };

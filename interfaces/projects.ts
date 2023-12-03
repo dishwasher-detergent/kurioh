@@ -1,6 +1,4 @@
-import { Models } from "appwrite";
-
-export interface Projects extends Models.Document {
+export interface Projects {
   title: string;
   short_description: string;
   description: string;

@@ -1,10 +1,16 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
+import { ENDPOINT, PORTFOLIO_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
 import { LucidePlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
-export const ImageInput = ({ register }: any) => {
+interface ImageInputProps {
+  form: UseFormReturn<any>;
+}
+
+export const ImageInput = ({ form }: ImageInputProps) => {
   const [preview, setPreview] = useState<any>(null);
 
   const handleUploadedFile = (event: React.FormEvent<HTMLInputElement>) => {
@@ -19,6 +25,15 @@ export const ImageInput = ({ register }: any) => {
     setPreview(urlImage);
   };
 
+  useEffect(() => {
+    const image = form.getValues("image");
+
+    if (typeof image === "string" && image !== "") {
+      const image_url = `${ENDPOINT}/storage/buckets/${PORTFOLIO_BUCKET_ID}/files/${image}/view?project=${PROJECT_ID}`;
+      setPreview(image_url);
+    }
+  }, []);
+
   return (
     <div>
       <Label className="cursor-pointer">
@@ -27,7 +42,7 @@ export const ImageInput = ({ register }: any) => {
           className="hidden"
           type="file"
           accept="image/*"
-          {...register("image", {
+          {...form.register("image", {
             onChange: (e: React.FormEvent<HTMLInputElement>) =>
               handleUploadedFile(e),
           })}
@@ -36,7 +51,7 @@ export const ImageInput = ({ register }: any) => {
           {preview ? (
             <img src={preview} className="h-24 w-24 rounded-lg" />
           ) : (
-            <div className="grid h-24 place-items-center rounded-lg bg-slate-200 text-slate-950">
+            <div className="grid h-24 w-24 place-items-center rounded-lg bg-slate-200 text-slate-950">
               <LucidePlus className="h-4 w-4" />
             </div>
           )}

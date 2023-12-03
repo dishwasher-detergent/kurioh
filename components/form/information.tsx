@@ -28,6 +28,7 @@ import {
   LINKEDIN,
   TWITTER,
 } from "@/constants/socials";
+import { toast } from "@/hooks/use-toast";
 import { Information, Social } from "@/interfaces/information";
 import {
   INFORMATION_COLLECTION_ID,
@@ -104,11 +105,27 @@ export const InformationForm = ({ data }: InformationFormProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let image = null;
-    if (values.image && typeof values.image !== "string") {
-      image = await storage_service.upload(
-        PORTFOLIO_BUCKET_ID,
-        values.image[0],
-      );
+
+    try {
+      if (values.image && typeof values.image !== "string") {
+        image = await storage_service.upload(
+          PORTFOLIO_BUCKET_ID,
+          values.image[0],
+        );
+
+        toast({
+          title: "Uploaded.",
+          description: `Image ${image.name} uploaded successfully.`,
+        });
+      }
+    } catch (err) {
+      const error = err as Error;
+
+      toast({
+        variant: "destructive",
+        title: "An error occurred while uploading your images.",
+        description: error.message,
+      });
     }
 
     const information = {
@@ -125,17 +142,35 @@ export const InformationForm = ({ data }: InformationFormProps) => {
       ],
     };
 
-    if (data?.$id) {
-      await database_service.update<Information>(
-        INFORMATION_COLLECTION_ID,
-        information,
-        data.$id,
-      );
-    } else {
-      await database_service.create<Information>(
-        INFORMATION_COLLECTION_ID,
-        information,
-      );
+    try {
+      if (data?.$id) {
+        await database_service.update<Information>(
+          INFORMATION_COLLECTION_ID,
+          information,
+          data.$id,
+        );
+
+        toast({
+          title: "Information Updated.",
+        });
+      } else {
+        await database_service.create<Information>(
+          INFORMATION_COLLECTION_ID,
+          information,
+        );
+
+        toast({
+          title: "Information Created.",
+        });
+      }
+    } catch (err) {
+      const error = err as Error;
+
+      toast({
+        variant: "destructive",
+        title: "An error occurred while uploading your images.",
+        description: error.message,
+      });
     }
   }
 

@@ -36,7 +36,10 @@ export const ArrayInput = ({ title, name, form }: ArrayInputProps) => {
           {fields.map((item, index) => {
             return (
               <li key={item.id} className="flex flex-row items-center gap-2">
-                <Badge className="grid h-8 w-8 place-items-center">
+                <Badge
+                  variant="secondary"
+                  className="grid h-8 w-8 place-items-center"
+                >
                   {index + 1}
                 </Badge>
                 <Input

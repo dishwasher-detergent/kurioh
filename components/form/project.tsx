@@ -31,7 +31,7 @@ import { ArrayInput } from "@/components/ui/form/array";
 import { ImageArrayInput } from "@/components/ui/form/image_array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Projects } from "@/interfaces/projects";
 import {
   PROJECTS_BUCKET_ID,

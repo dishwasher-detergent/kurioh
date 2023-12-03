@@ -74,7 +74,7 @@ export const CreateProjectForm = ({
       title: data?.title ?? "",
       short_description: data?.short_description ?? "",
       description: data?.description ?? "",
-      images: [],
+      images: data?.images.map((x) => ({ value: x })) ?? [],
       position: data?.position ?? 1,
       tags: data?.tags.map((x) => ({ value: x })) ?? [],
       links: data?.links.map((x) => ({ value: x })) ?? [],
@@ -85,16 +85,28 @@ export const CreateProjectForm = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     let images = [];
 
+    const existing_images =
+      values?.images
+        .filter((x) => typeof x.value == "string")
+        .map((x) => x.value) ?? [];
+
     if (values.images) {
       for (let i = 0; i < values.images.length; i++) {
-        const response = await storage_service.upload(
-          PROJECTS_BUCKET_ID,
-          values.images[i].value[0],
-        );
+        if (
+          values.images[i].value &&
+          typeof values.images[i].value !== "string"
+        ) {
+          const response = await storage_service.upload(
+            PROJECTS_BUCKET_ID,
+            values.images[i].value[0],
+          );
 
-        images.push(response.$id);
+          images.push(response.$id);
+        }
       }
     }
+
+    images = [...existing_images, ...images];
 
     const slug = createSlug(values.title);
 

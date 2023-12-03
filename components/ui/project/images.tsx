@@ -21,7 +21,7 @@ export const ProjectImages = ({ images }: ImagesProjectProps) => {
                 <img
                   key={index}
                   src={image}
-                  className="aspect-video h-24 rounded-lg object-cover object-left-top"
+                  className="aspect-square h-20 rounded-lg object-cover object-left-top"
                 />
               ),
           )}

@@ -3,8 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { ENDPOINT, PROJECTS_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
 import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 
 interface ImageArrayInputProps {
@@ -14,8 +15,9 @@ interface ImageArrayInputProps {
 }
 
 interface Preview {
-  id: string;
+  id: number | string;
   url: string;
+  aw_id?: string;
 }
 
 export const ImageArrayInput = ({
@@ -40,7 +42,7 @@ export const ImageArrayInput = ({
 
   const handleUploadedFile = (
     event: React.FormEvent<HTMLInputElement>,
-    id: string,
+    id: number,
   ) => {
     const inputElement = event.target as HTMLInputElement;
     const file = inputElement.files?.[0];
@@ -61,6 +63,23 @@ export const ImageArrayInput = ({
     }
   };
 
+  useEffect(() => {
+    const image = form.getValues(name);
+    const images: Preview[] = [];
+
+    for (let i = 0; i < fields.length; i++) {
+      if (typeof image[i].value === "string" && image[i].value !== "") {
+        images.push({
+          id: i.toString(),
+          url: `${ENDPOINT}/storage/buckets/${PROJECTS_BUCKET_ID}/files/${image[i].value}/view?project=${PROJECT_ID}`,
+          aw_id: image[i].value,
+        });
+      }
+    }
+
+    setPreview(images);
+  }, []);
+
   return (
     <div>
       <Label>
@@ -78,14 +97,14 @@ export const ImageArrayInput = ({
                     accept="image/*"
                     {...register(`${name}.${index}.value`, {
                       onChange: (e: React.FormEvent<HTMLInputElement>) =>
-                        handleUploadedFile(e, item.id),
+                        handleUploadedFile(e, index),
                     })}
                   />
-                  {preview.find((x) => x.id === item.id) ? (
+                  {preview.find((x) => x.id == index) ? (
                     <div className="h-full w-full overflow-hidden rounded-lg">
                       <img
                         className="h-full w-full object-cover"
-                        src={preview.find((x) => x.id === item.id)?.url}
+                        src={preview.find((x) => x.id == index)?.url}
                       />
                     </div>
                   ) : (

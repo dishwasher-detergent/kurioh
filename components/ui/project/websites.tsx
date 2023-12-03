@@ -29,13 +29,13 @@ export const ProjectWebsites = ({ websites }: ProjectWebsitesProps) => {
   return (
     websites && (
       <div className="flex flex-row flex-wrap gap-1">
-        {websites.map((website) => {
+        {websites.map((website, index) => {
           const Icon = renderSiteIcon(
             extractWebsiteName(website.toLowerCase()),
           );
 
           return (
-            <TooltipProvider>
+            <TooltipProvider key={index}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button asChild size="icon" variant="ghost">

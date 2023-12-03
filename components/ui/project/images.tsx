@@ -18,7 +18,7 @@ export const ProjectImages = ({ images }: ImagesProjectProps) => {
               (image, index) =>
                 index !== 0 && (
                   <img
-                    key={image}
+                    key={index}
                     src={image}
                     className="aspect-video h-24 rounded-lg object-cover object-left-top"
                   />

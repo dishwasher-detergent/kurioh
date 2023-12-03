@@ -14,14 +14,17 @@ import { ArrayInput } from "@/components/ui/form/array";
 import { ImageArrayInput } from "@/components/ui/form/image_array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Projects } from "@/interfaces/projects";
 import {
   PROJECTS_BUCKET_ID,
   PROJECTS_COLLECTION_ID,
   database_service,
   storage_service,
 } from "@/lib/appwrite";
+import { createSlug } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -56,22 +59,26 @@ const formSchema = z.object({
 
 interface CreateProjectFormProps {
   title?: string;
+  data?: Projects;
 }
 
 export const CreateProjectForm = ({
   title = "Create",
+  data,
 }: CreateProjectFormProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      short_description: "",
-      description: "",
+      title: data?.title ?? "",
+      short_description: data?.short_description ?? "",
+      description: data?.description ?? "",
       images: [],
-      position: 0,
-      tags: [],
-      links: [],
-      color: "",
+      position: data?.position ?? 1,
+      tags: data?.tags.map((x) => ({ value: x })) ?? [],
+      links: data?.links.map((x) => ({ value: x })) ?? [],
+      color: data?.color ?? "",
     },
   });
 
@@ -89,6 +96,8 @@ export const CreateProjectForm = ({
       }
     }
 
+    const slug = createSlug(values.title);
+
     const project = {
       title: values.title,
       short_description: values.short_description,
@@ -98,13 +107,41 @@ export const CreateProjectForm = ({
       tags: values.tags?.map((x) => x.value),
       links: values.links?.map((x) => x.value),
       color: values.color,
+      slug: slug,
     };
 
-    await database_service.create(PROJECTS_COLLECTION_ID, project);
+    try {
+      if (data) {
+        await database_service.update<Projects>(
+          PROJECTS_COLLECTION_ID,
+          project,
+          slug,
+        );
+      } else {
+        await database_service.create<Projects>(
+          PROJECTS_COLLECTION_ID,
+          project,
+          slug,
+        );
+
+        router.push(`/projects/${slug}`);
+      }
+    } catch (err) {
+      const error = err as Error;
+
+      if (
+        error.message.includes("Document with the requested ID already exists.")
+      ) {
+        form.setError("title", {
+          type: "manual",
+          message: "Project with this title already exists.",
+        });
+      }
+    }
   }
 
   return (
-    <Card>
+    <Card className="max-w-3xl">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>

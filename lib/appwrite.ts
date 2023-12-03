@@ -32,11 +32,11 @@ export const database_service = {
    * Retrieves information from the database based on the provided document ID and collection ID.
    *
    * @template {T} - The type of the document to retrieve.
-   * @param {string} id - The ID of the document to retrieve.
    * @param {string} collectionId - The ID of the collection where the document is stored.
+   * @param {string} id - The ID of the document to retrieve.
    * @returns A promise that resolves to the retrieved document.
    */
-  async get<T extends Models.Document>(id: string, collectionId: string) {
+  async get<T extends Models.Document>(collectionId: string, id: string) {
     const response = await database.getDocument<T>(
       DATABASE_ID,
       collectionId,

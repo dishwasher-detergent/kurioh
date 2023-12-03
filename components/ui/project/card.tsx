@@ -11,6 +11,7 @@ import Link from "next/link";
 
 interface ProjectCardProps {
   id: string;
+  slug: string;
   images: string[];
   badges: string[];
   title: string;
@@ -20,6 +21,7 @@ interface ProjectCardProps {
 
 export const ProjectCard = ({
   id,
+  slug,
   images,
   badges,
   title,
@@ -31,23 +33,23 @@ export const ProjectCard = ({
   }
 
   return (
-    <Card>
-      <CardContent className="space-y-5 p-4">
+    <Card className="flex flex-col">
+      <CardContent className="flex-1 space-y-4 p-4">
         <ProjectImages images={images} />
         <ProjectBadges badges={badges} />
         <div>
-          <h4 className="text-xl font-bold">{title}</h4>
+          <h4 className="text-xl font-bold capitalize">{title}</h4>
           <p>{description}</p>
         </div>
         <ProjectWebsites websites={websites} />
       </CardContent>
-      <CardFooter className="flex flex-row justify-end gap-2">
+      <CardFooter className="flex flex-row justify-end gap-2 border-t p-4">
         <Button variant="destructive" onClick={() => deleteProject()}>
           <LucideTrash className="mr-2 h-4 w-4" />
           Delete
         </Button>
         <Button asChild>
-          <Link href={`/projects/${id}`}>
+          <Link href={`/projects/${slug}`}>
             <>
               <LucidePencil className="mr-2 h-4 w-4" />
               Edit

@@ -5,6 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function createSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
+}
+
 export function extractWebsiteName(url: string): string {
   try {
     const urlObj = new URL(url);
@@ -13,5 +20,14 @@ export function extractWebsiteName(url: string): string {
   } catch (e) {
     console.error(e);
     return "";
+  }
+}
+
+export function isValidUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
   }
 }

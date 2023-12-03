@@ -9,4 +9,5 @@ export interface Projects extends Models.Document {
   tags: string[];
   links: string[];
   color: string;
+  slug: string;
 }

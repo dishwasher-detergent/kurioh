@@ -13,12 +13,15 @@ export const Profile = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-12 w-12">
+        <Button
+          variant="ghost"
+          className="flex h-12 w-full justify-start gap-2"
+        >
           <Avatar className="h-10 w-10">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p className="sr-only truncate">Kenneth Bass</p>
+          <p className="truncate">Kenneth Bass</p>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right" align="end">

@@ -25,13 +25,13 @@ export const ProjectFormLoading = ({ title }: { title: string }) => {
         <LoadingInput title="Links" className="h-28" />
         <LoadingInput title="Color" />
       </CardContent>
-      <CardFooter className="flex flex-row gap-2">
+      <CardFooter className="flex w-full flex-row justify-end gap-2">
+        <Button disabled={true} type="button" variant="destructive">
+          Reset
+        </Button>
         <Button disabled={true}>
           <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
           Save
-        </Button>
-        <Button disabled={true} type="button" variant="destructive">
-          Reset
         </Button>
       </CardFooter>
     </Card>

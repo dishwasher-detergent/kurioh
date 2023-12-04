@@ -315,25 +315,9 @@ export const CreateProjectForm = ({
               )}
             />
           </CardContent>
-          <CardFooter className="flex flex-row justify-between">
-            <div className="flex=row flex gap-2">
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && (
-                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save
-              </Button>
-              <Button
-                disabled={form.formState.isSubmitting}
-                type="button"
-                variant="destructive"
-                onClick={() => form.reset()}
-              >
-                Reset
-              </Button>
-            </div>
+          <CardFooter className="flex flex-row justify-end">
             {edit && (
-              <div>
+              <div className="flex-1">
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
@@ -372,6 +356,22 @@ export const CreateProjectForm = ({
                 </Dialog>
               </div>
             )}
+            <div className="flex flex-none flex-row gap-2">
+              <Button
+                disabled={form.formState.isSubmitting}
+                type="button"
+                variant="destructive"
+                onClick={() => form.reset()}
+              >
+                Reset
+              </Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Save
+              </Button>
+            </div>
           </CardFooter>
         </form>
       </Form>

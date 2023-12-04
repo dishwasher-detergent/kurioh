@@ -355,13 +355,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
               )}
             />
           </CardContent>
-          <CardFooter className="flex=row flex gap-2">
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting && (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Save
-            </Button>
+          <CardFooter className="flex flex-row justify-end gap-2">
             <Button
               disabled={form.formState.isSubmitting}
               type="button"
@@ -369,6 +363,12 @@ export const InformationForm = ({ data }: InformationFormProps) => {
               onClick={() => form.reset()}
             >
               Reset
+            </Button>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && (
+                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Save
             </Button>
           </CardFooter>
         </form>

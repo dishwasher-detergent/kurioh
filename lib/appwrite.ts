@@ -12,6 +12,8 @@ export const PROJECTS_COLLECTION_ID = process.env
   .NEXT_PUBLIC_PROJECTS_COLLECTION_ID as string;
 export const ARTICLES_COLLECTION_ID = process.env
   .NEXT_PUBLIC_ARTICLES_COLLECTION_ID as string;
+export const PORTFOLIO_COLLECTION_ID = process.env
+  .NEXT_PUBLIC_PROTFOLIO_COLLECTION_ID as string;
 
 // Buckets
 export const PORTFOLIO_BUCKET_ID = process.env
@@ -53,8 +55,15 @@ export const database_service = {
    * @param {string} collectionId - The ID of the collection to retrieve documents from.
    * @returns A promise that resolves to an array of documents of type T.
    */
-  async list<T extends Models.Document>(collectionId: string) {
-    const response = await database.listDocuments<T>(DATABASE_ID, collectionId);
+  async list<T extends Models.Document>(
+    collectionId: string,
+    queries: string[] = [],
+  ) {
+    const response = await database.listDocuments<T>(
+      DATABASE_ID,
+      collectionId,
+      queries,
+    );
 
     return response;
   },

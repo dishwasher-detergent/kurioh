@@ -1,35 +1,42 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/ui/project/card";
-import { Projects } from "@/interfaces/projects";
+import { Portfolios } from "@/interfaces/portfolios";
 import {
   ENDPOINT,
+  PORTFOLIO_COLLECTION_ID,
   PROJECTS_BUCKET_ID,
-  PROJECTS_COLLECTION_ID,
   PROJECT_ID,
   database_service,
 } from "@/lib/appwrite";
+import { Query } from "appwrite";
 import { LucideGhost } from "lucide-react";
 import Link from "next/link";
 
-async function fetchProjects() {
-  const response = await database_service.list<Projects>(
-    PROJECTS_COLLECTION_ID,
+async function fetchProjects(port_slug: string) {
+  const response = await database_service.list<Portfolios>(
+    PORTFOLIO_COLLECTION_ID,
+    [Query.equal("slug", port_slug), Query.limit(1)],
   );
 
-  return response;
+  return response.documents[0].projects;
 }
 
-export default async function Projects() {
-  const projects = await fetchProjects();
+export default async function Projects({
+  params,
+}: {
+  params: { slug: string; port_slug: string };
+}) {
+  const { port_slug } = params;
+  const projects = await fetchProjects(port_slug);
 
   return (
     <div className="flex flex-col gap-4">
       <h3 className="flex flex-row items-center gap-2 text-2xl font-bold">
         Projects
-        <Badge variant="secondary">{projects.total}</Badge>
+        <Badge variant="secondary">{projects.length}</Badge>
       </h3>
-      {projects.documents.length === 0 && (
+      {projects.length === 0 && (
         <div className="space-y-4 rounded-lg border bg-slate-100 p-4 dark:bg-slate-800">
           <p className="flex flex-row items-center text-sm font-semibold text-slate-500 dark:text-slate-300">
             <LucideGhost className="mr-2 h-4 w-4" />
@@ -41,7 +48,7 @@ export default async function Projects() {
         </div>
       )}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {projects.documents.map((project) => (
+        {projects.map((project) => (
           <ProjectCard
             key={project.$id}
             id={project.$id}

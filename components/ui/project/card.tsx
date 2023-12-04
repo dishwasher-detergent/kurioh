@@ -6,6 +6,7 @@ import { ProjectImages } from "@/components/ui/project//images";
 import { ProjectWebsites } from "@/components/ui/project//websites";
 import { ProjectBadges } from "@/components/ui/project/badges";
 import { PROJECTS_COLLECTION_ID, database_service } from "@/lib/appwrite";
+import { usePortfolioStore } from "@/store/zustand";
 import { LucidePencil, LucideTrash } from "lucide-react";
 import Link from "next/link";
 
@@ -28,6 +29,7 @@ export const ProjectCard = ({
   description,
   websites,
 }: ProjectCardProps) => {
+  const { current } = usePortfolioStore();
   async function deleteProject() {
     await database_service.delete(PROJECTS_COLLECTION_ID, id);
   }
@@ -49,7 +51,7 @@ export const ProjectCard = ({
           Delete
         </Button>
         <Button asChild>
-          <Link href={`/projects/${slug}`}>
+          <Link href={`/${current}/projects/${slug}`}>
             <>
               <LucidePencil className="mr-2 h-4 w-4" />
               Edit

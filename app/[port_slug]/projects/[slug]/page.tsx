@@ -3,8 +3,6 @@ import { Projects } from "@/interfaces/projects";
 import { PROJECTS_COLLECTION_ID, database_service } from "@/lib/appwrite";
 
 async function fetchProject(slug: string) {
-  console.log(slug);
-
   const response = await database_service.get<Projects>(
     PROJECTS_COLLECTION_ID,
     slug,
@@ -16,10 +14,12 @@ async function fetchProject(slug: string) {
 export default async function ProjectsCreate({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string; port_slug: string };
 }) {
-  const { slug } = params;
+  const { slug, port_slug } = params;
   const project = await fetchProject(slug);
+
+  console.log(slug);
 
   return (
     <div className="flex flex-col gap-4">

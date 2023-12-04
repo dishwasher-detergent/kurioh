@@ -1,4 +1,7 @@
+"use client";
+
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type PortfolioStore = {
   current: string | null;
@@ -6,8 +9,16 @@ type PortfolioStore = {
   remove: () => void;
 };
 
-export const usePortfolioStore = create<PortfolioStore>((set) => ({
-  current: null,
-  remove: () => set({ current: null }),
-  update: (x) => set({ current: x }),
-}));
+export const usePortfolioStore = create(
+  persist<PortfolioStore>(
+    (set) => ({
+      current: null,
+      remove: () => set({ current: null }),
+      update: (x) => set({ current: x }),
+    }),
+    {
+      name: "porti-storage",
+      skipHydration: true,
+    },
+  ),
+);

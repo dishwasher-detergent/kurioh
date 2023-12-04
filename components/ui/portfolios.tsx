@@ -36,6 +36,10 @@ export const PortfoliosSelect = () => {
     fetchPortfolios();
   }, []);
 
+  useEffect(() => {
+    usePortfolioStore.persist.rehydrate();
+  }, []);
+
   return !loading ? (
     <Select
       onValueChange={(e) => {

@@ -13,11 +13,9 @@ import {
   LucidePlus,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export const Sidebar = () => {
   const { current } = usePortfolioStore();
-  const pathname = usePathname();
 
   return (
     <aside className="flex w-60 flex-col border-r shadow">

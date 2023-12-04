@@ -40,6 +40,7 @@ import {
   storage_service,
 } from "@/lib/appwrite";
 import { createSlug } from "@/lib/utils";
+import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -85,6 +86,7 @@ export const CreateProjectForm = ({
   const edit = data ? true : false;
   const router = useRouter();
   const { toast } = useToast();
+  const { current } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -202,7 +204,7 @@ export const CreateProjectForm = ({
           description: `Project ${values.title} created successfully.`,
         });
 
-        router.push(`/projects/${slug}`);
+        router.push(`/${current}/projects/${slug}`);
       }
     } catch (err) {
       const error = err as Error;

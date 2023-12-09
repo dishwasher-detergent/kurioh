@@ -70,7 +70,7 @@ export const CreatePortfolioForm = () => {
         slug: response.slug,
       });
 
-      router.push(`/${response.slug}/portfolio/`);
+      router.push(`/${response.slug}`);
     } catch (err) {
       const error = err as Error;
 

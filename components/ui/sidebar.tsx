@@ -25,19 +25,19 @@ export const Sidebar = () => {
 
   return (
     <aside className="flex w-60 flex-col border-r shadow">
-      <div className="flex h-16 w-full flex-none flex-row justify-center px-5">
+      <div className="flex h-16 w-full flex-none flex-row justify-center border-b px-5 shadow-sm">
         <h1 className="flex flex-row items-center gap-2 text-lg font-bold text-primary">
           <LucideBoxes className="h-6 w-6" />
           Porti
         </h1>
       </div>
-      <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto p-2">
-        <li className="flex w-full flex-row gap-2">
+      <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto">
+        <li className="flex w-full flex-row gap-2 border-b p-2 shadow-sm">
           <PortfoliosSelect />
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button asChild size="icon" variant="ghost">
+                <Button asChild size="icon" variant="outline">
                   <Link href={`/portfolio/create`} className="flex-none">
                     <LucidePlus className="h-4 w-4" />
                   </Link>
@@ -51,7 +51,7 @@ export const Sidebar = () => {
         </li>
         {current ? (
           <>
-            <li className="flex w-full flex-row gap-2">
+            <li className="flex w-full flex-row gap-2 px-2">
               <Button
                 asChild
                 variant="ghost"
@@ -63,7 +63,7 @@ export const Sidebar = () => {
                 </Link>
               </Button>
             </li>
-            <li className="flex w-full flex-row gap-2">
+            <li className="flex w-full flex-row gap-2 px-2">
               <Button
                 asChild
                 variant="ghost"
@@ -77,7 +77,7 @@ export const Sidebar = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button asChild size="icon" variant="ghost">
+                    <Button asChild size="icon" variant="outline">
                       <Link
                         href={`/${current.slug}/projects/create`}
                         className="flex-none"
@@ -119,10 +119,10 @@ export const Sidebar = () => {
           </div>
         )}
       </ul>
-      <div className="border-t p-2">
+      <div className="border-t p-2 shadow-sm">
         <ModeToggle />
       </div>
-      <div className="border-t p-2">
+      <div className="border-t p-2 shadow-sm">
         <Profile />
       </div>
     </aside>

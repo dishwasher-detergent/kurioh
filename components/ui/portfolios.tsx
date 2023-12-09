@@ -34,13 +34,11 @@ export const PortfoliosSelect = () => {
     }
 
     fetchPortfolios();
-  }, []);
+  }, [current]);
 
   useEffect(() => {
     usePortfolioStore.persist.rehydrate();
   }, []);
-
-  console.log(current);
 
   return !loading ? (
     <Select

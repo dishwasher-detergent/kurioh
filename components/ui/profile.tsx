@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,8 +18,11 @@ export const Profile = () => {
           className="flex h-12 w-full justify-start gap-2"
         >
           <Avatar className="h-10 w-10">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+            <p className="grid h-full w-full place-items-center bg-slate-950 text-white">
+              KB
+            </p>
+            <AvatarFallback>KB</AvatarFallback>
           </Avatar>
           <p className="truncate">Kenneth Bass</p>
         </Button>

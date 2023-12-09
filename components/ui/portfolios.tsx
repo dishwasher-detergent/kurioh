@@ -50,7 +50,7 @@ export const PortfoliosSelect = () => {
       }}
       value={`{"slug": "${current?.slug}", "id": "${current?.id}"}`}
     >
-      <SelectTrigger className="w-full">
+      <SelectTrigger className="w-full truncate">
         <SelectValue placeholder="Portfolio" defaultValue={params.port_slug} />
       </SelectTrigger>
       <SelectContent>

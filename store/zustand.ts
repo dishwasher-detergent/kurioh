@@ -3,9 +3,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export interface Current {
+  id: string;
+  slug: string;
+}
+
 type PortfolioStore = {
-  current: string | null;
-  update: (current: string) => void;
+  current: Current | null;
+  update: (current: Current) => void;
   remove: () => void;
 };
 

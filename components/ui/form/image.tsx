@@ -52,7 +52,11 @@ export const ImageInput = ({ form }: ImageInputProps) => {
             })}
           />
           {preview ? (
-            <img src={preview} className="h-24 w-24 rounded-lg" />
+            <img
+              src={preview}
+              alt="Site title image."
+              className="h-24 w-24 rounded-lg"
+            />
           ) : (
             <div className="grid h-24 w-24 place-items-center rounded-lg bg-slate-200 text-slate-950">
               <LucidePlus className="h-4 w-4" />

@@ -21,6 +21,7 @@ export const ProjectImages = ({ images }: ImagesProjectProps) => {
                 <img
                   key={index}
                   src={image}
+                  alt="Project Image."
                   className="aspect-square h-20 rounded-lg object-cover object-left-top"
                 />
               ),

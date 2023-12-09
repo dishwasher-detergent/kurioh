@@ -51,7 +51,7 @@ export const ProjectCard = ({
           Delete
         </Button>
         <Button asChild>
-          <Link href={`/${current}/projects/${slug}`}>
+          <Link href={`/${current?.slug}/projects/${slug}`}>
             <>
               <LucidePencil className="mr-2 h-4 w-4" />
               Edit

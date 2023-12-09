@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/ui/project/card";
+import { ProjectEmpty } from "@/components/ui/project/empty";
 import { Portfolios } from "@/interfaces/portfolios";
 import {
   ENDPOINT,
@@ -10,8 +10,6 @@ import {
   database_service,
 } from "@/lib/appwrite";
 import { Query } from "appwrite";
-import { LucideGhost } from "lucide-react";
-import Link from "next/link";
 
 async function fetchProjects(port_slug: string) {
   const response = await database_service.list<Portfolios>(
@@ -36,17 +34,7 @@ export default async function Projects({
         Projects
         <Badge variant="secondary">{projects.length}</Badge>
       </h3>
-      {projects.length === 0 && (
-        <div className="space-y-4 rounded-lg border bg-slate-100 p-4 dark:bg-slate-800">
-          <p className="flex flex-row items-center text-sm font-semibold text-slate-500 dark:text-slate-300">
-            <LucideGhost className="mr-2 h-4 w-4" />
-            No Projects!
-          </p>
-          <Button asChild>
-            <Link href="/projects/create">Create one here!</Link>
-          </Button>
-        </div>
-      )}
+      {projects.length === 0 && <ProjectEmpty />}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {projects.map((project) => (
           <ProjectCard

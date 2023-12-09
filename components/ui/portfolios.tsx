@@ -40,20 +40,27 @@ export const PortfoliosSelect = () => {
     usePortfolioStore.persist.rehydrate();
   }, []);
 
+  console.log(current);
+
   return !loading ? (
     <Select
       onValueChange={(e) => {
-        update(e);
-        router.push(`/${e}`);
+        const data = JSON.parse(e);
+
+        update(data);
+        router.push(`/${data.slug}`);
       }}
-      value={current ?? ""}
+      value={`{"slug": "${current?.slug}", "id": "${current?.id}"}`}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Portfolio" defaultValue={params.port_slug} />
       </SelectTrigger>
       <SelectContent>
         {portfolios.map((item) => (
-          <SelectItem key={item.$id} value={item.slug}>
+          <SelectItem
+            key={item.$id}
+            value={`{"slug": "${item.slug}", "id": "${item.$id}"}`}
+          >
             {item.title}
           </SelectItem>
         ))}

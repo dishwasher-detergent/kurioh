@@ -6,7 +6,7 @@ import { Models } from "appwrite";
 export interface Portfolios extends Models.Document {
   title: string;
   slug: string;
-  information: Information;
+  information: Information[];
   articles: Articles[];
   projects: Projects[];
 }

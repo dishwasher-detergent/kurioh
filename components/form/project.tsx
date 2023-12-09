@@ -178,6 +178,7 @@ export const CreateProjectForm = ({
       links: values.links?.map((x) => x.value),
       color: values.color,
       slug: slug,
+      portfolios: current?.id,
     };
 
     try {
@@ -204,7 +205,7 @@ export const CreateProjectForm = ({
           description: `Project ${values.title} created successfully.`,
         });
 
-        router.push(`/${current}/projects/${slug}`);
+        router.push(`/${current?.slug}/projects/${slug}`);
       }
     } catch (err) {
       const error = err as Error;

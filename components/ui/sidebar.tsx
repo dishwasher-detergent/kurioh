@@ -9,7 +9,7 @@ import {
   LucideBookImage,
   LucideBoxes,
   LucideFolderOpen,
-  LucidePenLine,
+  LucideLoader2,
   LucidePlus,
 } from "lucide-react";
 import Link from "next/link";
@@ -26,10 +26,15 @@ export const Sidebar = () => {
         </h1>
       </div>
       <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto p-2">
-        <li>
+        <li className="flex w-full flex-row gap-2">
           <PortfoliosSelect />
+          <Button asChild size="icon" variant="ghost">
+            <Link href={`/portfolio/create`} className="flex-none">
+              <LucidePlus className="h-4 w-4" />
+            </Link>
+          </Button>
         </li>
-        {current && (
+        {current ? (
           <>
             <li className="flex w-full flex-row gap-2">
               <Button
@@ -37,7 +42,7 @@ export const Sidebar = () => {
                 variant="ghost"
                 className="flex flex-1 flex-row justify-start gap-4"
               >
-                <Link href={`/${current}/portfolio`}>
+                <Link href={`/${current.slug}/portfolio`}>
                   <LucideFolderOpen className="h-4 w-4" />
                   Portfolio
                 </Link>
@@ -49,35 +54,45 @@ export const Sidebar = () => {
                 variant="ghost"
                 className="flex flex-1 flex-row justify-start gap-4"
               >
-                <Link href={`/${current}/projects`}>
+                <Link href={`/${current.slug}/projects`}>
                   <LucideBookImage className="h-4 w-4" />
                   Projects
                 </Link>
               </Button>
-              <Button asChild size="icon" variant="secondary">
-                <Link href={`/${current}/projects/create`}>
+              <Button asChild size="icon" variant="ghost">
+                <Link
+                  href={`/${current.slug}/projects/create`}
+                  className="flex-none"
+                >
                   <LucidePlus className="h-4 w-4" />
                 </Link>
               </Button>
             </li>
-            <li className="flex w-full flex-row gap-2">
+            {/* <li className="flex w-full flex-row gap-2">
               <Button
                 asChild
                 variant="ghost"
                 className="flex flex-1 flex-row justify-start gap-4"
               >
-                <Link href={`/${current}/articles`}>
+                <Link href={`/${current.slug}/articles`}>
                   <LucidePenLine className="h-4 w-4" />
                   Articles
                 </Link>
               </Button>
-              <Button asChild size="icon" variant="secondary">
-                <Link href={`/${current}/articles/create`}>
+              <Button asChild size="icon" variant="ghost">
+                <Link
+                  href={`/${current.slug}/articles/create`}
+                  className="flex-none"
+                >
                   <LucidePlus className="h-4 w-4" />
                 </Link>
               </Button>
-            </li>
+            </li> */}
           </>
+        ) : (
+          <div className="grid w-full place-items-center">
+            <LucideLoader2 className="animate-spin" />
+          </div>
         )}
       </ul>
       <div className="border-t p-2">

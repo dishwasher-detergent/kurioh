@@ -24,15 +24,15 @@ export const Sidebar = () => {
   const { current } = usePortfolioStore();
 
   return (
-    <aside className="flex w-60 flex-col border-r shadow">
+    <aside className="flex w-60 flex-col border-r bg-background shadow">
       <div className="flex h-16 w-full flex-none flex-row justify-center border-b px-5 shadow-sm">
         <h1 className="flex flex-row items-center gap-2 text-lg font-bold text-primary">
           <LucideBoxes className="h-6 w-6" />
           Porti
         </h1>
       </div>
-      <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto">
-        <li className="flex w-full flex-row gap-2 border-b p-2 shadow-sm">
+      <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto py-2">
+        <li className="flex w-full flex-row gap-2 px-2">
           <PortfoliosSelect />
           <TooltipProvider>
             <Tooltip>
@@ -92,26 +92,6 @@ export const Sidebar = () => {
                 </Tooltip>
               </TooltipProvider>
             </li>
-            {/* <li className="flex w-full flex-row gap-2">
-              <Button
-                asChild
-                variant="ghost"
-                className="flex flex-1 flex-row justify-start gap-4"
-              >
-                <Link href={`/${current.slug}/articles`}>
-                  <LucidePenLine className="h-4 w-4" />
-                  Articles
-                </Link>
-              </Button>
-              <Button asChild size="icon" variant="ghost">
-                <Link
-                  href={`/${current.slug}/articles/create`}
-                  className="flex-none"
-                >
-                  <LucidePlus className="h-4 w-4" />
-                </Link>
-              </Button>
-            </li> */}
           </>
         ) : (
           <div className="grid w-full place-items-center">

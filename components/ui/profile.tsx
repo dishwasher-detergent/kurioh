@@ -19,9 +19,6 @@ export const Profile = () => {
         >
           <Avatar className="h-10 w-10">
             {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-            <p className="grid h-full w-full place-items-center bg-slate-950 text-white">
-              KB
-            </p>
             <AvatarFallback>KB</AvatarFallback>
           </Avatar>
           <p className="truncate">Kenneth Bass</p>

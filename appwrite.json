@@ -1,0 +1,24 @@
+{
+    "projectId": "portfolio-cms",
+    "projectName": "portfolio-cms",
+    "functions": [
+        {
+            "$id": "projects",
+            "name": "projects",
+            "runtime": "node-18.0",
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "path": "functions/projects"
+        }
+    ]
+}

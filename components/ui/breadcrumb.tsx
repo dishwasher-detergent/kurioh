@@ -42,7 +42,7 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
                   className={`${
                     index !== crumbs!.length - 1
                       ? "text-slate-500 dark:text-slate-300"
-                      : "text-primary font-semibold"
+                      : "font-semibold text-primary"
                   } flex flex-row items-center gap-2 capitalize`}
                 >
                   {crumb.name}

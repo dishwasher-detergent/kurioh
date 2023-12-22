@@ -3,8 +3,8 @@
     "projectName": "portfolio-cms",
     "functions": [
         {
-            "$id": "projects",
-            "name": "projects",
+            "$id": "portfolio-api",
+            "name": "portfolio-api",
             "runtime": "node-18.0",
             "execute": [],
             "events": [],
@@ -12,13 +12,13 @@
             "timeout": 15,
             "enabled": true,
             "logging": true,
-            "entrypoint": "src/main.js",
-            "commands": "npm install",
+            "entrypoint": "dist/main.js",
+            "commands": "npm install && npm run build",
             "ignore": [
                 "node_modules",
                 ".npm"
             ],
-            "path": "functions/projects"
+            "path": "functions/portfolio"
         }
     ]
 }

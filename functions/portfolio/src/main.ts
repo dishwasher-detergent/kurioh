@@ -6,7 +6,8 @@ import {
   responseForContext,
   throwIfMissing,
 } from './lib/utils.js';
-import { Portfolio } from './pages/project.js';
+import { Portfolio } from './pages/portfolio.js';
+import { Project } from './pages/project.js';
 import { Context } from './types/types.js';
 
 const cache = 1440; //24 hours in seconds
@@ -22,6 +23,7 @@ app.onError((err, c) => {
 
 // API Routes
 Portfolio(app, cache);
+Project(app, cache);
 
 export default async (context: Context) => {
   throwIfMissing(process.env, [

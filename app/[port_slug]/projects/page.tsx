@@ -9,15 +9,14 @@ import {
   PROJECT_ID,
   database_service,
 } from "@/lib/appwrite";
-import { Query } from "appwrite";
 
 async function fetchProjects(port_slug: string) {
-  const response = await database_service.list<Portfolios>(
+  const response = await database_service.get<Portfolios>(
     PORTFOLIO_COLLECTION_ID,
-    [Query.equal("slug", port_slug), Query.limit(1)],
+    port_slug,
   );
 
-  return response.documents[0].projects;
+  return response.projects;
 }
 
 export default async function Projects({

@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ENDPOINT, PORTFOLIO_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
-import { LucidePlus } from "lucide-react";
+import { LucideImagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -58,8 +58,8 @@ export const ImageInput = ({ form }: ImageInputProps) => {
               className="h-24 w-24 rounded-lg"
             />
           ) : (
-            <div className="grid h-24 w-24 place-items-center rounded-lg bg-slate-200 text-slate-950">
-              <LucidePlus className="h-4 w-4" />
+            <div className="grid h-24 w-24 place-items-center rounded-lg bg-slate-100 text-slate-950 hover:bg-slate-200">
+              <LucideImagePlus className="h-4 w-4" />
             </div>
           )}
         </Label>

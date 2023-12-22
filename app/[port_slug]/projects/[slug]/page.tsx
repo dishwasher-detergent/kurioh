@@ -1,11 +1,12 @@
 import { CreateProjectForm } from "@/components/form/project";
 import { Projects } from "@/interfaces/projects";
 import { PROJECTS_COLLECTION_ID, database_service } from "@/lib/appwrite";
+import { Query } from "appwrite";
 
 async function fetchProject(slug: string) {
-  const response = await database_service.get<Projects>(
+  const response = await database_service.list<Projects>(
     PROJECTS_COLLECTION_ID,
-    slug,
+    [Query.equal("slug", slug)],
   );
 
   return response;
@@ -19,8 +20,6 @@ export default async function ProjectsCreate({
   const { slug, port_slug } = params;
   const project = await fetchProject(slug);
 
-  console.log(slug);
-
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -29,7 +28,7 @@ export default async function ProjectsCreate({
         </p>
         <h3 className="text-2xl font-bold">{slug}</h3>
       </div>
-      <CreateProjectForm title="Edit" data={project} />
+      <CreateProjectForm title="Edit" data={project.documents[0]} />
     </div>
   );
 }

@@ -46,9 +46,9 @@ export const PortfoliosSelect = () => {
         const data = JSON.parse(e);
 
         update(data);
-        router.push(`/${data.slug}`);
+        router.push(`/${data.id}`);
       }}
-      value={`{"slug": "${current?.slug}", "id": "${current?.id}"}`}
+      value={`{"id": "${current?.id}", "title": "${current?.title}"}`}
     >
       <SelectTrigger className="w-full truncate">
         <SelectValue placeholder="Portfolio" defaultValue={params.port_slug} />
@@ -57,7 +57,7 @@ export const PortfoliosSelect = () => {
         {portfolios.map((item) => (
           <SelectItem
             key={item.$id}
-            value={`{"slug": "${item.slug}", "id": "${item.$id}"}`}
+            value={`{"id": "${item.$id}", "title": "${item.title}"}`}
           >
             {item.title}
           </SelectItem>

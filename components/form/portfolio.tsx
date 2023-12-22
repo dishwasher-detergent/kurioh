@@ -52,13 +52,13 @@ export const CreatePortfolioForm = () => {
 
     const portfolio = {
       title: values.title,
-      slug: slug,
     };
 
     try {
       const response = await database_service.create<Portfolios>(
         PORTFOLIO_COLLECTION_ID,
         portfolio,
+        slug,
       );
 
       toast({
@@ -67,10 +67,10 @@ export const CreatePortfolioForm = () => {
 
       update({
         id: response.$id,
-        slug: response.slug,
+        title: response.title,
       });
 
-      router.push(`/${response.slug}`);
+      router.push(`/${response.$id}`);
     } catch (err) {
       const error = err as Error;
 

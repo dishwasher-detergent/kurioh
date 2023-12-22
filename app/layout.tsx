@@ -1,5 +1,4 @@
 import "@/app/globals.css";
-import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { Sidebar } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
@@ -31,12 +30,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex h-full w-full flex-col overflow-hidden bg-slate-50 text-foreground">
+          <main className="flex h-full w-full flex-col overflow-hidden bg-slate-50 text-foreground dark:bg-slate-900">
             <div className="flex h-full w-full flex-1 flex-row flex-nowrap">
               <Sidebar />
               <div className="flex h-full flex-1 flex-col">
                 <section className="overflow-y-auto overflow-x-hidden p-4">
-                  <BreadCrumb />
                   {children}
                 </section>
               </div>

@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 
 export interface Current {
   id: string;
-  slug: string;
+  title: string;
 }
 
 type PortfolioStore = {

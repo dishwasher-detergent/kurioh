@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ENDPOINT, PROJECTS_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
-import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
+import {
+  LucideGhost,
+  LucideImagePlus,
+  LucidePlus,
+  LucideTrash,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 
@@ -110,7 +115,7 @@ export const ImageArrayInput = ({
                     </div>
                   ) : (
                     <div className="grid h-full w-full place-items-center rounded-lg border bg-slate-200 dark:bg-slate-700">
-                      <LucidePlus className="h-4 w-4" />
+                      <LucideImagePlus className="h-4 w-4" />
                     </div>
                   )}
                 </Label>

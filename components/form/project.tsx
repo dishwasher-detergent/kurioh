@@ -197,7 +197,6 @@ export const CreateProjectForm = ({
         await database_service.create<Projects>(
           PROJECTS_COLLECTION_ID,
           project,
-          slug,
         );
 
         toast({
@@ -205,7 +204,7 @@ export const CreateProjectForm = ({
           description: `Project ${values.title} created successfully.`,
         });
 
-        router.push(`/${current?.slug}/projects/${slug}`);
+        router.push(`/${current?.id}/projects/${slug}`);
       }
     } catch (err) {
       const error = err as Error;

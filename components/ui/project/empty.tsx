@@ -15,7 +15,7 @@ export const ProjectEmpty = () => {
         No Projects!
       </p>
       <Button asChild>
-        <Link href={`/${current?.slug}/projects/create`}>Create one here!</Link>
+        <Link href={`/${current?.id}/projects/create`}>Create one here!</Link>
       </Button>
     </div>
   );

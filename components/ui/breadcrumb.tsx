@@ -32,7 +32,7 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
 
   return (
     <div>
-      <ul className="flex flex-row gap-2 text-sm">
+      <ul className="flex flex-row gap-1 pb-4 text-sm">
         {crumbs.map((crumb, index) => {
           return (
             crumb.name != "" && (
@@ -43,7 +43,7 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
                     index !== crumbs!.length - 1
                       ? "text-slate-500 dark:text-slate-300"
                       : "font-semibold text-primary"
-                  } flex flex-row items-center gap-2 capitalize`}
+                  } flex flex-row items-center gap-1 capitalize`}
                 >
                   {crumb.name}
                   {index !== (crumbs?.length ?? 0) - 1 && (

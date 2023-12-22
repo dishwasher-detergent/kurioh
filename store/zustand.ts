@@ -27,3 +27,29 @@ export const usePortfolioStore = create(
     },
   ),
 );
+
+export interface Profile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+type ProfileStore = {
+  profile: Profile | null;
+  update: (profile: Profile) => void;
+  remove: () => void;
+};
+
+export const useProfileStore = create(
+  persist<ProfileStore>(
+    (set) => ({
+      profile: null,
+      remove: () => set({ profile: null }),
+      update: (x) => set({ profile: x }),
+    }),
+    {
+      name: "profile-storage",
+      skipHydration: true,
+    },
+  ),
+);

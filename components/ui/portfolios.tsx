@@ -8,7 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Portfolios } from "@/interfaces/portfolios";
-import { PORTFOLIO_COLLECTION_ID, database_service } from "@/lib/appwrite";
+import { database_service } from "@/lib/appwrite";
+import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
 import { usePortfolioStore } from "@/store/zustand";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

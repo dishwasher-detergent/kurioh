@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ENDPOINT, PORTFOLIO_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
+import { ENDPOINT, PORTFOLIO_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { LucideImagePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";

@@ -33,12 +33,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Projects } from "@/interfaces/projects";
-import {
-  PROJECTS_BUCKET_ID,
-  PROJECTS_COLLECTION_ID,
-  database_service,
-  storage_service,
-} from "@/lib/appwrite";
+import { database_service, storage_service } from "@/lib/appwrite";
+import { PROJECTS_BUCKET_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { createSlug } from "@/lib/utils";
 import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";

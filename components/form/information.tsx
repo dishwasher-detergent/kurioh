@@ -30,12 +30,11 @@ import {
 } from "@/constants/socials";
 import { toast } from "@/hooks/use-toast";
 import { Information, Social } from "@/interfaces/information";
+import { database_service, storage_service } from "@/lib/appwrite";
 import {
   INFORMATION_COLLECTION_ID,
   PORTFOLIO_BUCKET_ID,
-  database_service,
-  storage_service,
-} from "@/lib/appwrite";
+} from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2 } from "lucide-react";
 import { useForm } from "react-hook-form";

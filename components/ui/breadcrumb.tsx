@@ -32,7 +32,7 @@ export const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
 
   return (
     <div>
-      <ul className="flex flex-row gap-1 pb-4 text-sm">
+      <ul className="flex flex-row gap-1 text-sm">
         {crumbs.map((crumb, index) => {
           return (
             crumb.name != "" && (

@@ -19,7 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Portfolios } from "@/interfaces/portfolios";
-import { PORTFOLIO_COLLECTION_ID, database_service } from "@/lib/appwrite";
+import { database_service } from "@/lib/appwrite";
+import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
 import { createSlug } from "@/lib/utils";
 import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";

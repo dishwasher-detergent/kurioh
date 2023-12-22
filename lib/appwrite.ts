@@ -1,33 +1,75 @@
-import { Client, Databases, ID, Models, Storage } from "appwrite";
-
-export const ENDPOINT =
-  process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
-export const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID as string;
-export const DATABASE_ID = process.env.NEXT_PUBLIC_DATABASE_ID as string;
-
-// Collections
-export const INFORMATION_COLLECTION_ID = process.env
-  .NEXT_PUBLIC_INFORMATION_COLLECTION_ID as string;
-export const PROJECTS_COLLECTION_ID = process.env
-  .NEXT_PUBLIC_PROJECTS_COLLECTION_ID as string;
-export const ARTICLES_COLLECTION_ID = process.env
-  .NEXT_PUBLIC_ARTICLES_COLLECTION_ID as string;
-export const PORTFOLIO_COLLECTION_ID = process.env
-  .NEXT_PUBLIC_PROTFOLIO_COLLECTION_ID as string;
-
-// Buckets
-export const PORTFOLIO_BUCKET_ID = process.env
-  .NEXT_PUBLIC_PORTFOLIO_BUCKET_ID as string;
-export const PROJECTS_BUCKET_ID = process.env
-  .NEXT_PUBLIC_PROJECTS_BUCKET_ID as string;
-export const ARTICLES_BUCKET_ID = process.env
-  .NEXT_PUBLIC_ARTICLES_BUCKET_ID as string;
+import { DATABASE_ID, ENDPOINT, PROJECT_ID } from "@/lib/constants";
+import {
+  Account,
+  Avatars,
+  Client,
+  Databases,
+  ID,
+  Models,
+  Storage,
+} from "appwrite";
 
 const client = new Client();
 client.setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
 const database = new Databases(client);
 const storage = new Storage(client);
+const account = new Account(client);
+const avatars = new Avatars(client);
+
+export const auth_service = {
+  /**
+   * Creates a phone session for the given phone number.
+   * @param phone The phone number for the user.
+   */
+  async createPhoneSession(phone: string) {
+    return await account.createPhoneSession(ID.unique(), phone);
+  },
+
+  /**
+   * Signs out the current user by deleting the current session.
+   */
+  async signOut() {
+    await account.deleteSession("current");
+  },
+
+  /**
+   * Retrieves the account information.
+   * @returns {Promise<any>} The response from the account API.
+   */
+  async getAccount() {
+    return await account.get<any>();
+  },
+
+  /**
+   * Retrieves the current session.
+   * @returns {Promise<any>} The response from the account API.
+   */
+  async getSession() {
+    return await account.getSession("current");
+  },
+
+  /**
+   * Retrieves the account picture for a given name.
+   * @param name - The name used to generate the account picture.
+   * @returns The URL of the account picture.
+   */
+  getAccountPicture(name: string) {
+    return avatars
+      .getInitials(name.split("").reverse().join(""), 256, 256)
+      .toString();
+  },
+
+  /**
+   * Sets the session hash for authentication.
+   * @param hash - The session hash to set.
+   */
+  setSession(hash: string) {
+    const authCookies: any = {};
+    authCookies["a_session_" + PROJECT_ID] = hash;
+    client.headers["X-Fallback-Cookies"] = JSON.stringify(authCookies);
+  },
+};
 
 export const database_service = {
   /**

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ENDPOINT, PROJECTS_BUCKET_ID, PROJECT_ID } from "@/lib/appwrite";
+import { ENDPOINT, PROJECTS_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import {
   LucideGhost,
   LucideImagePlus,

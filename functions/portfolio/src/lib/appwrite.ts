@@ -4,6 +4,7 @@ export const ENDPOINT =
   process.env.APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
 export const PROJECT_ID = process.env.APPWRITE_PROJECT_ID as string;
 export const DATABASE_ID = process.env.DATABASE_ID as string;
+export const API_KEY = process.env.APPWRITE_API_KEY as string;
 
 // Collections
 export const INFORMATION_COLLECTION_ID = process.env
@@ -16,7 +17,7 @@ export const PORTFOLIO_COLLECTION_ID = process.env
   .PROTFOLIO_COLLECTION_ID as string;
 
 const client = new Client();
-client.setEndpoint(ENDPOINT).setProject(PROJECT_ID);
+client.setEndpoint(ENDPOINT).setProject(PROJECT_ID).setKey(API_KEY);
 
 const database = new Databases(client);
 

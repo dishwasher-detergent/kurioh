@@ -66,6 +66,6 @@ export const PortfoliosSelect = () => {
       </SelectContent>
     </Select>
   ) : (
-    <Skeleton className="h-8 w-full" />
+    <Skeleton className="h-9 w-full" />
   );
 };

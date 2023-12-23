@@ -26,10 +26,13 @@ export const Sidebar = () => {
   return (
     <aside className="flex w-60 flex-col border-r bg-background">
       <div className="flex w-full flex-none flex-row justify-start p-5">
-        <h1 className="flex flex-row items-center gap-2 text-lg font-bold text-primary">
+        <Link
+          href="/"
+          className="flex flex-row items-center gap-2 text-lg font-bold text-primary"
+        >
           <LucideBoxes className="h-6 w-6" />
           Porti
-        </h1>
+        </Link>
       </div>
       <ul className="flex w-full flex-1 flex-col gap-2 overflow-y-auto py-2">
         <li>

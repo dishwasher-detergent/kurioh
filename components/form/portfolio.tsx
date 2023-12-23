@@ -19,11 +19,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Portfolios } from "@/interfaces/portfolios";
-import { database_service } from "@/lib/appwrite";
+import { auth_service, database_service } from "@/lib/appwrite";
 import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
 import { createSlug } from "@/lib/utils";
 import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -33,13 +34,9 @@ const formSchema = z.object({
   title: z.string().min(1).max(128),
 });
 
-interface CreatePortfolioFormProps {
-  data: Portfolios;
-}
-
 export const CreatePortfolioForm = () => {
   const router = useRouter();
-  const { current, update } = usePortfolioStore();
+  const { update } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,10 +53,13 @@ export const CreatePortfolioForm = () => {
     };
 
     try {
+      const user = await auth_service.getAccount();
+
       const response = await database_service.create<Portfolios>(
         PORTFOLIO_COLLECTION_ID,
-        portfolio,
+        { ...portfolio, creator: user.$id },
         slug,
+        [Permission.read(Role.any()), Permission.write(Role.user(user.$id))],
       );
 
       toast({

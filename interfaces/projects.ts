@@ -1,3 +1,4 @@
+import { Portfolios } from "@/interfaces/portfolios";
 import { Models } from "appwrite";
 
 export interface Projects extends Models.Document {
@@ -10,4 +11,5 @@ export interface Projects extends Models.Document {
   links: string[];
   color: string;
   slug: string;
+  portfolio: Portfolios;
 }

@@ -1,7 +1,8 @@
 import { CreateProjectForm } from "@/components/form/project";
 import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { Projects } from "@/interfaces/projects";
-import { PROJECTS_COLLECTION_ID, database_service } from "@/lib/appwrite";
+import { database_service } from "@/lib/appwrite";
+import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { Query } from "appwrite";
 import { redirect } from "next/navigation";
 
@@ -12,9 +13,13 @@ async function fetchProject(port_slug: string, slug: string) {
       [Query.equal("slug", slug)],
     );
 
-    if (response.documents.length === 0) throw new Error("Project not found");
+    const project = response.documents.filter(
+      (x) => x.portfolios.$id === port_slug,
+    );
 
-    return response;
+    if (!project) throw new Error("Project not found.");
+
+    return project[0];
   } catch (err) {
     redirect(`/${port_slug}/projects`);
   }
@@ -37,7 +42,7 @@ export default async function ProjectsCreate({
           Edit your project to make it even better!
         </p>
       </div>
-      <CreateProjectForm title="Edit" data={project.documents[0]} />
+      <CreateProjectForm title="Edit" data={project} />
     </div>
   );
 }

@@ -21,7 +21,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,11 +32,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Projects } from "@/interfaces/projects";
-import { database_service, storage_service } from "@/lib/appwrite";
+import {
+  auth_service,
+  database_service,
+  storage_service,
+} from "@/lib/appwrite";
 import { PROJECTS_BUCKET_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { createSlug } from "@/lib/utils";
 import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ID, Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -182,7 +186,7 @@ export const CreateProjectForm = ({
         await database_service.update<Projects>(
           PROJECTS_COLLECTION_ID,
           project,
-          slug,
+          data.$id,
         );
 
         toast({
@@ -190,9 +194,13 @@ export const CreateProjectForm = ({
           description: `Project ${values.title} updated successfully.`,
         });
       } else {
+        const user = await auth_service.getAccount();
+
         await database_service.create<Projects>(
           PROJECTS_COLLECTION_ID,
-          project,
+          { ...project, creator: user.$id },
+          ID.unique(),
+          [Permission.read(Role.any()), Permission.write(Role.user(user.$id))],
         );
 
         toast({
@@ -233,18 +241,12 @@ export const CreateProjectForm = ({
             <FormField
               control={form.control}
               name="title"
-              disabled={edit}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input placeholder="Sample Project" {...field} />
                   </FormControl>
-                  {edit && (
-                    <FormDescription>
-                      The title cannot be updated.
-                    </FormDescription>
-                  )}
                   <FormMessage />
                 </FormItem>
               )}

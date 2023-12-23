@@ -123,12 +123,14 @@ export const database_service = {
     collectionId: string,
     data: Omit<T, keyof Models.Document>,
     id: string = ID.unique(),
+    permissions: string[] = [],
   ) {
     const response = await database.createDocument<T>(
       DATABASE_ID,
       collectionId,
       id,
       data,
+      permissions,
     );
 
     return response;

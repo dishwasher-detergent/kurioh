@@ -11,6 +11,7 @@ import {
 import { auth_service } from "@/lib/appwrite";
 import { getInitials } from "@/lib/utils";
 import { useProfileStore } from "@/store/zustand";
+import { useEffect } from "react";
 
 export const Profile = () => {
   const { profile } = useProfileStore();
@@ -18,6 +19,10 @@ export const Profile = () => {
   async function handleLogout() {
     await auth_service.signOut();
   }
+
+  useEffect(() => {
+    useProfileStore.persist.rehydrate();
+  }, []);
 
   return (
     profile && (

@@ -1,9 +1,13 @@
 import "@/app/globals.css";
 import { Sidebar } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import { auth_service } from "@/lib/appwrite";
+import { PROJECT_ID } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Inter as FontSans } from "next/font/google";
+import { cookies } from "next/headers";
+import "server-only";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -14,7 +18,32 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
+export async function getAccount() {
+  const sessionNames = [
+    "a_session_" + PROJECT_ID.toLowerCase(),
+    "a_session_" + PROJECT_ID.toLowerCase() + "_legacy",
+  ];
+
+  const cookieStore = cookies();
+  const hash =
+    cookieStore.get(sessionNames[0]) ??
+    cookieStore.get(sessionNames[1]) ??
+    null;
+  auth_service.setSession(hash ? hash.value : "");
+
+  let account;
+  try {
+    account = await auth_service.getAccount();
+  } catch (err) {
+    account = null;
+  }
+
+  return account;
+}
+
 export default async function RootLayout({ children }: RootLayoutProps) {
+  await getAccount();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />

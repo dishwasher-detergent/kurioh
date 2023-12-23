@@ -55,9 +55,7 @@ export const auth_service = {
    * @returns The URL of the account picture.
    */
   getAccountPicture(name: string) {
-    return avatars
-      .getInitials(name.split("").reverse().join(""), 256, 256)
-      .toString();
+    return avatars.getInitials(name, 256, 256).toString();
   },
 
   /**

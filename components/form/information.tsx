@@ -58,7 +58,7 @@ const formSchema = z.object({
 });
 
 interface InformationFormProps {
-  data: Information;
+  data: Information | null;
 }
 
 export const InformationForm = ({ data }: InformationFormProps) => {

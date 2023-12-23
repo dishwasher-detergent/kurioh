@@ -22,6 +22,7 @@ import { auth_service } from "@/lib/appwrite";
 import { useProfileStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideCheck, LucideLoader2, LucideSend } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -39,6 +40,7 @@ const codeVerifyFormSchema = z.object({
 });
 
 export default function Auth() {
+  const router = useRouter();
   const [smsSent, setSmsSent] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const { update } = useProfileStore();
@@ -102,6 +104,8 @@ export default function Auth() {
       toast({
         title: "Code Verified!",
       });
+
+      router.push("/");
     } catch (err) {
       const error = err as Error;
 
@@ -118,67 +122,76 @@ export default function Auth() {
       <CardHeader>
         <CardTitle>{smsSent ? "Verify Code" : "Log In"}</CardTitle>
       </CardHeader>
-      <Form {...codeVerifyForm}>
-        <form onSubmit={codeVerifyForm.handleSubmit(onCodeVerifySubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={codeVerifyForm.control}
-              name="secret"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="123456" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="flex flex-row justify-end gap-2">
-            <Button
-              type="submit"
-              disabled={codeVerifyForm.formState.isSubmitting}
-            >
-              {codeVerifyForm.formState.isSubmitting ? (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <LucideCheck className="mr-2 h-4 w-4" />
-              )}
-              Verify Code
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-      <Form {...codeForm}>
-        <form onSubmit={codeForm.handleSubmit(onCodeSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={codeForm.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="+1405888888" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="flex flex-row justify-end gap-2">
-            <Button type="submit" disabled={codeForm.formState.isSubmitting}>
-              {codeForm.formState.isSubmitting ? (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <LucideSend className="mr-2 h-4 w-4" />
-              )}
-              Send Code
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
+      {smsSent ? (
+        <Form {...codeVerifyForm}>
+          <form onSubmit={codeVerifyForm.handleSubmit(onCodeVerifySubmit)}>
+            <CardContent className="space-y-4">
+              <FormField
+                key="secret"
+                control={codeVerifyForm.control}
+                name="secret"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Code</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="123456"
+                        autoComplete="one-time-code"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex flex-row justify-end gap-2">
+              <Button
+                type="submit"
+                disabled={codeVerifyForm.formState.isSubmitting}
+              >
+                {codeVerifyForm.formState.isSubmitting ? (
+                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <LucideCheck className="mr-2 h-4 w-4" />
+                )}
+                Verify Code
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      ) : (
+        <Form {...codeForm}>
+          <form onSubmit={codeForm.handleSubmit(onCodeSubmit)}>
+            <CardContent className="space-y-4">
+              <FormField
+                key="phone"
+                control={codeForm.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+1405888888" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex flex-row justify-end gap-2">
+              <Button type="submit" disabled={codeForm.formState.isSubmitting}>
+                {codeForm.formState.isSubmitting ? (
+                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <LucideSend className="mr-2 h-4 w-4" />
+                )}
+                Send Code
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      )}
     </Card>
   );
 }

@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { PortfoliosSelect } from "@/components/ui/portfolios";
 import { Profile } from "@/components/ui/profile";
-import { ModeToggle } from "@/components/ui/theme-toggle";
 import { usePortfolioStore } from "@/store/zustand";
 import {
   LucideBookImage,
@@ -112,9 +111,6 @@ export const Sidebar = () => {
           </div>
         )}
       </ul>
-      <div className="border-t p-2">
-        <ModeToggle />
-      </div>
       <div className="border-t p-2">
         <Profile />
       </div>

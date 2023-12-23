@@ -21,6 +21,7 @@ async function fetchProjects(port_slug: string) {
 
     return response.projects;
   } catch (err) {
+    console.error(err);
     redirect("/");
   }
 }

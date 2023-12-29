@@ -1,7 +1,14 @@
 import { CreateProjectForm } from "@/components/form/project";
 import { BreadCrumb } from "@/components/ui/breadcrumb";
+import { checkAuth } from "@/lib/utils";
 
-export default function ProjectsCreate({ params }: { params: { id: string } }) {
+export default async function ProjectsCreate({
+  params,
+}: {
+  params: { id: string };
+}) {
+  await checkAuth();
+
   return (
     <div className="flex flex-col gap-4">
       <BreadCrumb />

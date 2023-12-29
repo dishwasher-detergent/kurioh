@@ -1,12 +1,12 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
-import { Badge } from "../badge";
 
 interface ArrayInputProps {
   title: string;

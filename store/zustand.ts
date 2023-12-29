@@ -1,7 +1,8 @@
 "use client";
 
+import { auth_service } from "@/lib/appwrite";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 
 export interface Current {
   id: string;
@@ -14,6 +15,31 @@ type PortfolioStore = {
   remove: () => void;
 };
 
+const storage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    const response = await auth_service.getPrefs();
+    const item = response[name];
+    return item || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    const response = await auth_service.getPrefs();
+
+    await auth_service.updatePrefs({
+      ...response,
+      [name]: value,
+    });
+  },
+  removeItem: async (name: string): Promise<void> => {
+    const response = await auth_service.getPrefs();
+
+    delete response[name];
+
+    await auth_service.updatePrefs({
+      ...response,
+    });
+  },
+};
+
 export const usePortfolioStore = create(
   persist<PortfolioStore>(
     (set) => ({
@@ -24,6 +50,7 @@ export const usePortfolioStore = create(
     {
       name: "porti-storage",
       skipHydration: true,
+      storage: createJSONStorage(() => storage),
     },
   ),
 );

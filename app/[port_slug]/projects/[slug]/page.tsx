@@ -3,6 +3,7 @@ import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { Projects } from "@/interfaces/projects";
 import { database_service } from "@/lib/appwrite";
 import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
+import { checkAuth } from "@/lib/utils";
 import { Query } from "appwrite";
 import { redirect } from "next/navigation";
 
@@ -31,6 +32,7 @@ export default async function ProjectsCreate({
 }: {
   params: { slug: string; port_slug: string };
 }) {
+  await checkAuth();
   const { slug, port_slug } = params;
   const project = await fetchProject(port_slug, slug);
 

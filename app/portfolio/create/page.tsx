@@ -1,7 +1,10 @@
 import { CreatePortfolioForm } from "@/components/form/portfolio";
 import { BreadCrumb } from "@/components/ui/breadcrumb";
+import { checkAuth } from "@/lib/utils";
 
-export default function PortfolioCreate() {
+export default async function PortfolioCreate() {
+  await checkAuth();
+
   return (
     <div className="flex flex-col gap-4">
       <BreadCrumb />

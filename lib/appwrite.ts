@@ -43,7 +43,7 @@ export const auth_service = {
 
   /**
    * Retrieves the current session.
-   * @returns {Promise<any>} The response from the account API.
+   * @returns {Promise<Models.Session>} The response from the account API.
    */
   async getSession() {
     return await account.getSession("current");
@@ -56,6 +56,23 @@ export const auth_service = {
    */
   getAccountPicture(name: string) {
     return avatars.getInitials(name, 256, 256).toString();
+  },
+
+  /**
+   * Retrieves the preferences of the current user.
+   * @returns {Promise<Models.Preferences>} A promise that resolves with the user's preferences.
+   */
+  async getPrefs() {
+    return await account.getPrefs();
+  },
+
+  /**
+   * Updates the preferences with the provided object.
+   * @param prefs - The preferences object to update.
+   * @returns A promise that resolves with the updated preferences.
+   */
+  async updatePrefs(prefs: Object) {
+    return await account.updatePrefs(prefs);
   },
 
   /**

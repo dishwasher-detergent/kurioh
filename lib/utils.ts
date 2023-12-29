@@ -1,4 +1,6 @@
+import { auth_service } from "@/lib/appwrite";
 import { clsx, type ClassValue } from "clsx";
+import { redirect } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -41,4 +43,14 @@ export function getInitials(name: string): string {
   }
 
   return initials;
+}
+
+export async function checkAuth() {
+  try {
+    await auth_service.getAccount();
+  } catch (e) {
+    console.log(e);
+
+    redirect("/auth/login");
+  }
 }

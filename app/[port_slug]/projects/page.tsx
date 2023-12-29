@@ -10,7 +10,7 @@ import {
   PROJECTS_BUCKET_ID,
   PROJECT_ID,
 } from "@/lib/constants";
-import { redirect } from "next/navigation";
+import { checkAuth } from "@/lib/utils";
 
 async function fetchProjects(port_slug: string) {
   try {
@@ -22,7 +22,7 @@ async function fetchProjects(port_slug: string) {
     return response.projects;
   } catch (err) {
     console.error(err);
-    redirect("/");
+    return null;
   }
 }
 
@@ -31,6 +31,7 @@ export default async function Projects({
 }: {
   params: { slug: string; port_slug: string };
 }) {
+  await checkAuth();
   const { port_slug } = params;
   const projects = await fetchProjects(port_slug);
 
@@ -40,15 +41,15 @@ export default async function Projects({
       <div>
         <h3 className="flex flex-row items-center gap-2 text-2xl font-bold">
           Projects
-          <Badge variant="secondary">{projects.length}</Badge>
+          <Badge variant="secondary">{projects?.length ?? 0}</Badge>
         </h3>
         <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">
           All your cherished projects in one place.
         </p>
       </div>
-      {projects.length === 0 && <ProjectEmpty />}
+      {(projects?.length === 0 || !projects) && <ProjectEmpty />}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {projects.map((project) => (
+        {projects?.map((project) => (
           <ProjectCard
             key={project.$id}
             id={project.$id}

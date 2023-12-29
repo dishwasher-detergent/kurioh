@@ -8,21 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ModeToggle } from "@/components/ui/theme-toggle";
+import { useAuth } from "@/hooks/use-auth";
 import { auth_service } from "@/lib/appwrite";
 import { getInitials } from "@/lib/utils";
 import { useProfileStore } from "@/store/zustand";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { ModeToggle } from "./theme-toggle";
 
 export const Profile = () => {
   const router = useRouter();
-  const { remove, profile } = useProfileStore();
+  const { logout, profile } = useAuth();
 
   async function handleLogout() {
-    await auth_service.signOut();
-    remove();
+    await logout();
     router.push("/");
   }
 
@@ -55,8 +54,11 @@ export const Profile = () => {
       </DropdownMenuContent>
     </DropdownMenu>
   ) : (
-    <Button asChild className="w-full">
-      <Link href="/auth/login">Login</Link>
+    <Button variant="ghost" className="flex h-12 w-full justify-start gap-2">
+      <Avatar className="h-8 w-8">
+        <AvatarFallback>NB</AvatarFallback>
+      </Avatar>
+      <p className="truncate">Nobody</p>
     </Button>
   );
 };

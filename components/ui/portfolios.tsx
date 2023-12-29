@@ -7,13 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Portfolios } from "@/interfaces/portfolios";
 import { database_service } from "@/lib/appwrite";
 import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
 import { usePortfolioStore } from "@/store/zustand";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Skeleton } from "./skeleton";
 
 export const PortfoliosSelect = () => {
   const { current, update } = usePortfolioStore();

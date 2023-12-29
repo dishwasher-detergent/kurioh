@@ -3,6 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { PortfoliosSelect } from "@/components/ui/portfolios";
 import { Profile } from "@/components/ui/profile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { usePortfolioStore } from "@/store/zustand";
 import {
   LucideBookImage,
@@ -12,12 +18,6 @@ import {
   LucidePlus,
 } from "lucide-react";
 import Link from "next/link";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./tooltip";
 
 export const Sidebar = () => {
   const { current } = usePortfolioStore();

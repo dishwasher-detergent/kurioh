@@ -17,9 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
 import { auth_service } from "@/lib/appwrite";
-import { useProfileStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideCheck, LucideLoader2, LucideSend } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -43,7 +43,7 @@ export default function Auth() {
   const router = useRouter();
   const [smsSent, setSmsSent] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const { update } = useProfileStore();
+  const { login } = useAuth();
 
   const codeForm = useForm<z.infer<typeof codeFormSchema>>({
     resolver: zodResolver(codeFormSchema),
@@ -83,38 +83,9 @@ export default function Auth() {
   async function onCodeVerifySubmit(
     values: z.infer<typeof codeVerifyFormSchema>,
   ) {
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "PUT",
-        body: `{ "userId": "${userId}", "secret": "${values.secret}" }`,
-      });
+    await login(userId!, values.secret);
 
-      if (!response.ok) {
-        throw new Error("Code verification failed!");
-      }
-
-      const user = await auth_service.getAccount();
-
-      update({
-        id: user.$id,
-        name: user.name,
-        email: user.email,
-      });
-
-      toast({
-        title: "Code Verified!",
-      });
-
-      router.push("/");
-    } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while verifying your code.",
-        description: error.message,
-      });
-    }
+    router.push("/");
   }
 
   return (

@@ -6,7 +6,7 @@
             "$id": "portfolio-api",
             "name": "portfolio-api",
             "runtime": "node-18.0",
-            "execute": [],
+            "execute": ["any"],
             "events": [],
             "schedule": "",
             "timeout": 15,

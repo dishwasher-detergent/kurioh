@@ -6,6 +6,7 @@ import {
   responseForContext,
   throwIfMissing,
 } from './lib/utils.js';
+import { Home } from './pages/home.js';
 import { Portfolios } from './pages/portfolio.js';
 import { Projects } from './pages/project.js';
 import { Context } from './types/types.js';
@@ -22,6 +23,7 @@ app.onError((err, c) => {
 });
 
 // API Routes
+Home(app, cache);
 Portfolios(app, cache);
 Projects(app, cache);
 

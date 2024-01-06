@@ -1,4 +1,5 @@
-import { Client, Databases, Models } from 'node-appwrite';
+import { Client, Databases, Models, Storage } from 'node-appwrite';
+import { ImagePreview } from '../types/types.js';
 
 export const ENDPOINT =
   process.env.APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
@@ -16,10 +17,16 @@ export const ARTICLES_COLLECTION_ID = process.env
 export const PORTFOLIO_COLLECTION_ID = process.env
   .PROTFOLIO_COLLECTION_ID as string;
 
+// Buckets
+export const PORTFOLIO_BUCKET_ID = process.env.PORTFOLIO_BUCKET_ID as string;
+export const PROJECTS_BUCKET_ID = process.env.PROJECTS_BUCKET_ID as string;
+export const ARTICLES_BUCKET_ID = process.env.ARTICLES_BUCKET_ID as string;
+
 const client = new Client();
 client.setEndpoint(ENDPOINT).setProject(PROJECT_ID).setKey(API_KEY);
 
 const database = new Databases(client);
+const storage = new Storage(client);
 
 export const database_service = {
   /**
@@ -58,5 +65,71 @@ export const database_service = {
     );
 
     return response;
+  },
+};
+
+export const storage_service = {
+  /**
+   * Retrieves a file from the specified storage bucket.
+   *
+   * @param {string} bucketId - The ID of the bucket where the file is stored.
+   * @param {string} id - The ID of the file to retrieve.
+   * @returns A promise that resolves to the retrieved file.
+   */
+  async get(bucketId: string, id: string) {
+    const response = await storage.getFile(bucketId, id);
+
+    return response;
+  },
+
+  /**
+   * Retrieves a list of files from the specified storage bucket.
+   *
+   * @param {string} bucketId - The ID of the bucket to retrieve files from.
+   * @returns A promise that resolves to an array of files.
+   */
+  async list(bucketId: string) {
+    const response = await storage.listFiles(bucketId);
+
+    return response;
+  },
+
+  async getFilePreview(bucketId: string, id: string, options?: ImagePreview) {
+    const defaultOptions = {
+      width: undefined,
+      height: undefined,
+      gravity: undefined,
+      quality: undefined,
+      borderWidth: undefined,
+      borderColor: undefined,
+      borderRadius: undefined,
+      opacity: undefined,
+      rotation: undefined,
+      background: undefined,
+      output: undefined,
+    };
+
+    const combinedOptions = {
+      ...defaultOptions,
+      ...options,
+    };
+
+    const response = await storage.getFilePreview(
+      bucketId,
+      id,
+      combinedOptions.width,
+      combinedOptions.height,
+      combinedOptions.gravity,
+      combinedOptions.quality,
+      combinedOptions.borderWidth,
+      combinedOptions.borderColor,
+      combinedOptions.borderRadius,
+      combinedOptions.opacity,
+      combinedOptions.rotation,
+      combinedOptions.background,
+      combinedOptions.output
+    );
+
+    return response.toString('base64');
   },
 };

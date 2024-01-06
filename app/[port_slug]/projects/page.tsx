@@ -10,7 +10,6 @@ import {
   PROJECTS_BUCKET_ID,
   PROJECT_ID,
 } from "@/lib/constants";
-import { checkAuth } from "@/lib/utils";
 
 async function fetchProjects(port_slug: string) {
   try {
@@ -31,7 +30,6 @@ export default async function Projects({
 }: {
   params: { slug: string; port_slug: string };
 }) {
-  await checkAuth();
   const { port_slug } = params;
   const projects = await fetchProjects(port_slug);
 

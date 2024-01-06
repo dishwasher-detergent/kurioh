@@ -39,6 +39,7 @@ import {
   INFORMATION_COLLECTION_ID,
   PORTFOLIO_BUCKET_ID,
 } from "@/lib/constants";
+import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ID, Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
@@ -62,6 +63,8 @@ interface InformationFormProps {
 }
 
 export const InformationForm = ({ data }: InformationFormProps) => {
+  const { current } = usePortfolioStore();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -132,19 +135,24 @@ export const InformationForm = ({ data }: InformationFormProps) => {
       });
     }
 
+    const social = [
+      `{"url":"${BITBUCKET}","value":"${values.bitbucket}"}`,
+      `{"url":"${CODEPEN}","value":"${values.codepen}"}`,
+      `{"url":"${GITHUB}","value":"${values.github}"}`,
+      `{"url":"${GITLAB}","value":"${values.gitlab}"}`,
+      `{"url":"${LINKEDIN}","value":"${values.linkedin}"}`,
+      `{"url":"${TWITTER}","value":"${values.twitter}"}`,
+    ];
+
     const information = {
       title: values.title,
       description: values.description,
       icon: image?.$id ?? values.image,
-      social: [
-        `{"url":"${BITBUCKET}","value":"${values.bitbucket}"}`,
-        `{"url":"${CODEPEN}","value":"${values.codepen}"}`,
-        `{"url":"${GITHUB}","value":"${values.github}"}`,
-        `{"url":"${GITLAB}","value":"${values.gitlab}"}`,
-        `{"url":"${LINKEDIN}","value":"${values.linkedin}"}`,
-        `{"url":"${TWITTER}","value":"${values.twitter}"}`,
-      ],
+      social: social.filter((item) => JSON.parse(item).value !== ""),
+      portfolios: current?.id,
     };
+
+    console.log(information);
 
     try {
       if (data?.$id) {

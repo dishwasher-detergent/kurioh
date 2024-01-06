@@ -4,7 +4,6 @@ import { Information, Social } from "@/interfaces/information";
 import { Portfolios } from "@/interfaces/portfolios";
 import { database_service } from "@/lib/appwrite";
 import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
-import { checkAuth } from "@/lib/utils";
 
 async function fetchInformation(port_slug: string) {
   let response;
@@ -43,7 +42,6 @@ export default async function Portfolio({
 }: {
   params: { port_slug: string };
 }) {
-  await checkAuth();
   const { port_slug } = params;
   const information = await fetchInformation(port_slug);
 

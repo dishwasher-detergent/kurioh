@@ -8,7 +8,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { extractWebsiteName, isValidUrl } from "@/lib/utils";
-import { LucideExternalLink, LucideGithub } from "lucide-react";
+import {
+  LucideCodepen,
+  LucideExternalLink,
+  LucideGitBranch,
+  LucideGithub,
+  LucideLinkedin,
+} from "lucide-react";
 
 interface ProjectWebsitesProps {
   websites: string[];
@@ -20,6 +26,12 @@ const renderSiteIcon = (param: string) => {
       return LucideGithub;
     case "gitlab":
       return LucideGithub;
+    case "linkedin":
+      return LucideLinkedin;
+    case "codepen":
+      return LucideCodepen;
+    case "bitbucket":
+      return LucideGitBranch;
     default:
       return LucideExternalLink;
   }

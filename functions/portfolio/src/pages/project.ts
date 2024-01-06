@@ -38,6 +38,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
       const portfolio_slug = c.req.param('portfolio_slug');
       const project_slug = c.req.param('project_slug');
       const image_id = c.req.param('image_id');
+      const queryParams = c.req.query();
 
       const response = await database_service.get<Portfolios>(
         PORTFOLIO_COLLECTION_ID,
@@ -66,9 +67,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         PROJECTS_BUCKET_ID,
         image,
         {
-          quality: 50,
-          width: 800,
-          output: 'png',
+          ...queryParams,
         }
       );
 

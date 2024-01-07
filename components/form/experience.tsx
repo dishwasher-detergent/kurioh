@@ -39,6 +39,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
         data?.map((x) => ({
           value: {
             id: x.$id,
+            company: x.company,
             title: x.title,
             description: x.description,
             start: x.start,
@@ -93,6 +94,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
           const response = await database_service.create<Experience>(
             EXPERIENCE_COLLECTION_ID,
             {
+              company: exp.company,
               title: exp.title,
               description: exp.description,
               start: exp.start,

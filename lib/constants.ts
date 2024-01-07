@@ -14,6 +14,8 @@ export const ARTICLES_COLLECTION_ID = process.env
   .NEXT_PUBLIC_ARTICLES_COLLECTION_ID as string;
 export const PORTFOLIO_COLLECTION_ID = process.env
   .NEXT_PUBLIC_PROTFOLIO_COLLECTION_ID as string;
+export const EXPERIENCE_COLLECTION_ID = process.env
+  .NEXT_PUBLIC_EXPERIENCE_COLLECTION_ID as string;
 
 // Buckets
 export const PORTFOLIO_BUCKET_ID = process.env

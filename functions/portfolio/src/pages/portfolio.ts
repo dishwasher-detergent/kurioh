@@ -37,11 +37,19 @@ export function Portfolios(app: Hono, cacheDuration: number = 1440) {
       links: project.links,
     }));
 
+    const formattedExperience = response.experience.map((experience) => ({
+      title: experience.title,
+      description: experience.description,
+      start: experience.start,
+      end: experience.end,
+    }));
+
     const prunedResponse = {
       title: response.title,
       slug: response.$id,
       information: formattedInformation,
       projects: formattedProject,
+      experience: formattedExperience,
     };
 
     return c.json(prunedResponse, 200, {

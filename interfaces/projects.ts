@@ -11,5 +11,5 @@ export interface Projects extends Models.Document {
   links: string[];
   color: string;
   slug: string;
-  portfolio: Portfolios;
+  portfolios: Portfolios;
 }

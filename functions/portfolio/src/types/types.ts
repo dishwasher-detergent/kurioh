@@ -31,6 +31,17 @@ export interface Portfolios extends Models.Document {
   slug: string;
   projects: Projects[];
   information: Information[];
+  experience: Experience[];
+}
+
+export interface Experience extends Models.Document {
+  title: string;
+  description: string;
+  current: boolean;
+  start: Date;
+  end: Date;
+  portfolios: Portfolios;
+  creator: string;
 }
 
 export interface ImagePreview {

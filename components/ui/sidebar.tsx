@@ -13,6 +13,7 @@ import { usePortfolioStore } from "@/store/zustand";
 import {
   LucideBookImage,
   LucideBoxes,
+  LucideBriefcase,
   LucideFolderOpen,
   LucideLoader2,
   LucidePlus,
@@ -103,6 +104,18 @@ export const Sidebar = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+            </li>
+            <li className="flex w-full flex-row gap-2 px-2">
+              <Button
+                asChild
+                variant="ghost"
+                className="flex flex-1 flex-row justify-start gap-4"
+              >
+                <Link href={`/${current.id}/experience`}>
+                  <LucideBriefcase className="h-4 w-4" />
+                  Experience
+                </Link>
+              </Button>
             </li>
           </>
         ) : (

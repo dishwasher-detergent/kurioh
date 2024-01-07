@@ -77,6 +77,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
           await database_service.update<Experience>(
             EXPERIENCE_COLLECTION_ID,
             {
+              company: exp.company,
               title: exp.title,
               description: exp.description,
               start: exp.start,

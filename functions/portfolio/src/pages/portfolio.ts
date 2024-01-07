@@ -38,6 +38,7 @@ export function Portfolios(app: Hono, cacheDuration: number = 1440) {
     }));
 
     const formattedExperience = response.experience.map((experience) => ({
+      company: experience.company,
       title: experience.title,
       description: experience.description,
       start: experience.start,

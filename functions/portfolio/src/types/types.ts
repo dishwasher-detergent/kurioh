@@ -35,9 +35,9 @@ export interface Portfolios extends Models.Document {
 }
 
 export interface Experience extends Models.Document {
+  company: string;
   title: string;
   description: string;
-  current: boolean;
   start: Date;
   end: Date;
   portfolios: Portfolios;

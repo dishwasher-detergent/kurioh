@@ -56,6 +56,13 @@ export const ExperienceArrayInput = ({
                     className="hidden"
                   />
                   <div className="space-y-1">
+                    <Label>Company</Label>
+                    <Input
+                      {...register(`${name}.${index}.value.company`)}
+                      className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
                     <Label>Title</Label>
                     <Input
                       {...register(`${name}.${index}.value.title`)}

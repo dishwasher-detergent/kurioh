@@ -18,13 +18,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
-import { toast } from "@/hooks/use-toast";
 import { auth_service } from "@/lib/appwrite";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideCheck, LucideLoader2, LucideSend } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const phoneRegex = new RegExp(
@@ -56,20 +56,12 @@ export default function Auth() {
     try {
       const response = await auth_service.createPhoneSession(values.phone);
 
-      toast({
-        title: "Code send!",
-      });
+      toast("Code Sent!");
 
       setUserId(response.userId);
       setSmsSent(true);
     } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while sending your code.",
-        description: error.message,
-      });
+      toast.error("An error occurred while sending your code.");
     }
   }
 

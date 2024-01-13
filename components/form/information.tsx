@@ -28,7 +28,6 @@ import {
   LINKEDIN,
   TWITTER,
 } from "@/constants/socials";
-import { toast } from "@/hooks/use-toast";
 import { Information, Social } from "@/interfaces/information";
 import {
   auth_service,
@@ -44,6 +43,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ID, Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -120,19 +120,10 @@ export const InformationForm = ({ data }: InformationFormProps) => {
           values.image[0],
         );
 
-        toast({
-          title: "Uploaded.",
-          description: `Image ${image.name} uploaded successfully.`,
-        });
+        toast.success(`Image ${image.name} uploaded successfully.`);
       }
     } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while uploading your images.",
-        description: error.message,
-      });
+      toast.error("An error occurred while uploading your images.");
     }
 
     const social = [
@@ -162,9 +153,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
           data.$id,
         );
 
-        toast({
-          title: "Information Updated.",
-        });
+        toast.success("Information updated successfully.");
       } else {
         const user = await auth_service.getAccount();
 
@@ -175,18 +164,12 @@ export const InformationForm = ({ data }: InformationFormProps) => {
           [Permission.read(Role.any()), Permission.write(Role.user(user.$id))],
         );
 
-        toast({
-          title: "Information Created.",
-        });
+        toast.success("Information created successfully.");
       }
     } catch (err) {
       const error = err as Error;
 
-      toast({
-        variant: "destructive",
-        title: "An error occurred while uploading your images.",
-        description: error.message,
-      });
+      toast.error("An error occurred while uploading your images.");
     }
   }
 

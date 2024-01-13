@@ -30,7 +30,6 @@ import { ArrayInput } from "@/components/ui/form/array";
 import { ImageArrayInput } from "@/components/ui/form/image_array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import { Projects } from "@/interfaces/projects";
 import {
   auth_service,
@@ -45,6 +44,7 @@ import { ID, Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -85,7 +85,6 @@ export const CreateProjectForm = ({
 }: CreateProjectFormProps) => {
   const edit = data ? true : false;
   const router = useRouter();
-  const { toast } = useToast();
   const { current } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -108,20 +107,11 @@ export const CreateProjectForm = ({
     try {
       await database_service.delete(PROJECTS_COLLECTION_ID, data?.$id);
 
-      toast({
-        title: "Project Deleted.",
-        description: `Project ${data.title} deleted successfully.`,
-      });
+      toast.success(`Project ${data.title} deleted successfully.`);
 
       router.push(`/projects`);
     } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while deleting your project.",
-        description: error.message,
-      });
+      toast.error("An error occurred while deleting your project.");
     }
   }
 
@@ -147,21 +137,12 @@ export const CreateProjectForm = ({
 
             images.push(response.$id);
 
-            toast({
-              title: "Uploaded.",
-              description: `Image ${response.name} uploaded successfully.`,
-            });
+            toast.success(`Image ${response.name} uploaded successfully.`);
           }
         }
       }
     } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while uploading your images.",
-        description: error.message,
-      });
+      toast.error("An error occurred while uploading your images.");
     }
 
     images = [...existing_images, ...images];
@@ -189,10 +170,7 @@ export const CreateProjectForm = ({
           data.$id,
         );
 
-        toast({
-          title: "Project Updated.",
-          description: `Project ${values.title} updated successfully.`,
-        });
+        toast.success(`Project ${values.title} updated successfully.`);
       } else {
         const user = await auth_service.getAccount();
 
@@ -203,21 +181,14 @@ export const CreateProjectForm = ({
           [Permission.read(Role.any()), Permission.write(Role.user(user.$id))],
         );
 
-        toast({
-          title: "Project Created.",
-          description: `Project ${values.title} created successfully.`,
-        });
+        toast.success(`Project ${values.title} created successfully.`);
 
         router.push(`/${current?.id}/projects/${slug}`);
       }
     } catch (err) {
       const error = err as Error;
 
-      toast({
-        variant: "destructive",
-        title: "An error occurred while creating your project.",
-        description: error.message,
-      });
+      toast.error("An error occurred while creating your project.");
 
       if (
         error.message.includes("Document with the requested ID already exists.")

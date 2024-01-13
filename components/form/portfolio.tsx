@@ -17,7 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
 import { Portfolios } from "@/interfaces/portfolios";
 import { auth_service, database_service } from "@/lib/appwrite";
 import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
@@ -28,6 +27,7 @@ import { Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -62,9 +62,7 @@ export const CreatePortfolioForm = () => {
         [Permission.read(Role.any()), Permission.write(Role.user(user.$id))],
       );
 
-      toast({
-        title: "Portfolio Created.",
-      });
+      toast.success(`Portfolio ${response.title} created successfully.`);
 
       update({
         id: response.$id,
@@ -73,13 +71,7 @@ export const CreatePortfolioForm = () => {
 
       router.push(`/${response.$id}`);
     } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while creating your portfolio.",
-        description: error.message,
-      });
+      toast.error("An error occurred while creating your portfolio.");
     }
   }
 

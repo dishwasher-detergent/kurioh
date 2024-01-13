@@ -1,6 +1,6 @@
-import { toast } from "@/hooks/use-toast";
 import { auth_service } from "@/lib/appwrite";
 import { useProfileStore } from "@/store/zustand";
+import { toast } from "sonner";
 
 export const useAuth = () => {
   const { update, remove, profile } = useProfileStore();
@@ -12,15 +12,10 @@ export const useAuth = () => {
     });
 
     if (!response.ok) {
-      toast({
-        variant: "destructive",
-        title: "An error occurred while verifying your code.",
-      });
+      toast.error("An error occurred while verifying your code.");
     }
 
-    toast({
-      title: "Code Verified!",
-    });
+    toast.success("Code Verified!");
 
     const userObj = await auth_service.getAccount();
 
@@ -35,9 +30,7 @@ export const useAuth = () => {
     await auth_service.signOut();
     remove();
 
-    toast({
-      title: "Logged out!",
-    });
+    toast("Logged out!");
   };
 
   return { login, logout, profile };

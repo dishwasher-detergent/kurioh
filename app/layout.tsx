@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import { Sidebar } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Inter as FontSans } from "next/font/google";
@@ -13,29 +13,6 @@ export const fontSans = FontSans({
 interface RootLayoutProps {
   children: React.ReactNode;
 }
-
-// export async function getAccount() {
-//   const sessionNames = [
-//     "a_session_" + PROJECT_ID.toLowerCase(),
-//     "a_session_" + PROJECT_ID.toLowerCase() + "_legacy",
-//   ];
-
-//   const cookieStore = cookies();
-//   const hash =
-//     cookieStore.get(sessionNames[0]) ??
-//     cookieStore.get(sessionNames[1]) ??
-//     null;
-//   auth_service.setSession(hash ? hash.value : "");
-
-//   let account;
-//   try {
-//     account = await auth_service.getAccount();
-//   } catch (err) {
-//     account = null;
-//   }
-
-//   return account;
-// }
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
@@ -63,7 +40,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
             </div>
           </main>
-          <Toaster />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

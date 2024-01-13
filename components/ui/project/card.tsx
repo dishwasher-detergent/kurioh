@@ -10,6 +10,17 @@ import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { usePortfolioStore } from "@/store/zustand";
 import { LucidePencil, LucideTrash } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
 
 interface ProjectCardProps {
   id: string;
@@ -32,7 +43,13 @@ export const ProjectCard = ({
 }: ProjectCardProps) => {
   const { current } = usePortfolioStore();
   async function deleteProject() {
-    await database_service.delete(PROJECTS_COLLECTION_ID, id);
+    try {
+      await database_service.delete(PROJECTS_COLLECTION_ID, id);
+
+      toast.success(`Project ${title} deleted successfully.`);
+    } catch (err) {
+      toast.message("An error occurred while deleting your project.");
+    }
   }
 
   return (
@@ -47,10 +64,41 @@ export const ProjectCard = ({
         <ProjectWebsites websites={websites} />
       </CardContent>
       <CardFooter className="flex flex-row justify-end gap-2">
-        <Button variant="destructive" onClick={() => deleteProject()}>
-          <LucideTrash className="mr-2 h-4 w-4" />
-          Delete
-        </Button>
+        <div className="flex-1">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="destructive">
+                <LucideTrash className="mr-2 h-4 w-4" />
+                Delete
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  this project.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="sm:justify-start">
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => deleteProject()}
+                  >
+                    Yes
+                  </Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary">
+                    No
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
         <Button asChild>
           <Link href={`/${current?.id}/projects/${slug}`}>
             <>

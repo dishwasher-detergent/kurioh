@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import { Experience } from "@/interfaces/experience";
 import { auth_service, database_service } from "@/lib/appwrite";
 import { EXPERIENCE_COLLECTION_ID } from "@/lib/constants";
@@ -18,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ID, Permission, Role } from "appwrite";
 import { LucideLoader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 import { ExperienceArrayInput } from "../ui/form/experience-array";
 
@@ -65,11 +65,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
         for (const id of difference) {
           await database_service.delete(EXPERIENCE_COLLECTION_ID, id);
 
-          toast({
-            variant: "destructive",
-            title: "Experience Deleted.",
-            description: `Experience deleted successfully.`,
-          });
+          toast.error("An error occurred while deleting your experiences.");
         }
       }
 
@@ -86,10 +82,8 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
             },
             exp.id,
           );
-          toast({
-            title: "Experience Updated.",
-            description: `Experience ${exp.title} updated successfully.`,
-          });
+
+          toast.success("Experience updated successfully.");
         } else {
           const response = await database_service.create<Experience>(
             EXPERIENCE_COLLECTION_ID,
@@ -120,20 +114,11 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
 
           form.setValue("experience", newValues);
 
-          toast({
-            title: "Experience Created.",
-            description: `Experience ${exp.title} created successfully.`,
-          });
+          toast.success(`Experience ${exp.title} created successfully.`);
         }
       }
     } catch (err) {
-      const error = err as Error;
-
-      toast({
-        variant: "destructive",
-        title: "An error occurred while creating your experiences.",
-        description: error.message,
-      });
+      toast.error("An error occurred while creating your experiences.");
     }
   }
 

@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { ProjectCard } from "@/components/ui/project/card";
+import { CreateProject } from "@/components/ui/project/create";
 import { ProjectEmpty } from "@/components/ui/project/empty";
 import { Portfolios } from "@/interfaces/portfolios";
 import { database_service } from "@/lib/appwrite";
@@ -46,7 +47,8 @@ export default async function Projects({
         </p>
       </div>
       {(projects?.length === 0 || !projects) && <ProjectEmpty />}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      {projects && projects?.length > 0 && <CreateProject />}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {projects?.map((project) => (
           <ProjectCard
             key={project.$id}
@@ -62,7 +64,7 @@ export default async function Projects({
             )}
           />
         ))}
-      </div>
+      </section>
     </div>
   );
 }

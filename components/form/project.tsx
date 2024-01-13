@@ -98,7 +98,7 @@ export const CreateProjectForm = ({
       position: data?.position ?? 1,
       tags: data?.tags.map((x) => ({ value: x })) ?? [],
       links: data?.links.map((x) => ({ value: x })) ?? [],
-      color: data?.color ?? "",
+      color: data?.color ?? "#ffffff",
     },
   });
 
@@ -306,7 +306,13 @@ export const CreateProjectForm = ({
                 <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
-                    <Input placeholder="#FFFFFF" {...field} />
+                    <input
+                      placeholder="#FFFFFF"
+                      type="color"
+                      className="block h-10 w-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900"
+                      title="Choose your color"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

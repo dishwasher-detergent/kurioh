@@ -14,6 +14,14 @@ export function createSlug(title: string): string {
     .replace(/[^\w-]+/g, "");
 }
 
+export function formatDate(date: Date | string): string {
+  date = new Date(date);
+  const day = `${date.getDate() < 10 ? "0" : ""}${date.getDate()}`;
+  const month = `${date.getMonth() + 1 < 10 ? "0" : ""}${date.getMonth() + 1}`;
+  const year = date.getFullYear();
+  return `${year}-${month}-${day}`;
+}
+
 export function extractWebsiteName(url: string): string {
   try {
     const urlObj = new URL(url);

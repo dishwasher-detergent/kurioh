@@ -12,6 +12,7 @@ import { Form } from "@/components/ui/form";
 import { Experience } from "@/interfaces/experience";
 import { auth_service, database_service } from "@/lib/appwrite";
 import { EXPERIENCE_COLLECTION_ID } from "@/lib/constants";
+import { formatDate } from "@/lib/utils";
 import { usePortfolioStore } from "@/store/zustand";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ID, Permission, Role } from "appwrite";
@@ -42,8 +43,8 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
             company: x.company,
             title: x.title,
             description: x.description,
-            start: x.start,
-            end: x.end,
+            start: x.start ? formatDate(x.start) : null,
+            end: x.end ? formatDate(x.end) : null,
           },
         })) ?? [],
     },

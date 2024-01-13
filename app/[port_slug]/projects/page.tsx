@@ -68,3 +68,5 @@ export default async function Projects({
     </div>
   );
 }
+
+export const revalidate = 0; // revalidate at most every hour

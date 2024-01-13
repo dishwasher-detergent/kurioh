@@ -2,15 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { ProjectImages } from "@/components/ui/project//images";
-import { ProjectWebsites } from "@/components/ui/project//websites";
-import { ProjectBadges } from "@/components/ui/project/badges";
-import { database_service } from "@/lib/appwrite";
-import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
-import { usePortfolioStore } from "@/store/zustand";
-import { LucidePencil, LucideTrash } from "lucide-react";
-import Link from "next/link";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogClose,
@@ -20,7 +11,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../dialog";
+} from "@/components/ui/dialog";
+import { ProjectImages } from "@/components/ui/project//images";
+import { ProjectWebsites } from "@/components/ui/project//websites";
+import { ProjectBadges } from "@/components/ui/project/badges";
+import { database_service } from "@/lib/appwrite";
+import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
+import { usePortfolioStore } from "@/store/zustand";
+import { LucidePencil, LucideTrash } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 interface ProjectCardProps {
   id: string;

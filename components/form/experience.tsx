@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { ExperienceArrayInput } from "@/components/ui/form/experience-array";
 import { Experience } from "@/interfaces/experience";
 import { auth_service, database_service } from "@/lib/appwrite";
 import { EXPERIENCE_COLLECTION_ID } from "@/lib/constants";
@@ -20,7 +21,6 @@ import { LucideLoader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { ExperienceArrayInput } from "../ui/form/experience-array";
 
 const formSchema = z.object({
   experience: z.any().optional(),

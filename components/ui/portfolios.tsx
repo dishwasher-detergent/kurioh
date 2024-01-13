@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Portfolios } from "@/interfaces/portfolios";
 import { database_service } from "@/lib/appwrite";
@@ -16,7 +17,6 @@ import { LucidePlus } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button } from "./button";
 
 export const PortfoliosSelect = () => {
   const { current, update } = usePortfolioStore();
@@ -72,12 +72,14 @@ export const PortfoliosSelect = () => {
             {item.title}
           </SelectItem>
         ))}
-        <Button asChild>
-          <Link href={`/portfolio/create`} className="mt-2 w-full">
-            <LucidePlus className="mr-2 h-4 w-4" />
-            Add
-          </Link>
-        </Button>
+        <Separator className="my-2" />
+        <Link
+          href={`/portfolio/create`}
+          className="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+        >
+          Create
+          <LucidePlus className="ml-2 h-4 w-4" />
+        </Link>
       </SelectContent>
     </Select>
   ) : (

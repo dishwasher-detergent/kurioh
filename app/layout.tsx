@@ -21,6 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={cn(
           "h-screen w-screen overflow-hidden font-sans antialiased",
+          fontSans.className,
           fontSans.variable,
         )}
       >
@@ -32,7 +33,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <main className="flex h-full w-full flex-col overflow-hidden bg-slate-50 text-foreground dark:bg-slate-900">
             <Nav />
-            <section className="overflow-x flex flex-1 flex-col overflow-y-auto p-4 pt-8">
+            <section className="overflow-x flex flex-1 flex-col overflow-y-auto p-4">
               {children}
             </section>
           </main>

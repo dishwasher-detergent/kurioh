@@ -35,7 +35,7 @@ export default async function Projects({
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-      <div>
+      <header className="py-4">
         <h3 className="flex flex-row items-center gap-2 text-2xl font-bold">
           Projects
           <Badge variant="secondary">{projects?.length ?? 0}</Badge>
@@ -43,7 +43,7 @@ export default async function Projects({
         <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">
           All your cherished projects in one place.
         </p>
-      </div>
+      </header>
       {(projects?.length === 0 || !projects) && <ProjectEmpty />}
       {projects && projects?.length > 0 && <CreateProject />}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">

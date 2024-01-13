@@ -22,7 +22,7 @@ async function fetchExperience(port_slug: string) {
   }
 }
 
-export default async function Portfolio({
+export default async function Experience({
   params,
 }: {
   params: { port_slug: string };
@@ -30,15 +30,5 @@ export default async function Portfolio({
   const { port_slug } = params;
   const experience = await fetchExperience(port_slug);
 
-  return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-      <nav>
-        <h3 className="pb-1 text-3xl font-bold">Experience</h3>
-        <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">
-          All your experience, wrapped up in one place.
-        </p>
-      </nav>
-      <ExperienceForm data={experience} />
-    </div>
-  );
+  return <ExperienceForm data={experience} />;
 }

@@ -33,15 +33,5 @@ export default async function ProjectsCreate({
   const { slug, port_slug } = params;
   const project = await fetchProject(port_slug, slug);
 
-  return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-      <div>
-        <h3 className="pb-1 text-3xl font-bold capitalize">Edit {slug}</h3>
-        <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">
-          Edit your project to make it even better!
-        </p>
-      </div>
-      <CreateProjectForm title="Edit" data={project} />
-    </div>
-  );
+  return <CreateProjectForm title="Edit" data={project} />;
 }

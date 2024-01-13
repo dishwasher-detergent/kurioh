@@ -1,35 +1,61 @@
+"use client";
+
+import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { PortfoliosSelect } from "@/components/ui/portfolios";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { LucidePlus } from "lucide-react";
+import { Profile } from "@/components/ui/profile";
+import { usePortfolioStore } from "@/store/zustand";
+import { LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 
 export const Nav = () => {
+  const { current } = usePortfolioStore();
+
   return (
-    <nav className="flex h-16 w-full flex-none flex-row flex-nowrap items-center gap-2 px-4">
-      <ul>
-        <li className="flex w-full flex-row gap-2">
-          <PortfoliosSelect />
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button asChild size="icon" variant="outline">
-                  <Link href={`/portfolio/create`} className="flex-none">
-                    <LucidePlus className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p className="capitalize">Create a portfolio.</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+    <nav className="flex w-full flex-none flex-col flex-nowrap items-center gap-4 border-b bg-background px-4 pb-2 pt-4">
+      <ul className="flex w-full flex-col-reverse flex-nowrap justify-between gap-4 px-4 md:flex-row md:gap-0">
+        <li className="flex items-center">
+          <BreadCrumb />
         </li>
+        <li className="flex items-center">
+          <Profile />
+        </li>
+      </ul>
+      <ul className="flex w-full flex-row">
+        {current ? (
+          <>
+            <li className="flex flex-row gap-2">
+              <Button
+                asChild
+                variant="ghost"
+                className="flex flex-1 flex-row justify-start gap-4"
+              >
+                <Link href={`/${current.id}`}>Portfolio</Link>
+              </Button>
+            </li>
+            <li className="flex flex-row gap-2">
+              <Button
+                asChild
+                variant="ghost"
+                className="flex flex-1 flex-row justify-start gap-4"
+              >
+                <Link href={`/${current.id}/projects`}>Projects</Link>
+              </Button>
+            </li>
+            <li className="flex flex-row gap-2">
+              <Button
+                asChild
+                variant="ghost"
+                className="flex flex-1 flex-row justify-start gap-4"
+              >
+                <Link href={`/${current.id}/experience`}>Experience</Link>
+              </Button>
+            </li>
+          </>
+        ) : (
+          <div className="grid place-items-center">
+            <LucideLoader2 className="animate-spin" />
+          </div>
+        )}
       </ul>
     </nav>
   );

@@ -11,7 +11,7 @@ import { LucideLoader2 } from "lucide-react";
 
 export const ProjectFormLoading = ({ title }: { title: string }) => {
   return (
-    <Card className="max-w-3xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>

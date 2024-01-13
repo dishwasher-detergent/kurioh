@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { ProjectCard } from "@/components/ui/project/card";
 import { CreateProject } from "@/components/ui/project/create";
 import { ProjectEmpty } from "@/components/ui/project/empty";
@@ -35,8 +34,7 @@ export default async function Projects({
   const projects = await fetchProjects(port_slug);
 
   return (
-    <div className="flex flex-col gap-4">
-      <BreadCrumb />
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div>
         <h3 className="flex flex-row items-center gap-2 text-2xl font-bold">
           Projects

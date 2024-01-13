@@ -174,7 +174,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
   }
 
   return (
-    <Card className="max-w-3xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Information</CardTitle>
       </CardHeader>

@@ -1,5 +1,5 @@
 import "@/app/globals.css";
-import { Sidebar } from "@/components/ui/sidebar";
+import { Nav } from "@/components/ui/nav";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -31,14 +31,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <main className="flex h-full w-full flex-col overflow-hidden bg-slate-50 text-foreground dark:bg-slate-900">
-            <div className="flex h-full w-full flex-1 flex-row flex-nowrap">
-              <Sidebar />
-              <div className="flex h-full flex-1 flex-col">
-                <section className="overflow-y-auto overflow-x-hidden p-4">
-                  {children}
-                </section>
-              </div>
-            </div>
+            <Nav />
+            <section className="overflow-x flex flex-1 flex-col overflow-y-auto p-4 pt-8">
+              {children}
+            </section>
           </main>
           <Toaster richColors />
         </ThemeProvider>

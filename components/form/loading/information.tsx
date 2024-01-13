@@ -12,7 +12,7 @@ import { LucideLoader2 } from "lucide-react";
 
 export const InformationFormLoading = () => {
   return (
-    <Card className="max-w-3xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Information</CardTitle>
       </CardHeader>

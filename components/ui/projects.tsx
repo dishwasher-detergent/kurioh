@@ -9,21 +9,23 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Portfolios } from "@/interfaces/portfolios";
+import { Projects } from "@/interfaces/projects";
 import { database_service } from "@/lib/appwrite";
 import { PORTFOLIO_COLLECTION_ID } from "@/lib/constants";
 import { usePortfolioStore } from "@/store/zustand";
+import { Query } from "appwrite";
 import { LucidePlus } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "./button";
 
-export const PortfoliosSelect = () => {
+export const ProjectsSelect = () => {
   const { current, update } = usePortfolioStore();
   const router = useRouter();
   const params = useParams();
 
-  const [portfolios, setPortfolios] = useState<Portfolios[]>([]);
+  const [projects, setProjects] = useState<Projects[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,46 +36,44 @@ export const PortfoliosSelect = () => {
 
       const res = await database_service.list<Portfolios>(
         PORTFOLIO_COLLECTION_ID,
+        [Query.equal("$id", current?.id as string)],
       );
 
-      setPortfolios(res.documents);
+      const projects = res.documents[0].projects;
+
+      console.log(params.slug);
+
+      setProjects(projects);
       setLoading(false);
     }
 
     fetchPortfolios();
-  }, [current]);
-
-  useEffect(() => {
-    usePortfolioStore.persist.rehydrate();
-  }, []);
+  }, [current, params]);
 
   return !loading ? (
     <Select
       onValueChange={(e) => {
-        const data = JSON.parse(e);
-
-        update(data);
-        router.push(`/${data.id}`);
+        router.push(`/${current?.id}/projects/${e}`);
       }}
-      value={`{"id": "${current?.id}", "title": "${current?.title}"}`}
+      value={params?.slug as string}
     >
       <SelectTrigger className="w-36 truncate bg-background">
         <SelectValue
-          placeholder="Select a Portfolio"
-          defaultValue={params.port_slug}
+          placeholder="Select a Project"
+          defaultValue={params.slug}
         />
       </SelectTrigger>
       <SelectContent>
-        {portfolios.map((item) => (
-          <SelectItem
-            key={item.$id}
-            value={`{"id": "${item.$id}", "title": "${item.title}"}`}
-          >
+        {projects.map((item) => (
+          <SelectItem key={item.$id} value={item.slug}>
             {item.title}
           </SelectItem>
         ))}
         <Button asChild>
-          <Link href={`/portfolio/create`} className="mt-2 w-full">
+          <Link
+            href={`/${current?.id}/projects/create`}
+            className="mt-2 w-full"
+          >
             <LucidePlus className="mr-2 h-4 w-4" />
             Add
           </Link>

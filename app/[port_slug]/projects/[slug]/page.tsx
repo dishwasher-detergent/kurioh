@@ -1,5 +1,4 @@
 import { CreateProjectForm } from "@/components/form/project";
-import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { Projects } from "@/interfaces/projects";
 import { database_service } from "@/lib/appwrite";
 import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
@@ -35,8 +34,7 @@ export default async function ProjectsCreate({
   const project = await fetchProject(port_slug, slug);
 
   return (
-    <div className="flex flex-col gap-4">
-      <BreadCrumb />
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div>
         <h3 className="pb-1 text-3xl font-bold capitalize">Edit {slug}</h3>
         <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">

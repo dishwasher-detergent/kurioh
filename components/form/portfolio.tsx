@@ -76,7 +76,7 @@ export const CreatePortfolioForm = () => {
   }
 
   return (
-    <Card className="max-w-3xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Create Portfolio</CardTitle>
       </CardHeader>

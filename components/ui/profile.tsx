@@ -31,19 +31,16 @@ export const Profile = () => {
 
   return profile ? (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-12 w-full justify-start gap-2"
-        >
+      <DropdownMenuTrigger className="flex w-36 flex-row items-center gap-2">
+        <>
           <Avatar className="h-8 w-8">
             <AvatarImage src={auth_service.getAccountPicture(profile.name)} />
             <AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
           </Avatar>
-          <p className="truncate">{profile.name}</p>
-        </Button>
+          <p className="truncate text-sm font-semibold">{profile.name}</p>
+        </>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="right" align="end">
+      <DropdownMenuContent side="bottom" align="start">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

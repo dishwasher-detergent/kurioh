@@ -124,7 +124,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
   }
 
   return (
-    <Card className="max-w-3xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Experience</CardTitle>
       </CardHeader>

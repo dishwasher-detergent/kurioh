@@ -1,5 +1,4 @@
 import { InformationForm } from "@/components/form/information";
-import { BreadCrumb } from "@/components/ui/breadcrumb";
 import { Information, Social } from "@/interfaces/information";
 import { Portfolios } from "@/interfaces/portfolios";
 import { database_service } from "@/lib/appwrite";
@@ -46,8 +45,7 @@ export default async function Portfolio({
   const information = await fetchInformation(port_slug);
 
   return (
-    <div className="flex flex-col gap-4">
-      <BreadCrumb />
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <nav>
         <h3 className="pb-1 text-3xl font-bold">Portfolio Information</h3>
         <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">

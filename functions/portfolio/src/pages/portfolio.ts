@@ -93,4 +93,40 @@ export function Portfolios(app: Hono, cacheDuration: number = 1440) {
     c.header('Cache-Control', `public, max-age=${cacheDuration}`);
     return c.body(file);
   });
+
+  app.get('/portfolios/:portfolio_slug/favicon', async (c) => {
+    const portfolio_slug = c.req.param('portfolio_slug');
+    const queryParams = c.req.query();
+
+    const response = await database_service.get<Portfolios>(
+      PORTFOLIO_COLLECTION_ID,
+      portfolio_slug
+    );
+
+    if (!response) {
+      return c.json({ error: 'Portfolio not found' }, 404);
+    }
+
+    const information = response.information[0];
+
+    if (!information) {
+      return c.json({ error: 'Information not found' }, 404);
+    }
+
+    if (!information.icon) {
+      return c.json({ error: 'Image not found' }, 404);
+    }
+
+    const file = await storage_service.getFilePreview(
+      PORTFOLIO_BUCKET_ID,
+      information.icon,
+      {
+        ...queryParams,
+      }
+    );
+
+    c.header('Content-Type', `image/png`);
+    c.header('Cache-Control', `public, max-age=${cacheDuration}`);
+    return c.body(file);
+  });
 }

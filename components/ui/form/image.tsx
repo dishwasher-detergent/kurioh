@@ -9,9 +9,10 @@ import { UseFormReturn } from "react-hook-form";
 
 interface ImageInputProps {
   form: UseFormReturn<any>;
+  label: string;
 }
 
-export const ImageInput = ({ form }: ImageInputProps) => {
+export const ImageInput = ({ form, label }: ImageInputProps) => {
   const [preview, setPreview] = useState<any>(null);
 
   const handleUploadedFile = (event: React.FormEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ export const ImageInput = ({ form }: ImageInputProps) => {
   return (
     <div>
       <Label>
-        <p className="pb-3">Icon</p>
+        <p className="pb-3">{label}</p>
       </Label>
       <Card className="p-2">
         <Label className="cursor-pointer">

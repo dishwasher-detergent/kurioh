@@ -12,7 +12,7 @@ export function Home(app: Hono, cacheDuration: number = 1440) {
             {
               name: 'images',
               description: 'Get the image for your portfolio.',
-              path: '/portfolios/:portfolio_slug/image',
+              path: '/portfolios/:portfolio_slug/favicon',
             },
           ],
         },

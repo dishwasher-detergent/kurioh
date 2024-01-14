@@ -210,7 +210,7 @@ export const InformationForm = ({ data }: InformationFormProps) => {
                 </FormItem>
               )}
             />
-            <ImageInput form={form} />
+            <ImageInput form={form} label="Favicon" />
             <Separator />
             <p className="font-semibold leading-none tracking-tight">Socials</p>
             <FormField

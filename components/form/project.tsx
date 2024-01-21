@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ArrayInput } from "@/components/ui/form/array";
-import { ImageArrayInput } from "@/components/ui/form/image_array";
+import { ImageArrayInput } from "@/components/ui/form/image-array";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Projects } from "@/interfaces/projects";

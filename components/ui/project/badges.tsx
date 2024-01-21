@@ -10,7 +10,9 @@ export const ProjectBadges = ({ badges }: ProjectBadgesProps) => {
     badges.length > 0 && (
       <div className="flex flex-row flex-wrap gap-1">
         {badges.map((badge, index) => (
-          <Badge key={index}>{badge}</Badge>
+          <Badge key={index} variant="secondary">
+            {badge}
+          </Badge>
         ))}
       </div>
     )

@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/form";
 import { ImageInput } from "@/components/ui/form/image";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import {
   BITBUCKET,
   CODEPEN,
@@ -211,7 +210,6 @@ export const InformationForm = ({ data }: InformationFormProps) => {
               )}
             />
             <ImageInput form={form} label="Favicon" />
-            <Separator />
             <p className="font-semibold leading-none tracking-tight">Socials</p>
             <FormField
               control={form.control}

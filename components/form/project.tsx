@@ -271,7 +271,7 @@ export const CreateProjectForm = ({
                     <input
                       placeholder="#FFFFFF"
                       type="color"
-                      className="block h-10 w-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900"
+                      className="block h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900"
                       title="Choose your color"
                       {...field}
                     />

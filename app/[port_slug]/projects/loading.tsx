@@ -6,7 +6,7 @@ export default async function ProjectsLoading() {
   const emptyArray = Array.from({ length: randomLength });
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
       <header className="py-4">
         <h3 className="flex flex-row items-center gap-2 text-2xl font-bold">
           Projects

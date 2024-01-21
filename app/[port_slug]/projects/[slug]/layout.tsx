@@ -8,7 +8,7 @@ interface LayoutProps {
 
 export default async function Layout({ params, children }: LayoutProps) {
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
       <header className="py-4">
         <h3 className="pb-1 text-3xl font-bold capitalize">
           Edit {params.slug}

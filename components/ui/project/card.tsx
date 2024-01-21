@@ -2,23 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DynamicDrawer } from "@/components/ui/dynamic-drawer";
 import { ProjectImages } from "@/components/ui/project//images";
 import { ProjectWebsites } from "@/components/ui/project//websites";
 import { ProjectBadges } from "@/components/ui/project/badges";
 import { database_service } from "@/lib/appwrite";
 import { PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { usePortfolioStore } from "@/store/zustand";
-import { LucidePencil, LucideTrash } from "lucide-react";
+import { LucidePencil } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -65,39 +56,22 @@ export const ProjectCard = ({
       </CardContent>
       <CardFooter className="flex flex-row justify-end gap-2">
         <div className="flex-1">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="destructive">
-                <LucideTrash className="mr-2 h-4 w-4" />
-                Delete
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  this project.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="sm:justify-start">
-                <DialogClose asChild>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => deleteProject()}
-                  >
-                    Yes
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button type="button" variant="secondary">
-                    No
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <DynamicDrawer
+            title="Are you sure absolutely sure?"
+            buttonText="Delete"
+          >
+            <div className="flex flex-col gap-4">
+              <p>
+                This action cannot be undone. This will permanently delete this
+                project.
+              </p>
+              <div className="md:flex md:justify-end">
+                <Button variant="destructive" onClick={deleteProject}>
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </DynamicDrawer>
         </div>
         <Button asChild>
           <Link href={`/${current?.id}/projects/${slug}`}>

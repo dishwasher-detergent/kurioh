@@ -5,6 +5,7 @@ import { ProjectsSelect } from "@/components/ui/projects";
 import { LucideBoxes } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { Button } from "./button";
 
 export const BreadCrumb = () => {
   const params = useParams();
@@ -12,14 +13,16 @@ export const BreadCrumb = () => {
   return (
     <div>
       <ul className="flex flex-row items-center gap-2 text-sm">
-        <Link href="/">
-          <LucideBoxes className="h-6 w-6" />
-        </Link>
-        <p>/</p>
+        <Button asChild variant="ghost" size="icon">
+          <Link href="/">
+            <LucideBoxes className="h-6 w-6 text-primary" />
+          </Link>
+        </Button>
+        <p className="font-bold text-slate-600 dark:text-slate-100">/</p>
         <PortfoliosSelect />
         {params?.slug && (
           <>
-            <p>/</p>
+            <p className="font-bold text-slate-600 dark:text-slate-100">/</p>
             <ProjectsSelect />
           </>
         )}

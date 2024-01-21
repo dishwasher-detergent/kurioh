@@ -9,16 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Form,
   FormControl,
   FormField,
@@ -46,6 +36,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { DynamicDrawer } from "../ui/dynamic-drawer";
 
 const formSchema = z.object({
   title: z.string().min(1).max(128),
@@ -293,42 +284,22 @@ export const CreateProjectForm = ({
           <CardFooter className="flex flex-row justify-end">
             {edit && (
               <div className="flex-1">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      disabled={form.formState.isSubmitting}
-                      type="button"
-                      variant="destructive"
-                    >
-                      Delete
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-                      <DialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete this project.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="sm:justify-start">
-                      <DialogClose asChild>
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          onClick={() => deleteProject()}
-                        >
-                          Yes
-                        </Button>
-                      </DialogClose>
-                      <DialogClose asChild>
-                        <Button type="button" variant="secondary">
-                          No
-                        </Button>
-                      </DialogClose>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                <DynamicDrawer
+                  title="Are you sure absolutely sure?"
+                  buttonText="Delete"
+                >
+                  <div className="flex flex-col gap-4">
+                    <p>
+                      This action cannot be undone. This will permanently delete
+                      this project.
+                    </p>
+                    <div className="md:flex md:justify-end">
+                      <Button variant="destructive" onClick={deleteProject}>
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                </DynamicDrawer>
               </div>
             )}
             <div className="flex flex-none flex-row gap-2">

@@ -31,13 +31,15 @@ export const Profile = () => {
 
   return profile ? (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex w-36 flex-row items-center gap-2">
+      <DropdownMenuTrigger className="flex flex-row items-center gap-2 md:w-36">
         <>
           <Avatar className="h-8 w-8">
             <AvatarImage src={auth_service.getAccountPicture(profile.name)} />
             <AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
           </Avatar>
-          <p className="truncate text-sm font-semibold">{profile.name}</p>
+          <p className="hidden truncate text-sm font-semibold md:block">
+            {profile.name}
+          </p>
         </>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="start">

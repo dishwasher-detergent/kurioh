@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Header } from "@/components/ui/header";
 import { ProjectCard } from "@/components/ui/project/card";
 import { CreateProject } from "@/components/ui/project/create";
 import { ProjectEmpty } from "@/components/ui/project/empty";
@@ -34,21 +34,13 @@ export default async function Projects({
   const projects = await fetchProjects(port_slug);
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
-      <header className="flex flex-row items-center justify-between py-4">
-        <div>
-          <h3 className="flex flex-row items-center gap-2 text-2xl font-bold">
-            Projects
-            <Badge variant="secondary">{projects?.length ?? 0}</Badge>
-          </h3>
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">
-            All your cherished projects in one place.
-          </p>
-        </div>
-        {projects && projects?.length > 0 && <CreateProject />}
-      </header>
+    <Header
+      title="Projects"
+      description="All your cherished projects in one place."
+      action={projects && projects?.length > 0 && <CreateProject />}
+    >
       {(projects?.length === 0 || !projects) && <ProjectEmpty />}
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {projects?.map((project) => (
           <ProjectCard
             key={project.$id}
@@ -65,7 +57,7 @@ export default async function Projects({
           />
         ))}
       </section>
-    </div>
+    </Header>
   );
 }
 

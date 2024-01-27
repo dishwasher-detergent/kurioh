@@ -33,7 +33,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <main className="flex h-full w-full flex-col overflow-hidden bg-slate-50 text-foreground dark:bg-slate-900">
             <Nav />
-            <section className="overflow-x flex flex-1 flex-col overflow-y-auto p-4">
+            <section className="overflow-x flex flex-1 flex-col overflow-y-auto">
               {children}
             </section>
           </main>

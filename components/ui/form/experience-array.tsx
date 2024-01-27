@@ -10,7 +10,7 @@ import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
 
 interface ExperienceArrayInputProps {
-  title: string;
+  title?: string;
   name: string;
   form: UseFormReturn<any>;
 }
@@ -33,16 +33,14 @@ export const ExperienceArrayInput = ({
 
   return (
     <div>
-      <Label>
-        <p className="pb-3">{title}</p>
-      </Label>
+      <Label>{title && <p className="pb-3">{title}</p>}</Label>
       <Card className="p-2">
-        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 p-4 dark:bg-slate-800 dark:text-slate-300">
+        <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 px-4 dark:bg-slate-800 dark:text-slate-300">
           {fields.map((item, index) => {
             return (
               <li
                 key={item.id}
-                className="flex flex-row items-start gap-4 border-b-2 border-dotted border-slate-300 pb-2 last:border-none"
+                className="flex flex-row items-start gap-4 border-b-2 border-dotted border-slate-300 py-4 last:border-none"
               >
                 <Badge
                   variant="secondary"

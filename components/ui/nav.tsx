@@ -11,8 +11,8 @@ export const Nav = () => {
   const { current } = usePortfolioStore();
 
   return (
-    <nav className="flex w-full flex-none flex-col flex-nowrap items-center gap-4 border-b bg-background px-4 pb-2 pt-4">
-      <ul className="flex w-full flex-col-reverse flex-nowrap justify-between gap-4 px-4 md:flex-row md:gap-0">
+    <nav className="flex w-full flex-none flex-col flex-nowrap items-center gap-4 border-b bg-background px-2 pb-2 pt-4 md:px-4">
+      <ul className="flex w-full flex-row flex-nowrap justify-between gap-4 pl-2">
         <li className="flex items-center">
           <BreadCrumb />
         </li>

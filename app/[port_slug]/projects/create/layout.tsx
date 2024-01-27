@@ -1,3 +1,5 @@
+import { Header } from "@/components/ui/header";
+
 interface LayoutProps {
   params: {
     port_slug: string;
@@ -8,14 +10,11 @@ interface LayoutProps {
 
 export default async function Layout({ params, children }: LayoutProps) {
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
-      <header className="py-4">
-        <h3 className="pb-1 text-3xl font-bold">Create a Project</h3>
-        <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">
-          Show off what you&apos;ve been working on!
-        </p>
-      </header>
+    <Header
+      title="Create a Project"
+      description="Show off what you've been working on!"
+    >
       {children}
-    </div>
+    </Header>
   );
 }

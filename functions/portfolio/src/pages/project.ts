@@ -26,8 +26,20 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
     if (!project) {
       return c.json({ error: 'Project not found' }, 404);
     }
+    
+    const formattedProject = {
+      title: project.title,
+      slug: project.slug,
+      short_description: project.short_description,
+      description: project.description,
+      images: project.images,
+      position: project.position,
+      tags: project.tags,
+      color: project.color,
+      links: project.links,
+    };
 
-    return c.json(project, 200, {
+    return c.json(formattedProject, 200, {
       'Cache-Control': `public, max-age=${cacheDuration}`,
     });
   });

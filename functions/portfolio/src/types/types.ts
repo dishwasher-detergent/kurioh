@@ -42,6 +42,8 @@ export interface Experience extends Models.Document {
   end: Date;
   portfolios: Portfolios;
   creator: string;
+  website: string;
+  languages: string[];
 }
 
 export interface ImagePreview {

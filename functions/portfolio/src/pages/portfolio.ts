@@ -43,6 +43,8 @@ export function Portfolios(app: Hono, cacheDuration: number = 1440) {
       description: experience.description,
       start: experience.start,
       end: experience.end,
+      website: experience.website,
+      languages: experience.languages,
     }));
 
     const prunedResponse = {

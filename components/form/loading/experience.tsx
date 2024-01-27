@@ -1,24 +1,14 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LucideLoader2 } from "lucide-react";
 
 export const ExperienceFormLoading = () => {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Experience</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="w-full">
+      <div>
         <Skeleton className="h-48 w-full" />
-      </CardContent>
-      <CardFooter className="flex w-full flex-row justify-end gap-2">
+      </div>
+      <footer className="flex w-full flex-row justify-end gap-2">
         <Button disabled={true} type="button" variant="destructive">
           Reset
         </Button>
@@ -26,7 +16,7 @@ export const ExperienceFormLoading = () => {
           <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
           Save
         </Button>
-      </CardFooter>
-    </Card>
+      </footer>
+    </div>
   );
 };

@@ -1,13 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { ExperienceArrayInput } from "@/components/ui/form/experience-array";
 import { Experience } from "@/interfaces/experience";
@@ -124,33 +117,28 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Experience</CardTitle>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <ExperienceArrayInput form={form} name="experience" />
-          </CardContent>
-          <CardFooter className="flex flex-row justify-end gap-2">
-            <Button
-              disabled={form.formState.isSubmitting}
-              type="button"
-              variant="destructive"
-              onClick={() => form.reset()}
-            >
-              Reset
-            </Button>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting && (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Save
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <ExperienceArrayInput form={form} name="experience" />
+        </div>
+        <footer className="flex flex-row justify-end gap-2">
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="button"
+            variant="destructive"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && (
+              <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Save
+          </Button>
+        </footer>
+      </form>
+    </Form>
   );
 };

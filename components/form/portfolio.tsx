@@ -2,13 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -76,45 +69,40 @@ export const CreatePortfolioForm = () => {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Create Portfolio</CardTitle>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="My Portfolio" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="flex flex-row justify-end gap-2">
-            <Button
-              disabled={form.formState.isSubmitting}
-              type="button"
-              variant="destructive"
-              onClick={() => form.reset()}
-            >
-              Reset
-            </Button>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting && (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Save
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="My Portfolio" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <footer className="flex flex-row justify-end gap-2">
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="button"
+            variant="destructive"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && (
+              <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Save
+          </Button>
+        </footer>
+      </form>
+    </Form>
   );
 };

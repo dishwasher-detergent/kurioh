@@ -2,13 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -173,203 +166,197 @@ export const InformationForm = ({ data }: InformationFormProps) => {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Information</CardTitle>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Kenneth Bass' Portfolio" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Kenneth Bass' Portfolio" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="This is my portfolio, full of amazing projects!"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ImageInput form={form} label="Favicon" />
+          <FormField
+            control={form.control}
+            name="github"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>GitHub</FormLabel>
+                <FormControl>
+                  <div className="flex flex-row items-center">
+                    <p className="grid h-9 place-items-center rounded-l-md border bg-slate-900 px-2 text-sm font-bold text-white">
+                      https://github.com/
+                    </p>
                     <Input
-                      placeholder="This is my portfolio, full of amazing projects!"
+                      className="rounded-l-none"
+                      placeholder="dishwasher-detergent"
                       {...field}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <ImageInput form={form} label="Favicon" />
-            <p className="font-semibold leading-none tracking-tight">Socials</p>
-            <FormField
-              control={form.control}
-              name="github"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>GitHub</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border bg-slate-900 px-2 text-sm font-bold text-white">
-                        https://github.com/
-                      </p>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="dishwasher-detergent"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormDescription>Your GitHub username.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="bitbucket"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>BitBucket</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
-                        https://bitbucket.org/
-                      </p>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="dishwasher-detergent"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormDescription>Your BitBucket username.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="gitlab"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>GitLab</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
-                        https://gitlab.com/
-                      </p>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="diswasher-detergent"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormDescription>Your GitLab username.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="codepen"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CodePen</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
-                        https://codepen.com/
-                      </p>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="kennethbass"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormDescription>Your CodePen username.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="twitter"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Twitter</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
-                        https://twitter.com/
-                      </p>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="aNinjaHobo"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormDescription>Your Twitter handle.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="linkedin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>LinkedIn</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row items-center">
-                      <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
-                        https://linkedin.com/in/
-                      </p>
-                      <Input
-                        className="rounded-l-none"
-                        placeholder="kennethtylerbass"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormDescription>
-                    Your LinkedIn profile name from linkedin.com/in/profilename.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="flex flex-row justify-end gap-2">
-            <Button
-              disabled={form.formState.isSubmitting}
-              type="button"
-              variant="destructive"
-              onClick={() => form.reset()}
-            >
-              Reset
-            </Button>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting && (
-                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Save
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+                  </div>
+                </FormControl>
+                <FormDescription>Your GitHub username.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bitbucket"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>BitBucket</FormLabel>
+                <FormControl>
+                  <div className="flex flex-row items-center">
+                    <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
+                      https://bitbucket.org/
+                    </p>
+                    <Input
+                      className="rounded-l-none"
+                      placeholder="dishwasher-detergent"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>Your BitBucket username.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="gitlab"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>GitLab</FormLabel>
+                <FormControl>
+                  <div className="flex flex-row items-center">
+                    <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
+                      https://gitlab.com/
+                    </p>
+                    <Input
+                      className="rounded-l-none"
+                      placeholder="diswasher-detergent"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>Your GitLab username.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="codepen"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CodePen</FormLabel>
+                <FormControl>
+                  <div className="flex flex-row items-center">
+                    <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
+                      https://codepen.com/
+                    </p>
+                    <Input
+                      className="rounded-l-none"
+                      placeholder="kennethbass"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>Your CodePen username.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="twitter"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Twitter</FormLabel>
+                <FormControl>
+                  <div className="flex flex-row items-center">
+                    <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
+                      https://twitter.com/
+                    </p>
+                    <Input
+                      className="rounded-l-none"
+                      placeholder="aNinjaHobo"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>Your Twitter handle.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="linkedin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>LinkedIn</FormLabel>
+                <FormControl>
+                  <div className="flex flex-row items-center">
+                    <p className="grid h-9 place-items-center rounded-l-md border  bg-slate-900 px-2 text-sm font-bold text-white">
+                      https://linkedin.com/in/
+                    </p>
+                    <Input
+                      className="rounded-l-none"
+                      placeholder="kennethtylerbass"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>
+                  Your LinkedIn profile name from linkedin.com/in/profilename.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <footer className="flex flex-row justify-end gap-2">
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="button"
+            variant="destructive"
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && (
+              <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Save
+          </Button>
+        </footer>
+      </form>
+    </Form>
   );
 };

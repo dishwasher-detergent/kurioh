@@ -57,7 +57,7 @@ export const PortfoliosSelect = () => {
       }}
       value={`{"id": "${current?.id}", "title": "${current?.title}"}`}
     >
-      <SelectTrigger className="w-36 truncate bg-background">
+      <SelectTrigger className="w-32 truncate border-none bg-background font-semibold shadow-none">
         <SelectValue
           placeholder="Select a Portfolio"
           defaultValue={params.port_slug}

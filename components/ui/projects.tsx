@@ -57,7 +57,7 @@ export const ProjectsSelect = () => {
       }}
       value={params?.slug as string}
     >
-      <SelectTrigger className="w-36 truncate bg-background">
+      <SelectTrigger className="w-32 truncate border-none bg-background font-semibold shadow-none">
         <SelectValue
           placeholder="Select a Project"
           defaultValue={params.slug}

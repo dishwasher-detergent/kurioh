@@ -2,13 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -193,134 +186,126 @@ export const CreateProjectForm = ({
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Sample Project" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="short_description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Short Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="This project is amazing!"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="This project is really really amazing!"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <ImageArrayInput form={form} title="Images" name="images" />
-            <FormField
-              control={form.control}
-              name="position"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Position</FormLabel>
-                  <FormControl>
-                    <Input type="tel" placeholder="0" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <ArrayInput form={form} title="Tags" name="tags" />
-            <ArrayInput form={form} title="Links" name="links" />
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <FormControl>
-                    <input
-                      placeholder="#FFFFFF"
-                      type="color"
-                      className="block h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900"
-                      title="Choose your color"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="flex flex-row justify-end">
-            {edit && (
-              <div className="flex-1">
-                <DynamicDrawer
-                  title="Are you sure absolutely sure?"
-                  buttonText="Delete"
-                >
-                  <div className="flex flex-col gap-4">
-                    <p>
-                      This action cannot be undone. This will permanently delete
-                      this project.
-                    </p>
-                    <div className="md:flex md:justify-end">
-                      <Button variant="destructive" onClick={deleteProject}>
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                </DynamicDrawer>
-              </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Sample Project" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-            <div className="flex flex-none flex-row gap-2">
-              <Button
-                disabled={form.formState.isSubmitting}
-                type="button"
-                variant="destructive"
-                onClick={() => form.reset()}
+          />
+          <FormField
+            control={form.control}
+            name="short_description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Short Description</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="This project is amazing!" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="This project is really really amazing!"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ImageArrayInput form={form} title="Images" name="images" />
+          <FormField
+            control={form.control}
+            name="position"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Position</FormLabel>
+                <FormControl>
+                  <Input type="tel" placeholder="0" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ArrayInput form={form} title="Tags" name="tags" />
+          <ArrayInput form={form} title="Links" name="links" />
+          <FormField
+            control={form.control}
+            name="color"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Color</FormLabel>
+                <FormControl>
+                  <input
+                    placeholder="#FFFFFF"
+                    type="color"
+                    className="block h-10 w-14 cursor-pointer rounded-lg border border-gray-200 bg-white p-1 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900"
+                    title="Choose your color"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <footer className="flex flex-row justify-end">
+          {edit && (
+            <div className="flex-1">
+              <DynamicDrawer
+                title="Are you sure absolutely sure?"
+                buttonText="Delete"
               >
-                Reset
-              </Button>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && (
-                  <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save
-              </Button>
+                <div className="flex flex-col gap-4">
+                  <p>
+                    This action cannot be undone. This will permanently delete
+                    this project.
+                  </p>
+                  <div className="md:flex md:justify-end">
+                    <Button variant="destructive" onClick={deleteProject}>
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </DynamicDrawer>
             </div>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+          )}
+          <div className="flex flex-none flex-row gap-2">
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="button"
+              variant="destructive"
+              onClick={() => form.reset()}
+            >
+              Reset
+            </Button>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && (
+                <LucideLoader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Save
+            </Button>
+          </div>
+        </footer>
+      </form>
+    </Form>
   );
 };

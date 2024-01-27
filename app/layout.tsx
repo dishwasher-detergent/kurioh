@@ -31,7 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex h-full w-full flex-col overflow-hidden bg-slate-50 text-foreground dark:bg-slate-900">
+          <main className="flex h-full w-full flex-col overflow-hidden text-foreground">
             <Nav />
             <section className="overflow-x flex flex-1 flex-col overflow-y-auto">
               {children}

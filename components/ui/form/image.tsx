@@ -39,7 +39,7 @@ export const ImageInput = ({ form, label }: ImageInputProps) => {
   return (
     <div>
       <Label>
-        <p className="pb-3">{label}</p>
+        <p className="pb-2">{label}</p>
       </Label>
       <Card className="p-2">
         <Label className="cursor-pointer">

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LucideGhost, LucidePlus, LucideTrash } from "lucide-react";
 import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
+import { ArrayInput } from "./array";
 
 interface ExperienceArrayInputProps {
   title?: string;
@@ -33,7 +34,7 @@ export const ExperienceArrayInput = ({
 
   return (
     <div>
-      <Label>{title && <p className="pb-3">{title}</p>}</Label>
+      <Label>{title && <p className="pb-2">{title}</p>}</Label>
       <Card className="p-2">
         <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 px-4 dark:bg-slate-800 dark:text-slate-300">
           {fields.map((item, index) => {
@@ -82,6 +83,11 @@ export const ExperienceArrayInput = ({
                         className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
                       />
                     </div>
+                    <ArrayInput
+                      form={form}
+                      title="Languages"
+                      name={`${name}.${index}.value.languages`}
+                    />
                     <div className="flex w-full flex-row gap-2">
                       <div className="flex-1 space-y-1">
                         <Label>Start Date</Label>

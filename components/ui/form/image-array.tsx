@@ -88,7 +88,7 @@ export const ImageArrayInput = ({
   return (
     <div>
       <Label>
-        <p className="pb-3">{title}</p>
+        <p className="pb-2">{title}</p>
       </Label>
       <Card className="p-2">
         <ul className="mb-2 flex flex-row flex-wrap gap-2 rounded-lg border bg-slate-100 p-4 dark:bg-slate-800 dark:text-slate-300">

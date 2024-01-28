@@ -4,7 +4,7 @@ import { LucideLoader2 } from "lucide-react";
 
 export const ExperienceFormLoading = () => {
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
       <div>
         <Skeleton className="h-48 w-full" />
       </div>

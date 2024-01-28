@@ -48,60 +48,69 @@ export const ExperienceArrayInput = ({
                 >
                   {index + 1}
                 </Badge>
-                <div className="flex flex-1 flex-col gap-2">
-                  <Input
-                    {...register(`${name}.${index}.value.id`)}
-                    className="hidden"
-                  />
-                  <div className="space-y-1">
-                    <Label>Company</Label>
+                <div className="flex flex-1 flex-col gap-4 md:flex-row">
+                  <div className="flex flex-1 flex-col gap-2">
                     <Input
-                      {...register(`${name}.${index}.value.company`)}
-                      className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
+                      {...register(`${name}.${index}.value.id`)}
+                      className="hidden"
                     />
-                  </div>
-                  <div className="space-y-1">
-                    <Label>Title</Label>
-                    <Input
-                      {...register(`${name}.${index}.value.title`)}
-                      className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label>Description</Label>
-                    <Textarea
-                      {...register(`${name}.${index}.value.description`)}
-                      className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
-                    />
-                  </div>
-                  <div className="flex w-full flex-row gap-2">
-                    <div className="flex-1 space-y-1">
-                      <Label>Start Date</Label>
+                    <div className="space-y-1">
+                      <Label>Company</Label>
                       <Input
-                        type="date"
-                        {...register(`${name}.${index}.value.start`)}
+                        {...register(`${name}.${index}.value.company`)}
                         className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
                       />
                     </div>
-                    <div className="flex-1 space-y-1">
-                      <Label>End Date</Label>
+                    <div className="space-y-1">
+                      <Label>Website</Label>
                       <Input
-                        type="date"
-                        {...register(`${name}.${index}.value.end`)}
+                        {...register(`${name}.${index}.value.website`)}
                         className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
                       />
                     </div>
+                    <div className="space-y-1">
+                      <Label>Title</Label>
+                      <Input
+                        {...register(`${name}.${index}.value.title`)}
+                        className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label>Description</Label>
+                      <Textarea
+                        {...register(`${name}.${index}.value.description`)}
+                        className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
+                      />
+                    </div>
+                    <div className="flex w-full flex-row gap-2">
+                      <div className="flex-1 space-y-1">
+                        <Label>Start Date</Label>
+                        <Input
+                          type="date"
+                          {...register(`${name}.${index}.value.start`)}
+                          className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <Label>End Date</Label>
+                        <Input
+                          type="date"
+                          {...register(`${name}.${index}.value.end`)}
+                          className="dark:text-slate-white bg-white dark:bg-slate-950 dark:text-white"
+                        />
+                      </div>
+                    </div>
                   </div>
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    type="button"
+                    className="flex-none"
+                    onClick={() => remove(index)}
+                  >
+                    <LucideTrash className="h-4 w-4" />
+                  </Button>
                 </div>
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  type="button"
-                  className="flex-none"
-                  onClick={() => remove(index)}
-                >
-                  <LucideTrash className="h-4 w-4" />
-                </Button>
               </li>
             );
           })}

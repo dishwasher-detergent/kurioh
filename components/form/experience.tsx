@@ -34,6 +34,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
           value: {
             id: x.$id,
             company: x.company,
+            website: x.website,
             title: x.title,
             description: x.description,
             start: x.start ? formatDate(x.start) : null,
@@ -69,6 +70,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
             EXPERIENCE_COLLECTION_ID,
             {
               company: exp.company,
+              website: exp.website,
               title: exp.title,
               description: exp.description,
               start: exp.start,
@@ -83,6 +85,7 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
             EXPERIENCE_COLLECTION_ID,
             {
               company: exp.company,
+              website: exp.website,
               title: exp.title,
               description: exp.description,
               start: exp.start,

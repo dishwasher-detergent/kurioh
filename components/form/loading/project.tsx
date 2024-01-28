@@ -4,7 +4,7 @@ import { LucideLoader2 } from "lucide-react";
 
 export const ProjectFormLoading = ({ title }: { title: string }) => {
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
       <div className="space-y-4">
         <LoadingInput title="Title" />
         <LoadingInput title="Short Description" className="h-16" />

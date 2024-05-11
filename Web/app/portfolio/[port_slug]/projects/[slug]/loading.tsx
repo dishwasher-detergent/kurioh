@@ -1,5 +1,13 @@
 import { ProjectFormLoading } from "@/components/form/loading/project";
+import { Header } from "@/components/ui/header";
 
 export default async function ProjectsLoading() {
-  return <ProjectFormLoading title="Edit" />;
+  return (
+    <Header
+      title={`Edit Project`}
+      description="Edit your project to make it even better!"
+    >
+      <ProjectFormLoading title="Edit" />
+    </Header>
+  );
 }

@@ -1,7 +1,7 @@
 import { InformationFormLoading } from "@/components/form/loading/information";
 import { Header } from "@/components/ui/header";
 
-export default async function PortfolioLoading() {
+export default function Test() {
   return (
     <Header
       title="Portfolio Information"

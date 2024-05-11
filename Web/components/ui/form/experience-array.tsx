@@ -37,7 +37,7 @@ export const ExperienceArrayInput = ({
       <Label>{title && <p className="pb-2">{title}</p>}</Label>
       <Card className="p-2">
         <ul className="mb-2 space-y-2 rounded-lg border bg-slate-100 px-4 dark:bg-slate-800 dark:text-slate-300">
-          {fields.map((item, index) => {
+          {fields.map((item: any, index: number) => {
             return (
               <li
                 key={item.id}
@@ -121,7 +121,7 @@ export const ExperienceArrayInput = ({
             );
           })}
           {fields.length === 0 && (
-            <li className="flex flex-row items-center text-sm font-semibold text-slate-500 dark:text-slate-300">
+            <li className="flex flex-row items-center p-2 text-sm font-semibold text-slate-500 dark:text-slate-300">
               <LucideGhost className="mr-2 h-4 w-4" />
               No {title}
             </li>

@@ -126,7 +126,11 @@ export const ExperienceForm = ({ data }: ExperienceFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
-          <ExperienceArrayInput form={form} name="experience" />
+          <ExperienceArrayInput
+            form={form}
+            name="experience"
+            title="Experience"
+          />
         </div>
         <footer className="flex flex-row justify-end gap-2">
           <Button

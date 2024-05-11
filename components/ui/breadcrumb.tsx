@@ -16,7 +16,7 @@ export const BreadCrumb = () => {
     <div>
       <ul className="flex flex-row items-center gap-2 text-sm">
         <Button asChild variant="ghost" size="icon">
-          <Link href={`/${current?.id}`}>
+          <Link href={`/portfolio/${current?.id}`}>
             <LucideBoxes className="h-6 w-6 text-primary" />
           </Link>
         </Button>

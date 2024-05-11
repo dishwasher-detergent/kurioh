@@ -74,7 +74,7 @@ export const ProjectCard = ({
           </DynamicDrawer>
         </div>
         <Button asChild>
-          <Link href={`/${current?.id}/projects/${slug}`}>
+          <Link href={`/portfolio/${current?.id}/projects/${slug}`}>
             <>
               <LucidePencil className="mr-2 h-4 w-4" />
               Edit

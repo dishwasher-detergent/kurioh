@@ -41,8 +41,6 @@ export const ProjectsSelect = () => {
 
       const projects = res.documents[0].projects;
 
-      console.log(params.slug);
-
       setProjects(projects);
       setLoading(false);
     }
@@ -53,7 +51,7 @@ export const ProjectsSelect = () => {
   return !loading ? (
     <Select
       onValueChange={(e) => {
-        router.push(`/${current?.id}/projects/${e}`);
+        router.push(`/portfolio/${current?.id}/projects/${e}`);
       }}
       value={params?.slug as string}
     >

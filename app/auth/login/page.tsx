@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -81,9 +82,17 @@ export default function Auth() {
   }
 
   return (
-    <Card className="max-w-3xl">
-      <CardHeader>
-        <CardTitle>{smsSent ? "Verify Code" : "Log In"}</CardTitle>
+    <Card className="mx-auto w-full max-w-sm">
+      <CardHeader className="mb-4 border-b">
+        <h1 className="mb-4 flex items-center gap-2 text-xl font-bold">
+          PortiCMS
+        </h1>
+        <CardTitle className="text-lg">Sign In</CardTitle>
+        <CardDescription>
+          {smsSent
+            ? "Enter the code sent to your phone number."
+            : "Enter your phone number to receive a code."}
+        </CardDescription>
       </CardHeader>
       {smsSent ? (
         <Form {...codeVerifyForm}>

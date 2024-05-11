@@ -30,7 +30,7 @@ export const Nav = () => {
                   variant="ghost"
                   className="flex flex-1 flex-row justify-start gap-4"
                 >
-                  <Link href={`/${current.id}`}>Portfolio</Link>
+                  <Link href={`/portfolio/${current.id}`}>Portfolio</Link>
                 </Button>
               </li>
               <li className="flex flex-row gap-2">
@@ -39,7 +39,9 @@ export const Nav = () => {
                   variant="ghost"
                   className="flex flex-1 flex-row justify-start gap-4"
                 >
-                  <Link href={`/${current.id}/projects`}>Projects</Link>
+                  <Link href={`/portfolio/${current.id}/projects`}>
+                    Projects
+                  </Link>
                 </Button>
               </li>
               <li className="flex flex-row gap-2">
@@ -48,7 +50,9 @@ export const Nav = () => {
                   variant="ghost"
                   className="flex flex-1 flex-row justify-start gap-4"
                 >
-                  <Link href={`/${current.id}/experience`}>Experience</Link>
+                  <Link href={`/portfolio/${current.id}/experience`}>
+                    Experience
+                  </Link>
                 </Button>
               </li>
             </>

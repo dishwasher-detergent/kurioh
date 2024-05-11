@@ -1,5 +1,4 @@
 import "@/app/globals.css";
-import { Nav } from "@/components/ui/nav";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -32,10 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <main className="flex h-full w-full flex-col overflow-hidden text-foreground">
-            <Nav />
-            <section className="overflow-x flex flex-1 flex-col overflow-y-auto">
-              {children}
-            </section>
+            {children}
           </main>
           <Toaster richColors />
         </ThemeProvider>

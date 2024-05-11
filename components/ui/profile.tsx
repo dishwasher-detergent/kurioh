@@ -22,7 +22,7 @@ export const Profile = () => {
 
   async function handleLogout() {
     await logout();
-    router.push("/");
+    router.push("/auth/login");
   }
 
   useEffect(() => {

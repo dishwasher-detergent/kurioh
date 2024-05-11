@@ -23,7 +23,16 @@ export const auth_service = {
    * @param phone The phone number for the user.
    */
   async createPhoneSession(phone: string) {
-    return await account.createPhoneSession(ID.unique(), phone);
+    return await account.createPhoneToken(ID.unique(), phone);
+  },
+
+  /**
+   * Verifies the phone session with the given user ID and secret.
+   * @param userId The user ID to verify.
+   * @param secret The secret to verify.
+   */
+  async verifyPhoneSession(userId: string, secret: string) {
+    return await account.createSession(userId, secret);
   },
 
   /**

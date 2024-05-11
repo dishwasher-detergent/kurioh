@@ -1,17 +1,18 @@
 "use client";
 
 import { usePortfolioStore } from "@/store/zustand";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default async function Main() {
+export default function Main() {
   const { current } = usePortfolioStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (current) {
-      redirect(current.id);
+      router.push(current.id);
     } else {
-      redirect("/portfolio/create");
+      router.push("/portfolio/create");
     }
   }, []);
 }

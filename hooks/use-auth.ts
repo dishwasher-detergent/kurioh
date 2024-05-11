@@ -6,12 +6,9 @@ export const useAuth = () => {
   const { update, remove, profile } = useProfileStore();
 
   const login = async (user: string, secret: string) => {
-    const response = await fetch("/api/auth/login", {
-      method: "PUT",
-      body: `{ "userId": "${user}", "secret": "${secret}" }`,
-    });
+    const response = await auth_service.verifyPhoneSession(user, secret);
 
-    if (!response.ok) {
+    if (!response) {
       toast.error("An error occurred while verifying your code.");
     }
 

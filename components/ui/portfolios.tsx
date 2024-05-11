@@ -53,7 +53,7 @@ export const PortfoliosSelect = () => {
         const data = JSON.parse(e);
 
         update(data);
-        router.push(`/${data.id}`);
+        router.push(`/portfolio/${data.id}`);
       }}
       value={`{"id": "${current?.id}", "title": "${current?.title}"}`}
     >

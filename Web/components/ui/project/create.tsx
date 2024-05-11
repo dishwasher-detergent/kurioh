@@ -10,7 +10,7 @@ export const CreateProject = () => {
   return (
     <div>
       <Button asChild>
-        <Link href={`/${current?.id}/projects/create`}>
+        <Link href={`/portfolio/${current?.id}/projects/create`}>
           Create a new project!
         </Link>
       </Button>

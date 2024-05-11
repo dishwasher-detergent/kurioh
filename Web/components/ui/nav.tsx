@@ -4,8 +4,8 @@ import { Bread } from "@/components/ui/bread";
 import { Button } from "@/components/ui/button";
 import { Profile } from "@/components/ui/profile";
 import { usePortfolioStore } from "@/store/zustand";
-import { LucideLoader2 } from "lucide-react";
 import Link from "next/link";
+import { Skeleton } from "./skeleton";
 
 export const Nav = () => {
   const { current } = usePortfolioStore();
@@ -60,8 +60,10 @@ export const Nav = () => {
               </li>
             </>
           ) : (
-            <div className="grid place-items-center">
-              <LucideLoader2 className="animate-spin" />
+            <div className="flex flex-row gap-2">
+              <Skeleton className="h-6 w-20" />
+              <Skeleton className="h-6 w-20" />
+              <Skeleton className="h-6 w-20" />
             </div>
           )}
         </ul>

@@ -3,6 +3,7 @@
 import "@/app/globals.css";
 import { Nav } from "@/components/ui/nav";
 import { auth_service } from "@/lib/appwrite";
+import { useProfileStore } from "@/store/zustand";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,11 +14,18 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const [auth, setAuth] = useState(false);
+  const { update } = useProfileStore();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await auth_service.getAccount();
+        const result = await auth_service.getAccount();
+
+        update({
+          id: result.$id,
+          name: result.name,
+          email: result.email,
+        });
         setAuth(true);
       } catch (err) {
         router.push("/auth/login");

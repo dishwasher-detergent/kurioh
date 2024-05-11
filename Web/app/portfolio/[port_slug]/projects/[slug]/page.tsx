@@ -21,7 +21,7 @@ async function fetchProject(port_slug: string, slug: string) {
     return project[0];
   } catch (err) {
     console.error(err);
-    redirect(`/${port_slug}/projects`);
+    redirect(`/portfolio/${port_slug}/projects`);
   }
 }
 

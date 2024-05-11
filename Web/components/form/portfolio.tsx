@@ -62,7 +62,7 @@ export const CreatePortfolioForm = () => {
         title: response.title,
       });
 
-      router.push(`/${response.$id}`);
+      router.push(`/portfolio/${response.$id}`);
     } catch (err) {
       toast.error("An error occurred while creating your portfolio.");
     }

@@ -93,7 +93,7 @@ export const CreateProjectForm = ({
 
       toast.success(`Project ${data.title} deleted successfully.`);
 
-      router.push(`/projects`);
+      router.push(`/portfolio/projects`);
     } catch (err) {
       toast.error("An error occurred while deleting your project.");
     }
@@ -167,7 +167,7 @@ export const CreateProjectForm = ({
 
         toast.success(`Project ${values.title} created successfully.`);
 
-        router.push(`/${current?.id}/projects/${slug}`);
+        router.push(`/portfolio/${current?.id}/projects/${slug}`);
       }
     } catch (err) {
       const error = err as Error;

@@ -45,7 +45,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
   });
 
   app.get(
-    '/portfolios/:portfolio_slug/projects/:project_slug/image/:image_id',
+    '/portfolios/:portfolio_slug/projects/:project_slug/images/:image_id',
     async (c) => {
       const portfolio_slug = c.req.param('portfolio_slug');
       const project_slug = c.req.param('project_slug');

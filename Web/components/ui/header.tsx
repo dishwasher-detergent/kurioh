@@ -12,8 +12,8 @@ export const Header = ({
   children,
 }: HeaderProps) => {
   return (
-    <div className="flex w-full flex-col gap-4 pb-6 bg-background">
-      <header className="border-b py-6">
+    <div className="flex w-full flex-col gap-4 pb-6">
+      <header className="border-b py-6 bg-background">
         <div className="mx-auto flex w-full max-w-5xl items-center px-4">
           <div className="flex-1">
             <h3 className="pb-1 text-3xl font-semibold">{title}</h3>

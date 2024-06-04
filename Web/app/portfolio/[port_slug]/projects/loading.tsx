@@ -10,7 +10,7 @@ export default async function ProjectsLoading() {
       title="Projects"
       description="All your cherished projects in one place."
     >
-      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {emptyArray.map((x, i) => (
           <ProjectLoading key={i} />
         ))}

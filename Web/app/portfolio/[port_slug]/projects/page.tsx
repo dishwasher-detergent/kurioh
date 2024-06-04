@@ -40,7 +40,7 @@ export default async function Projects({
       action={projects && projects?.length > 0 && <CreateProject />}
     >
       {(projects?.length === 0 || !projects) && <ProjectEmpty />}
-      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {projects?.map((project) => (
           <ProjectCard
             key={project.$id}

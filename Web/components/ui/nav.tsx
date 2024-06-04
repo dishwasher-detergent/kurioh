@@ -11,7 +11,7 @@ export const Nav = () => {
   const { current } = usePortfolioStore();
 
   return (
-    <nav className="w-full border-b px-2">
+    <nav className="w-full border-b px-2 bg-background">
       <div className="mx-auto flex w-full max-w-5xl flex-none flex-col flex-nowrap items-center gap-2 py-2">
         <ul className="flex w-full flex-row flex-nowrap justify-between gap-4 pl-2">
           <li className="flex items-center">

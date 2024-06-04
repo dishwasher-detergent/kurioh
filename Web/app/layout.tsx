@@ -19,7 +19,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={cn(
-          "h-screen w-screen overflow-hidden font-sans antialiased",
+          "h-screen w-screen overflow-hidden font-sans antialiased bg-muted",
           fontSans.className,
           fontSans.variable,
         )}

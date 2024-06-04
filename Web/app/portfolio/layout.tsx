@@ -26,6 +26,7 @@ export default function Layout({ children }: LayoutProps) {
           name: result.name,
           email: result.email,
         });
+
         setAuth(true);
       } catch (err) {
         router.push("/auth/login");
@@ -36,11 +37,12 @@ export default function Layout({ children }: LayoutProps) {
   }, []);
 
   return (
-    <>
-      <Nav />
-      <section className="overflow-x flex flex-1 flex-col overflow-y-auto">
-        {auth && children}
-      </section>
-    </>
+    auth && 
+      <>
+        <Nav />
+        <section className="overflow-x flex flex-1 flex-col overflow-y-auto">
+          {children}
+        </section>
+      </>
   );
 }

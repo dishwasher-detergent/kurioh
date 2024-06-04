@@ -57,8 +57,6 @@ export async function checkAuth() {
   try {
     await auth_service.getAccount();
   } catch (e) {
-    console.log(e);
-
     redirect("/auth/login");
   }
 }

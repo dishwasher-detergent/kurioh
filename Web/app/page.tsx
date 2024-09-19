@@ -10,6 +10,8 @@ export default function Main() {
   const router = useRouter();
 
   useEffect(() => {
+    console.log(current, init);
+
     if(init && !current) {
       setInit(false)
       return

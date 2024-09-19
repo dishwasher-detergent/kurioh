@@ -5,17 +5,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Main() {
-  const [init, setInit] = useState(true);
-  const { current } = usePortfolioStore();
+  const { current, update } = usePortfolioStore();
   const router = useRouter();
+  const [init, setInit] = useState(true);
 
   useEffect(() => {
-    console.log(current, init);
-
-    if(init && !current) {
-      setInit(false)
-      return
-    };
+    if(!current && init) {
+      setInit(false);
+      return;
+    }
 
     if (current) {
       router.push(current.id);

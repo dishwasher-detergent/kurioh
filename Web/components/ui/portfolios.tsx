@@ -63,7 +63,7 @@ export const PortfoliosSelect = () => {
           defaultValue={params.port_slug}
         />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="min-w-[200px]">
         {portfolios.map((item) => (
           <SelectItem
             key={item.$id}
@@ -75,7 +75,7 @@ export const PortfoliosSelect = () => {
         <Separator className="my-2" />
         <Link
           href={`/portfolio/create`}
-          className="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+          className="relative flex w-full cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
         >
           Create
           <LucidePlus className="ml-2 h-4 w-4" />

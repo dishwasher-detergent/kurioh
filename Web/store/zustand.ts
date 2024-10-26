@@ -49,7 +49,7 @@ export const usePortfolioStore = create(
     }),
     {
       name: "porti-storage",
-      skipHydration: true,
+      skipHydration: false,
       storage: createJSONStorage(() => storage),
     },
   ),

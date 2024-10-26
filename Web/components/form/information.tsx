@@ -135,8 +135,6 @@ export const InformationForm = ({ data }: InformationFormProps) => {
       portfolios: current?.id,
     };
 
-    console.log(information);
-
     try {
       if (data?.$id) {
         await database_service.update<Information>(

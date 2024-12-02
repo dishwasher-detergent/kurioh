@@ -1,40 +1,26 @@
-import "@/app/globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { Inter as FontSans } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+import "./globals.css";
 
-export const fontSans = FontSans({
+import { Dev } from "@/providers/jotai-devtools";
+import { Noto_Sans_Mono as Font } from "next/font/google";
+
+const font = Font({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
-interface RootLayoutProps {
+export default async function RootLayout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
+    <html lang="en">
       <body
-        className={cn(
-          "h-screen w-screen overflow-hidden bg-muted font-sans antialiased dark:bg-slate-900",
-          fontSans.className,
-          fontSans.variable,
-        )}
+        className={`${font.className} min-h-dvh overflow-x-hidden antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <main className="flex h-full w-full flex-col overflow-hidden text-foreground">
-            {children}
-          </main>
-          <Toaster richColors />
-        </ThemeProvider>
+        {children}
+        <Dev />
+        <Toaster />
       </body>
     </html>
   );

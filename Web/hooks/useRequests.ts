@@ -1,4 +1,4 @@
-import { portfolioIdAtom } from "@/atoms/portfolio";
+import { organizationIdAtom } from "@/atoms/organization";
 import { Request as RequestItem } from "@/interfaces/request.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
@@ -8,13 +8,13 @@ import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
 export const useRequests = () => {
-  const portfolioId = useAtomValue(portfolioIdAtom);
+  const organizationId = useAtomValue(organizationIdAtom);
   const [requests, setRequests] = useState<RequestItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    async function fetchRequests(portfolioId: string) {
+    async function fetchRequests(organizationId: string) {
       setLoading(true);
       const { database } = await createClient();
 
@@ -22,7 +22,7 @@ export const useRequests = () => {
         DATABASE_ID,
         REQUEST_COLLECTION_ID,
         [
-          Query.equal("portfolioId", portfolioId),
+          Query.equal("organizationId", organizationId),
           Query.orderDesc("$createdAt"),
         ],
       );
@@ -31,10 +31,10 @@ export const useRequests = () => {
       setLoading(false);
     }
 
-    if (portfolioId && requests.length === 0) {
-      fetchRequests(portfolioId);
+    if (organizationId && requests.length === 0) {
+      fetchRequests(organizationId);
     }
-  }, [portfolioId, requests.length]);
+  }, [organizationId, requests.length]);
 
   useEffect(() => {
     async function fetchClient() {
@@ -52,7 +52,7 @@ export const useRequests = () => {
       unsubscribe = client.subscribe<RequestItem>(
         `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
         (response) => {
-          if (response.payload.portfolioId === portfolioId) {
+          if (response.payload.organizationId === organizationId) {
             if (
               response.events.includes(
                 "databases.*.collections.*.documents.*.create",
@@ -78,7 +78,7 @@ export const useRequests = () => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [client, portfolioId]);
+  }, [client, organizationId]);
 
   return { requests, loading };
 };

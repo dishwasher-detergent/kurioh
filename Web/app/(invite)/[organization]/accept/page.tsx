@@ -67,7 +67,7 @@ export default function Invite() {
             </p>
           ) : null}
           <div className="grid gap-2">
-            <Label>Portfolio</Label>
+            <Label>Organization</Label>
             <p className="font-bold">{teamId}</p>
           </div>
           <input name="teamId" value={teamId} readOnly className="hidden" />

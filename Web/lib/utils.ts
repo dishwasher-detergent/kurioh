@@ -1,4 +1,4 @@
-import { Portfolio } from "@/interfaces/portfolio.interface";
+import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import {
@@ -10,7 +10,6 @@ import {
 
 import { ID, Permission, Query, Role } from "appwrite";
 import { clsx, type ClassValue } from "clsx";
-import { generate } from "random-words";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
@@ -18,46 +17,59 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function createProject() {
+export async function createProject(organizationId?: string) {
   const { database } = await createClient();
   const user = await getLoggedInUser();
-  const currentProject = "TEST";
 
   if (!user) {
+    toast.error(
+      "Failed to create project, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  if (!organizationId) {
+    toast.error(
+      "Failed to create project, no organization was given for this project.",
+    );
     return;
   }
 
   try {
     const data = await database.createDocument<Project>(
       DATABASE_ID,
-      PORTFOLIOS_COLLECTION_ID,
+      PROJECTS_COLLECTION_ID,
       ID.unique(),
-      {},
+      {
+        title: "test",
+        short_description: "short description",
+        description: "description",
+        ordinal: 1,
+        slug: "test",
+        organization_id: organizationId,
+        createdBy: user.$id,
+      },
       [
-        Permission.read(Role.team(currentProject)),
-        Permission.write(Role.team(currentProject)),
+        Permission.read(Role.team(organizationId)),
+        Permission.write(Role.team(organizationId)),
         Permission.read(Role.user(user?.$id)),
         Permission.write(Role.user(user?.$id)),
       ],
     );
 
-    toast.success(`${data.$id} has been created!`);
+    toast.success(`${data.title} has been created!`);
     return data;
   } catch (err) {
+    console.error(err);
+
     toast.error(`Failed to create project!`);
     return;
   }
 }
 
-export async function createPortfolio() {
+export async function createOrganization() {
   const { database, team } = await createClient();
   const user = await getLoggedInUser();
-  const maxCheckCount = 5;
-  let id = generate({
-    exactly: 10,
-    wordsPerString: 3,
-    separator: "-",
-  }) as string[];
 
   if (!user) {
     return;
@@ -70,54 +82,19 @@ export async function createPortfolio() {
     return null;
   }
 
-  let doesPortfolioExist = true;
-  let checks = 0;
-  let portfolioId;
-
-  do {
-    checks++;
-    const checkedPortfolios = await database.listDocuments(
-      DATABASE_ID,
-      PORTFOLIOS_COLLECTION_ID,
-      [Query.equal("$id", id)],
-    );
-
-    if (checkedPortfolios.total < 10) {
-      doesPortfolioExist = false;
-      portfolioId = id.filter(
-        (x) => !checkedPortfolios.documents.map((y) => y.$id).includes(x),
-      )[0];
-    } else {
-      id = generate({
-        exactly: 10,
-        wordsPerString: 3,
-        separator: "-",
-      }) as string[];
-    }
-  } while (doesPortfolioExist == true || checks == maxCheckCount);
-
-  if (checks == maxCheckCount) {
-    toast.error("Could not find valid org name.");
-
-    return;
-  }
-
-  if (!portfolioId) {
-    toast.error("Could not generate valid org name.");
-
-    return;
-  }
+  const organizationId = ID.unique();
 
   try {
-    const teamData = await team.create(portfolioId, portfolioId);
+    const teamData = await team.create(organizationId, organizationId);
 
-    const data = await database.createDocument<Portfolio>(
+    const data = await database.createDocument<Organization>(
       DATABASE_ID,
       PORTFOLIOS_COLLECTION_ID,
-      portfolioId,
+      organizationId,
       {
-        shared: false,
-        description: null,
+        title: organizationId,
+        slug: organizationId,
+        createdBy: user.$id,
       },
       [
         Permission.read(Role.team(teamData.$id)),
@@ -127,15 +104,15 @@ export async function createPortfolio() {
       ],
     );
 
-    toast.success(`${data.$id} has been created!`);
+    toast.success(`${data.title} has been created!`);
     return data;
   } catch {
-    toast.error(`Failed to create ${portfolioId}!`);
+    toast.error(`Failed to create ${organizationId}!`);
     return;
   }
 }
 
-export async function deletePortfolio(portfolioId: string) {
+export async function deleteOrganization(organizationId: string) {
   const { database, team } = await createClient();
   const user = await getLoggedInUser();
 
@@ -144,7 +121,10 @@ export async function deletePortfolio(portfolioId: string) {
   }
 
   let response;
-  const queries = [Query.limit(50), Query.equal("portfolioId", portfolioId)];
+  const queries = [
+    Query.limit(50),
+    Query.equal("organizationId", organizationId),
+  ];
 
   do {
     response = await database.listDocuments(
@@ -164,11 +144,11 @@ export async function deletePortfolio(portfolioId: string) {
     );
   } while (response.documents.length > 0);
 
-  await team.delete(portfolioId);
+  await team.delete(organizationId);
   await database.deleteDocument(
     DATABASE_ID,
     PORTFOLIOS_COLLECTION_ID,
-    portfolioId,
+    organizationId,
   );
 
   const data = await database.listDocuments(
@@ -177,7 +157,7 @@ export async function deletePortfolio(portfolioId: string) {
     [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
-  toast.error(`${portfolioId} has been deleted!`);
+  toast.error(`${organizationId} has been deleted!`);
 
   if (data.documents.length > 0) {
     return data.documents[0].$id;
@@ -186,7 +166,7 @@ export async function deletePortfolio(portfolioId: string) {
   return null;
 }
 
-export async function leavePortfolio(portfolioId: string) {
+export async function leaveOrganization(organizationId: string) {
   const { database, team } = await createClient();
   const user = await getLoggedInUser();
 
@@ -194,7 +174,7 @@ export async function leavePortfolio(portfolioId: string) {
     return;
   }
 
-  const memberships = await team.listMemberships(portfolioId, [
+  const memberships = await team.listMemberships(organizationId, [
     Query.equal("userId", user.$id),
   ]);
 
@@ -202,19 +182,19 @@ export async function leavePortfolio(portfolioId: string) {
 
   if (!membership) {
     toast.error(
-      `An error occured while leaving ${portfolioId}, please try again.`,
+      `An error occured while leaving ${organizationId}, please try again.`,
     );
     return;
   }
 
   if (membership.roles.includes("owner")) {
     toast.error(
-      "The owner cannot leave their own portfolio, delete it instead.",
+      "The owner cannot leave their own organization, delete it instead.",
     );
     return;
   }
 
-  await team.deleteMembership(portfolioId, membership.$id);
+  await team.deleteMembership(organizationId, membership.$id);
 
   const data = await database.listDocuments(
     DATABASE_ID,
@@ -222,7 +202,7 @@ export async function leavePortfolio(portfolioId: string) {
     [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
-  toast.error(`You've left ${portfolioId}!`);
+  toast.error(`You've left ${organizationId}!`);
 
   if (data.documents.length > 0) {
     return data.documents[0].$id;
@@ -231,24 +211,24 @@ export async function leavePortfolio(portfolioId: string) {
   return null;
 }
 
-export async function sharePortfolio(portfolioId: string, email: string) {
+export async function shareOrganization(organizationId: string, email: string) {
   const { team } = await createClient();
 
   try {
     await team.createMembership(
-      portfolioId,
+      organizationId,
       [],
       email,
       undefined,
       undefined,
-      `${location.protocol}//${HOSTNAME}/${portfolioId}/accept`,
+      `${location.protocol}//${HOSTNAME}/${organizationId}/accept`,
       undefined,
     );
   } catch {
-    toast.error(`Failed to invite ${email} to ${portfolioId}`);
+    toast.error(`Failed to invite ${email} to ${organizationId}`);
     return;
   }
 
-  toast.success(`${email} has been invited to ${portfolioId}`);
+  toast.success(`${email} has been invited to ${organizationId}`);
   return;
 }

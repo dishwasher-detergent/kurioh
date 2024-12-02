@@ -44,7 +44,7 @@ export function RequestsChart({ data }: { data: ChartData[] }) {
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b border-dashed p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-2">
-          <CardTitle>Portfolio Requests</CardTitle>
+          <CardTitle>Organization Requests</CardTitle>
           <CardDescription className="text-xs">
             Showing total requests by the hour
           </CardDescription>

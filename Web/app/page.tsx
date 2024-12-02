@@ -1,10 +1,11 @@
 "use client";
 
-import { portfolioIdAtom } from "@/atoms/portfolio";
+import { organizationIdAtom } from "@/atoms/organization";
 import { Button } from "@/components/ui/button";
+import { Organization } from "@/interfaces/organization.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
-import { createPortfolio } from "@/lib/utils";
+import { createOrganization } from "@/lib/utils";
 
 import { useAtom } from "jotai";
 import { LucideLoader2, LucidePlus } from "lucide-react";
@@ -13,14 +14,14 @@ import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [portfolioId, setportfolioId] = useAtom(portfolioIdAtom);
-  const [loadingCreatePortfolio, setLoadingCreatePortfolio] =
+  const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
+  const [loadingCreateOrganization, setLoadingCreateOrganization] =
     useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
-    async function getportfolios() {
+    async function getOrganizations() {
       setLoading(true);
       const { database } = await createClient();
       const user = await getLoggedInUser();
@@ -30,38 +31,44 @@ export default function Home() {
         return;
       }
 
-      if (portfolioId) {
-        router.push(portfolioId);
+      if (organizationId) {
+        router.push(organizationId.id);
         return;
       }
 
-      const data = await database.listDocuments(
+      const data = await database.listDocuments<Organization>(
         DATABASE_ID,
         PORTFOLIOS_COLLECTION_ID,
         [Query.orderDesc("$createdAt"), Query.limit(1)],
       );
 
       if (data.documents.length > 0) {
-        setportfolioId(data.documents[0].$id);
+        setorganizationId({
+          title: data.documents[0].title,
+          id: data.documents[0].$id,
+        });
         router.replace(data.documents[0].$id);
       }
 
       setLoading(false);
     }
 
-    getportfolios();
-  }, [portfolioId]);
+    getOrganizations();
+  }, [organizationId]);
 
   async function create() {
-    setLoadingCreatePortfolio(true);
-    const data = await createPortfolio();
+    setLoadingCreateOrganization(true);
+    const data = await createOrganization();
 
     if (data) {
-      setportfolioId(data.$id);
+      setorganizationId({
+        title: data.title,
+        id: data.$id,
+      });
       router.push(data.$id);
     }
 
-    setLoadingCreatePortfolio(false);
+    setLoadingCreateOrganization(false);
   }
 
   return (
@@ -69,7 +76,7 @@ export default function Home() {
       {loading && (
         <p className="flex flex-row items-center gap-2">
           <LucideLoader2 className="size-4 animate-spin" />
-          Checking for existing portfolios
+          Checking for existing organizations
         </p>
       )}
       {!loading && (
@@ -79,15 +86,15 @@ export default function Home() {
           </h1>
           <p>Lets get started!</p>
           <Button onClick={create}>
-            {loadingCreatePortfolio ? (
+            {loadingCreateOrganization ? (
               <>
                 <LucideLoader2 className="mr-2 size-4 animate-spin" />
-                Creating Portfolio
+                Creating Organization
               </>
             ) : (
               <>
                 <LucidePlus className="mr-2 size-4" />
-                Create Portfolio
+                Create Organization
               </>
             )}
           </Button>

@@ -1,8 +1,7 @@
 "use client";
 
-import { portfolioIdAtom } from "@/atoms/portfolio";
+import { organizationIdAtom } from "@/atoms/organization";
 import { projectIdAtom } from "@/atoms/project";
-import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -22,6 +21,7 @@ import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { cn, createProject } from "@/lib/utils";
+import { Query } from "appwrite";
 
 import { useAtom, useAtomValue } from "jotai";
 import { Check, ChevronsUpDown, LucideLoader2, LucidePlus } from "lucide-react";
@@ -31,15 +31,13 @@ import { useEffect, useState } from "react";
 export function Project() {
   const router = useRouter();
 
-  const portfolioId = useAtomValue(portfolioIdAtom);
+  const organizationId = useAtomValue(organizationIdAtom);
   const [projectId, setprojectId] = useAtom(projectIdAtom);
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingCreateProject, setLoadingCreateProject] =
     useState<boolean>(false);
-  const [owner, setOwner] = useState<boolean>(false);
-  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
 
   async function fetchProjects() {
     setLoading(true);
@@ -48,6 +46,7 @@ export function Project() {
     const data = await database.listDocuments<ProjectItem>(
       DATABASE_ID,
       PROJECTS_COLLECTION_ID,
+      [Query.equal("organization_id", organizationId!.id)],
     );
 
     if (data.documents.length > 0) {
@@ -58,6 +57,8 @@ export function Project() {
   }
 
   useEffect(() => {
+    if (!organizationId) return;
+
     if (projects.length == 0) {
       fetchProjects();
     }
@@ -65,7 +66,7 @@ export function Project() {
 
   async function create() {
     setLoadingCreateProject(true);
-    const data = await createProject();
+    const data = await createProject(organizationId?.id);
 
     if (data) {
       setProjects((prev) => [...prev, data]);
@@ -73,13 +74,13 @@ export function Project() {
         id: data.$id,
         title: data.title,
       });
-      router.push(`${portfolioId}/${data.$id}`);
+      router.push(`${organizationId?.id}/${data.$id}`);
     }
 
     setLoadingCreateProject(false);
   }
 
-  if (!portfolioId) return null;
+  if (!organizationId) return null;
 
   return (
     <>
@@ -127,13 +128,13 @@ export function Project() {
                       <CommandItem
                         key={project.$id}
                         value={project.$id}
-                        onSelect={() => {
+                        onSelect={(currentValue) => {
                           setprojectId({
                             title: project.title,
-                            id: project.$id,
+                            id: currentValue,
                           });
                           setOpen(false);
-                          router.push(`/${portfolioId}/${project.$id}`);
+                          router.push(`/${organizationId}/${project.$id}`);
                         }}
                         className="cursor-pointer text-xs"
                       >
@@ -165,7 +166,6 @@ export function Project() {
                     <LucidePlus className="ml-2 size-3.5" />
                   )}
                 </Button>
-                {!loadingAuth && <>{owner && <Share />}</>}
               </div>
             </PopoverContent>
           </Popover>

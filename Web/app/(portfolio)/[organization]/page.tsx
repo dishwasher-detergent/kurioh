@@ -1,7 +1,7 @@
 "use client";
 
-import { portfolioIdAtom } from "@/atoms/portfolio";
-import { Portfolio } from "@/interfaces/portfolio.interface";
+import { organizationIdAtom } from "@/atoms/organization";
+import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
 
@@ -10,37 +10,40 @@ import { useRouter } from "next/navigation";
 import { Usable, use, useEffect } from "react";
 
 interface Params {
-  portfolio: string;
+  organization: string;
 }
 
 interface Props {
   params: Usable<Params>;
 }
 
-export default async function PortfolioPage({ params }: Props) {
-  const [portfolioId, setPortfolioId] = useAtom(portfolioIdAtom);
+export default function OrganizationPage({ params }: Props) {
+  const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
   const router = useRouter();
-  const { portfolio: portfolioParam } = use(params);
+  const { organization: organizationParam } = use(params);
 
   useEffect(() => {
-    async function validatePortfolio() {
+    async function validateOrganization() {
       try {
         const { database } = await createClient();
-        await database.getDocument<Portfolio>(
+        const org = await database.getDocument<Organization>(
           DATABASE_ID,
           PORTFOLIOS_COLLECTION_ID,
-          portfolioParam,
+          organizationParam,
         );
 
-        setPortfolioId(portfolioParam);
+        setOrganizationId({
+          title: org.title,
+          id: org.$id,
+        });
       } catch {
-        setPortfolioId(null);
+        setOrganizationId(null);
         router.push("not-found");
       }
     }
 
-    if (portfolioParam != portfolioId) {
-      validatePortfolio();
+    if (organizationParam != organizationId?.id) {
+      validateOrganization();
     }
   }, []);
 

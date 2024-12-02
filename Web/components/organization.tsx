@@ -1,6 +1,6 @@
 "use client";
 
-import { portfolioIdAtom } from "@/atoms/portfolio";
+import { organizationIdAtom } from "@/atoms/organization";
 import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,10 +17,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Portfolio as PortfolioItem } from "@/interfaces/portfolio.interface";
+import { Organization as OrganizationItem } from "@/interfaces/organization.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
-import { cn, createPortfolio } from "@/lib/utils";
+import { cn, createOrganization } from "@/lib/utils";
 
 import { Query } from "appwrite";
 import { useAtom } from "jotai";
@@ -28,39 +28,39 @@ import { Check, ChevronsUpDown, LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export function Portfolio() {
+export function Organization() {
   const router = useRouter();
 
-  const [portfolioId, setportfolioId] = useAtom(portfolioIdAtom);
+  const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
   const [open, setOpen] = useState(false);
-  const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
+  const [organizations, setOrganizations] = useState<OrganizationItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingCreatePortfolio, setLoadingCreatePortfolio] =
+  const [loadingCreateOrganization, setLoadingCreateOrganization] =
     useState<boolean>(false);
   const [owner, setOwner] = useState<boolean>(false);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
 
-  async function fetchPortfolios() {
+  async function fetchOrganizations() {
     setLoading(true);
     const { database } = await createClient();
 
-    const data = await database.listDocuments<PortfolioItem>(
+    const data = await database.listDocuments<OrganizationItem>(
       DATABASE_ID,
       PORTFOLIOS_COLLECTION_ID,
     );
 
     if (data.documents.length > 0) {
-      setPortfolios(data.documents);
+      setOrganizations(data.documents);
     }
 
     setLoading(false);
   }
 
   useEffect(() => {
-    if (portfolios.length == 0) {
-      fetchPortfolios();
+    if (organizations.length == 0) {
+      fetchOrganizations();
     }
-  }, [portfolios]);
+  }, [organizations]);
 
   useEffect(() => {
     async function checkAuthorization() {
@@ -69,8 +69,8 @@ export function Portfolio() {
       const { team } = await createClient();
       const user = await getLoggedInUser();
 
-      if (user && portfolioId) {
-        const memberships = await team.listMemberships(portfolioId, [
+      if (user && organizationId) {
+        const memberships = await team.listMemberships(organizationId.id, [
           Query.equal("userId", user.$id),
         ]);
 
@@ -82,40 +82,43 @@ export function Portfolio() {
     }
 
     checkAuthorization();
-  }, [portfolioId]);
+  }, [organizationId]);
 
   async function create() {
-    setLoadingCreatePortfolio(true);
-    const data = await createPortfolio();
+    setLoadingCreateOrganization(true);
+    const data = await createOrganization();
 
     if (data) {
-      setPortfolios((prev) => [...prev, data]);
-      setportfolioId(data.$id);
+      setOrganizations((prev) => [...prev, data]);
+      setorganizationId({
+        title: data.title,
+        id: data.$id,
+      });
       router.push(data.$id);
     }
 
-    setLoadingCreatePortfolio(false);
+    setLoadingCreateOrganization(false);
   }
 
   return (
     <>
-      {portfolios.length == 0 && !loading ? (
+      {organizations.length == 0 && !loading ? (
         <Button onClick={create} size="sm">
-          {loadingCreatePortfolio ? (
+          {loadingCreateOrganization ? (
             <>
               <LucideLoader2 className="mr-2 size-4 animate-spin" />
-              Creating Portfolio
+              Creating Organization
             </>
           ) : (
             <>
               <LucidePlus className="mr-2 size-4" />
-              Create Portfolio
+              Create Organization
             </>
           )}
         </Button>
       ) : null}
       {loading && <Skeleton className="h-8 min-w-32" />}
-      {portfolios.length > 0 && !loading && (
+      {organizations.length > 0 && !loading && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -126,7 +129,7 @@ export function Portfolio() {
                 aria-expanded={open}
                 className="min-w-32 justify-between truncate font-normal text-muted-foreground md:w-auto"
               >
-                <span className="truncate">{portfolioId}</span>
+                <span className="truncate">{organizationId?.title}</span>
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -134,31 +137,34 @@ export function Portfolio() {
               <Command>
                 <CommandInput
                   className="h-8 text-xs"
-                  placeholder="Search portfolio..."
+                  placeholder="Search organization..."
                 />
                 <CommandList>
-                  <CommandEmpty>No portfolio found.</CommandEmpty>
+                  <CommandEmpty>No organization found.</CommandEmpty>
                   <CommandGroup>
-                    {portfolios.map((portfolio) => (
+                    {organizations.map((organization) => (
                       <CommandItem
-                        key={portfolio.$id}
-                        value={portfolio.$id}
+                        key={organization.$id}
+                        value={organization.$id}
                         onSelect={(currentValue) => {
-                          setportfolioId(currentValue);
+                          setorganizationId({
+                            id: currentValue,
+                            title: organization.title,
+                          });
                           setOpen(false);
-                          router.push(portfolio.$id);
+                          router.push(organization.$id);
                         }}
                         className="cursor-pointer text-xs"
                       >
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            portfolioId === portfolio.$id
+                            organizationId?.id === organization.$id
                               ? "opacity-100"
                               : "opacity-0",
                           )}
                         />
-                        {portfolio.$id}
+                        {organization.title}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -169,10 +175,10 @@ export function Portfolio() {
                   onClick={create}
                   variant="outline"
                   size="sm"
-                  className="flex-none"
+                  className="flex-1"
                 >
-                  New
-                  {loadingCreatePortfolio ? (
+                  New Org
+                  {loadingCreateOrganization ? (
                     <LucideLoader2 className="ml-2 size-3.5 animate-spin" />
                   ) : (
                     <LucidePlus className="ml-2 size-3.5" />

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Usable, use, useEffect } from "react";
 
 interface Params {
-  portfolio: string;
+  organization: string;
   project: string;
 }
 

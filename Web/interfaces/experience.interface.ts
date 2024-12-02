@@ -1,4 +1,4 @@
-import { Portfolio } from "@/interfaces/portfolio.interface";
+import { Organization } from "@/interfaces/organization.interface";
 import { Models } from "appwrite";
 
 export interface Experience extends Models.Document {
@@ -9,6 +9,6 @@ export interface Experience extends Models.Document {
   languages: string[];
   start: Date;
   end: Date;
-  portfolios: Portfolio;
+  organizations: Organization;
   creator: string;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { portfolioIdAtom } from "@/atoms/portfolio";
+import { organizationIdAtom } from "@/atoms/organization";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { cn, sharePortfolio } from "@/lib/utils";
+import { cn, shareOrganization } from "@/lib/utils";
 
 import { useAtom } from "jotai";
 import { LucideLoader2, LucideShare2 } from "lucide-react";
@@ -38,14 +38,13 @@ export function Share() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm">
-            Share
-            <LucideShare2 className="ml-2 size-3.5" />
+          <Button variant="outline" size="icon" className="size-8">
+            <LucideShare2 className="size-3.5" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Share Portfolio</DialogTitle>
+            <DialogTitle>Share Organization</DialogTitle>
             <DialogDescription className="text-xs">
               Enter the email of whomever you want to share with.
             </DialogDescription>
@@ -66,7 +65,7 @@ export function Share() {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Share Portfolio</DrawerTitle>
+          <DrawerTitle>Share Organization</DrawerTitle>
           <DrawerDescription className="text-xs">
             Enter the email of whomever you want to share with.
           </DrawerDescription>
@@ -87,17 +86,17 @@ interface FormProps extends React.ComponentProps<"form"> {
 }
 
 function Form({ className, setOpen }: FormProps) {
-  const [portfolioId, _] = useAtom(portfolioIdAtom);
+  const [organizationId, _] = useAtom(organizationIdAtom);
 
-  const [loadingSharePortfolio, setLoadingSharePortfolio] =
+  const [loadingShareOrganization, setLoadingShareOrganization] =
     useState<boolean>(false);
   const [email, setEmail] = useState<string | null>(null);
 
   async function share() {
-    setLoadingSharePortfolio(true);
+    setLoadingShareOrganization(true);
 
-    if (!portfolioId) {
-      toast.error("No portfolio specified!");
+    if (!organizationId) {
+      toast.error("No organization specified!");
       return;
     }
 
@@ -106,9 +105,9 @@ function Form({ className, setOpen }: FormProps) {
       return;
     }
 
-    await sharePortfolio(portfolioId, email);
+    await shareOrganization(organizationId.id, email);
 
-    setLoadingSharePortfolio(false);
+    setLoadingShareOrganization(false);
     setOpen(false);
   }
 
@@ -128,8 +127,8 @@ function Form({ className, setOpen }: FormProps) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      <Button type="submit" disabled={loadingSharePortfolio}>
-        {loadingSharePortfolio ? (
+      <Button type="submit" disabled={loadingShareOrganization}>
+        {loadingShareOrganization ? (
           <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
         ) : (
           <LucideShare2 className="mr-2 size-3.5" />

@@ -2,7 +2,7 @@
 
 import { organizationIdAtom } from "@/atoms/organization";
 import { projectIdAtom } from "@/atoms/project";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -71,26 +71,17 @@ export function Project() {
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-              <div className="flex items-center">
-                <p
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "sm",
-                  })}
-                >
-                  {projectId?.title ?? "Select Project..."}
-                </p>
-                <Button
-                  onClick={() => setOpen(!open)}
-                  size="icon"
-                  variant="ghost"
-                  role="combobox"
-                  aria-expanded={open}
-                  className="size-8 text-muted-foreground"
-                >
-                  <ChevronsUpDown className="size-4" />
-                </Button>
-              </div>
+              <Button
+                onClick={() => setOpen(!open)}
+                size="sm"
+                variant="ghost"
+                role="combobox"
+                aria-expanded={open}
+                className="text-muted-foreground"
+              >
+                {projectId?.title ?? "Select Project..."}
+                <ChevronsUpDown className="ml-2 size-4" />
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0" align="start">
               <Command>

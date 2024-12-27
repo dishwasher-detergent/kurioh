@@ -8,7 +8,7 @@ import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
-import { useParams, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 type Params = {
@@ -37,7 +37,7 @@ export default function OrganizationPage() {
         });
       } catch {
         setOrganizationId(null);
-        router.push("not-found");
+        notFound();
       }
     }
 

@@ -67,9 +67,6 @@ importers:
       node-appwrite:
         specifier: ^14.1.0
         version: 14.1.0
-      random-words:
-        specifier: ^2.0.1
-        version: 2.0.1
       react:
         specifier: 19.0.0-rc-65a56d0e-20241020
         version: 19.0.0-rc-65a56d0e-20241020
@@ -2246,9 +2243,6 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  random-words@2.0.1:
-    resolution: {integrity: sha512-nZNJAmgcFmtJMTDDIUCm/iK4R6RydC6NvALvWhYItXQrgYGk1F7Gww416LpVROFQtfVd5TaLEf4WuSsko03N7w==}
-
   react-base16-styling@0.9.1:
     resolution: {integrity: sha512-1s0CY1zRBOQ5M3T61wetEpvQmsYSNtWEcdYzyZNxKa8t7oDvaOn9d21xrGezGAHFWLM7SHcktPuPTrvoqxSfKw==}
 
@@ -2426,9 +2420,6 @@ packages:
 
   scheduler@0.25.0-rc-65a56d0e-20241020:
     resolution: {integrity: sha512-HxWcXSy0sNnf+TKRkMwyVD1z19AAVQ4gUub8m7VxJUUfSu3J4lr1T+AagohKEypiW5dbQhJuCtAumPY6z9RQ1g==}
-
-  seedrandom@3.0.5:
-    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -4895,10 +4886,6 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  random-words@2.0.1:
-    dependencies:
-      seedrandom: 3.0.5
-
   react-base16-styling@0.9.1:
     dependencies:
       '@babel/runtime': 7.26.0
@@ -5114,8 +5101,6 @@ snapshots:
       is-regex: 1.1.4
 
   scheduler@0.25.0-rc-65a56d0e-20241020: {}
-
-  seedrandom@3.0.5: {}
 
   semver@6.3.1: {}
 

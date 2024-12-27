@@ -6,22 +6,18 @@ import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { Usable, use, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-interface Params {
+type Params = {
   organization: string;
   project: string;
-}
+};
 
-interface Props {
-  params: Usable<Params>;
-}
-
-export default function ProjectPage({ params }: Props) {
+export default function ProjectPage() {
   const [projectId, setProjectId] = useAtom(projectIdAtom);
   const router = useRouter();
-  const { project: projectParam } = use(params);
+  const { project: projectParam } = useParams<Params>();
 
   useEffect(() => {
     async function validateProject() {

@@ -8,22 +8,18 @@ import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { Usable, use, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-interface Params {
+type Params = {
   organization: string;
-}
+};
 
-interface Props {
-  params: Usable<Params>;
-}
-
-export default function OrganizationPage({ params }: Props) {
+export default function OrganizationPage() {
   const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
   const router = useRouter();
-  const { loading, projects } = useProjects();
-  const { organization: organizationParam } = use(params);
+  const { projects } = useProjects();
+  const { organization: organizationParam } = useParams<Params>();
 
   useEffect(() => {
     async function validateOrganization() {

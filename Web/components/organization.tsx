@@ -1,8 +1,9 @@
 "use client";
 
 import { organizationIdAtom } from "@/atoms/organization";
+import { projectIdAtom } from "@/atoms/project";
 import { Share } from "@/components/share";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -20,17 +21,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Organization as OrganizationItem } from "@/interfaces/organization.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
-import { cn, createOrganization } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 import { Query } from "appwrite";
 import { useAtom } from "jotai";
-import { Check, ChevronsUpDown, LucideLoader2, LucidePlus } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CreateOrg } from "./create-organization";
 
 export function Organization() {
   const router = useRouter();
 
+  const [projectId, setProjectId] = useAtom(projectIdAtom);
   const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
   const [open, setOpen] = useState(false);
   const [organizations, setOrganizations] = useState<OrganizationItem[]>([]);
@@ -49,18 +53,13 @@ export function Organization() {
       PORTFOLIOS_COLLECTION_ID,
     );
 
-    if (data.documents.length > 0) {
-      setOrganizations(data.documents);
-    }
-
+    setOrganizations(data.documents);
     setLoading(false);
   }
 
   useEffect(() => {
-    if (organizations.length == 0) {
-      fetchOrganizations();
-    }
-  }, [organizations]);
+    fetchOrganizations();
+  }, []);
 
   useEffect(() => {
     async function checkAuthorization() {
@@ -84,54 +83,40 @@ export function Organization() {
     checkAuthorization();
   }, [organizationId]);
 
-  async function create() {
-    setLoadingCreateOrganization(true);
-    const data = await createOrganization();
-
-    if (data) {
-      setOrganizations((prev) => [...prev, data]);
-      setorganizationId({
-        title: data.title,
-        id: data.$id,
-      });
-      router.push(data.$id);
-    }
-
-    setLoadingCreateOrganization(false);
-  }
-
   return (
     <>
       {organizations.length == 0 && !loading ? (
-        <Button onClick={create} size="sm">
-          {loadingCreateOrganization ? (
-            <>
-              <LucideLoader2 className="mr-2 size-4 animate-spin" />
-              Creating Organization
-            </>
-          ) : (
-            <>
-              <LucidePlus className="mr-2 size-4" />
-              Create Organization
-            </>
-          )}
-        </Button>
+        <div className="flex w-32">
+          <CreateOrg />
+        </div>
       ) : null}
       {loading && <Skeleton className="h-8 min-w-32" />}
       {organizations.length > 0 && !loading && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="min-w-32 justify-between truncate font-normal text-muted-foreground md:w-auto"
-              >
-                <span className="truncate">{organizationId?.title}</span>
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
+              <div className="flex items-center">
+                <Link
+                  href={`/${organizationId!.id}`}
+                  onClick={() => setProjectId(null)}
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                  })}
+                >
+                  {organizationId?.title}
+                </Link>
+                <Button
+                  onClick={() => setOpen(!open)}
+                  size="icon"
+                  variant="ghost"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="size-8 text-muted-foreground"
+                >
+                  <ChevronsUpDown className="size-4" />
+                </Button>
+              </div>
             </PopoverTrigger>
             <PopoverContent className="p-0" align="start">
               <Command>
@@ -147,12 +132,13 @@ export function Organization() {
                         key={organization.$id}
                         value={organization.$id}
                         onSelect={(currentValue) => {
+                          setProjectId(null);
                           setorganizationId({
                             id: currentValue,
                             title: organization.title,
                           });
                           setOpen(false);
-                          router.push(organization.$id);
+                          router.push(`/${currentValue}`);
                         }}
                         className="cursor-pointer text-xs"
                       >
@@ -171,19 +157,7 @@ export function Organization() {
                 </CommandList>
               </Command>
               <div className="flex flex-row justify-end gap-1 border-t p-1 md:justify-start">
-                <Button
-                  onClick={create}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  New Org
-                  {loadingCreateOrganization ? (
-                    <LucideLoader2 className="ml-2 size-3.5 animate-spin" />
-                  ) : (
-                    <LucidePlus className="ml-2 size-3.5" />
-                  )}
-                </Button>
+                <CreateOrg />
                 {!loadingAuth && <>{owner && <Share />}</>}
               </div>
             </PopoverContent>

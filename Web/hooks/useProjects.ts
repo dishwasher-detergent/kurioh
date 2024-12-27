@@ -1,40 +1,40 @@
 import { organizationIdAtom } from "@/atoms/organization";
-import { Request as RequestItem } from "@/interfaces/request.interface";
+import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, REQUEST_COLLECTION_ID } from "@/lib/constants";
+import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 
 import { Client, Query } from "appwrite";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
-export const useRequests = () => {
+export const useProjects = () => {
   const organizationId = useAtomValue(organizationIdAtom);
-  const [requests, setRequests] = useState<RequestItem[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    async function fetchRequests(organizationId: string) {
+    async function fetchProjects(organizationId: string) {
       setLoading(true);
       const { database } = await createClient();
 
-      const data = await database.listDocuments<RequestItem>(
+      const data = await database.listDocuments<ProjectItem>(
         DATABASE_ID,
-        REQUEST_COLLECTION_ID,
+        PROJECTS_COLLECTION_ID,
         [
-          Query.equal("organizationId", organizationId),
+          Query.equal("organization_id", organizationId),
           Query.orderDesc("$createdAt"),
         ],
       );
 
-      setRequests(data.documents);
+      setProjects(data.documents);
       setLoading(false);
     }
 
-    if (organizationId && requests.length === 0) {
-      fetchRequests(organizationId);
+    if (organizationId && projects.length === 0) {
+      fetchProjects(organizationId.id);
     }
-  }, [organizationId, requests.length]);
+  }, [organizationId, projects.length]);
 
   useEffect(() => {
     async function fetchClient() {
@@ -49,16 +49,32 @@ export const useRequests = () => {
     let unsubscribe: (() => void) | undefined;
 
     if (client) {
-      unsubscribe = client.subscribe<RequestItem>(
-        `databases.${DATABASE_ID}.collections.${REQUEST_COLLECTION_ID}.documents`,
+      unsubscribe = client.subscribe<ProjectItem>(
+        `databases.${DATABASE_ID}.collections.${PROJECTS_COLLECTION_ID}.documents`,
         (response) => {
-          if (response.payload.organizationId === organizationId) {
+          if (response.payload.organization_id === organizationId?.id) {
             if (
               response.events.includes(
                 "databases.*.collections.*.documents.*.create",
               )
             ) {
-              setRequests((prev) => [response.payload, ...prev]);
+              setProjects((prev) => [response.payload, ...prev]);
+            }
+
+            if (
+              response.events.includes(
+                "databases.*.collections.*.documents.*.update",
+              )
+            ) {
+              setProjects((prev) => {
+                const index = prev.findIndex(
+                  (x) => x.$id == response.payload.$id,
+                );
+                const newItem = response.payload;
+                prev[index] = newItem;
+
+                return prev;
+              });
             }
 
             if (
@@ -66,7 +82,7 @@ export const useRequests = () => {
                 "databases.*.collections.*.documents.*.delete",
               )
             ) {
-              setRequests((prev) =>
+              setProjects((prev) =>
                 prev.filter((x) => x.$id !== response.payload.$id),
               );
             }
@@ -80,5 +96,5 @@ export const useRequests = () => {
     };
   }, [client, organizationId]);
 
-  return { requests, loading };
+  return { projects, loading };
 };

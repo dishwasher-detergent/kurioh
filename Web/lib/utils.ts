@@ -17,7 +17,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function createProject(organizationId?: string) {
+export function createSlug(title: string) {
+  return title
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
+}
+
+export async function createProject(organizationId: string, name: string) {
   const { database } = await createClient();
   const user = await getLoggedInUser();
 
@@ -41,11 +48,11 @@ export async function createProject(organizationId?: string) {
       PROJECTS_COLLECTION_ID,
       ID.unique(),
       {
-        title: "test",
-        short_description: "short description",
-        description: "description",
+        title: name,
+        short_description: null,
+        description: null,
         ordinal: 1,
-        slug: "test",
+        slug: createSlug(name),
         organization_id: organizationId,
         createdBy: user.$id,
       },
@@ -67,7 +74,7 @@ export async function createProject(organizationId?: string) {
   }
 }
 
-export async function createOrganization() {
+export async function createOrganization(name: string) {
   const { database, team } = await createClient();
   const user = await getLoggedInUser();
 
@@ -92,8 +99,8 @@ export async function createOrganization() {
       PORTFOLIOS_COLLECTION_ID,
       organizationId,
       {
-        title: organizationId,
-        slug: organizationId,
+        title: name,
+        slug: createSlug(name),
         createdBy: user.$id,
       },
       [

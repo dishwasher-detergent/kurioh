@@ -2,7 +2,7 @@
 
 import { organizationIdAtom } from "@/atoms/organization";
 import { projectIdAtom } from "@/atoms/project";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -20,13 +20,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
-import { cn, createProject } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Query } from "appwrite";
 
 import { useAtom, useAtomValue } from "jotai";
-import { Check, ChevronsUpDown, LucideLoader2, LucidePlus } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CreateProject } from "./create-project";
 
 export function Project() {
   const router = useRouter();
@@ -36,8 +37,6 @@ export function Project() {
   const [open, setOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingCreateProject, setLoadingCreateProject] =
-    useState<boolean>(false);
 
   async function fetchProjects() {
     setLoading(true);
@@ -49,71 +48,49 @@ export function Project() {
       [Query.equal("organization_id", organizationId!.id)],
     );
 
-    if (data.documents.length > 0) {
-      setProjects(data.documents);
-    }
-
+    setProjects(data.documents);
     setLoading(false);
   }
 
   useEffect(() => {
     if (!organizationId) return;
+    fetchProjects();
+  }, [organizationId]);
 
-    if (projects.length == 0) {
-      fetchProjects();
-    }
-  }, [projects]);
-
-  async function create() {
-    setLoadingCreateProject(true);
-    const data = await createProject(organizationId?.id);
-
-    if (data) {
-      setProjects((prev) => [...prev, data]);
-      setprojectId({
-        id: data.$id,
-        title: data.title,
-      });
-      router.push(`${organizationId?.id}/${data.$id}`);
-    }
-
-    setLoadingCreateProject(false);
-  }
-
-  if (!organizationId) return null;
+  if (!organizationId) return <Skeleton className="h-8 min-w-32" />;
 
   return (
     <>
       {projects.length == 0 && !loading ? (
-        <Button onClick={create} size="sm">
-          {loadingCreateProject ? (
-            <>
-              <LucideLoader2 className="mr-2 size-4 animate-spin" />
-              Creating Project
-            </>
-          ) : (
-            <>
-              <LucidePlus className="mr-2 size-4" />
-              Create Project
-            </>
-          )}
-        </Button>
+        <div className="flex w-32">
+          <CreateProject />
+        </div>
       ) : null}
       {loading && <Skeleton className="h-8 min-w-32" />}
       {projects.length > 0 && !loading && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-              <Button
-                size="sm"
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="min-w-32 justify-between truncate font-normal text-muted-foreground md:w-auto"
-              >
-                <span className="truncate">{projectId?.title}</span>
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
+              <div className="flex items-center">
+                <p
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                  })}
+                >
+                  {projectId?.title ?? "Select Project..."}
+                </p>
+                <Button
+                  onClick={() => setOpen(!open)}
+                  size="icon"
+                  variant="ghost"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="size-8 text-muted-foreground"
+                >
+                  <ChevronsUpDown className="size-4" />
+                </Button>
+              </div>
             </PopoverTrigger>
             <PopoverContent className="p-0" align="start">
               <Command>
@@ -134,7 +111,7 @@ export function Project() {
                             id: currentValue,
                           });
                           setOpen(false);
-                          router.push(`/${organizationId}/${project.$id}`);
+                          router.push(`/${organizationId.id}/${currentValue}`);
                         }}
                         className="cursor-pointer text-xs"
                       >
@@ -152,20 +129,8 @@ export function Project() {
                   </CommandGroup>
                 </CommandList>
               </Command>
-              <div className="border-t p-1 md:justify-start">
-                <Button
-                  onClick={create}
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                >
-                  New Project
-                  {loadingCreateProject ? (
-                    <LucideLoader2 className="ml-2 size-3.5 animate-spin" />
-                  ) : (
-                    <LucidePlus className="ml-2 size-3.5" />
-                  )}
-                </Button>
+              <div className="flex border-t p-1 md:justify-start">
+                <CreateProject />
               </div>
             </PopoverContent>
           </Popover>

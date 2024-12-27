@@ -1,14 +1,13 @@
 "use client";
 
 import { organizationIdAtom } from "@/atoms/organization";
-import { Button } from "@/components/ui/button";
+import { CreateOrg } from "@/components/create-organization";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
-import { createOrganization } from "@/lib/utils";
 
 import { useAtom } from "jotai";
-import { LucideLoader2, LucidePlus } from "lucide-react";
+import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
@@ -56,21 +55,6 @@ export default function Home() {
     getOrganizations();
   }, [organizationId]);
 
-  async function create() {
-    setLoadingCreateOrganization(true);
-    const data = await createOrganization();
-
-    if (data) {
-      setorganizationId({
-        title: data.title,
-        id: data.$id,
-      });
-      router.push(data.$id);
-    }
-
-    setLoadingCreateOrganization(false);
-  }
-
   return (
     <main className="grid min-h-dvh w-full place-items-center">
       {loading && (
@@ -85,19 +69,7 @@ export default function Home() {
             Looks like you don&apos;t have any orgnaizations created yet.
           </h1>
           <p>Lets get started!</p>
-          <Button onClick={create}>
-            {loadingCreateOrganization ? (
-              <>
-                <LucideLoader2 className="mr-2 size-4 animate-spin" />
-                Creating Organization
-              </>
-            ) : (
-              <>
-                <LucidePlus className="mr-2 size-4" />
-                Create Organization
-              </>
-            )}
-          </Button>
+          <CreateOrg />
         </div>
       )}
     </main>

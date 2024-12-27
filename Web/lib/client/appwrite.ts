@@ -3,6 +3,7 @@
 import { COOKIE_KEY, ENDPOINT, PROJECT_ID } from "@/lib/constants";
 
 import { Account, Client, Databases, Storage, Teams } from "appwrite";
+import Cookies from "js-cookie";
 
 export async function createClient() {
   const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
@@ -14,13 +15,8 @@ export async function createClient() {
   if (session) {
     client.setSession(session.value);
 
-    const localStorageCookie: any = {};
-    localStorageCookie[COOKIE_KEY] = session.value;
-
-    window.localStorage.setItem(
-      "cookieFallback",
-      JSON.stringify(localStorageCookie),
-    );
+    Cookies.set(COOKIE_KEY, session.value);
+    Cookies.set(`${COOKIE_KEY}_legacy`, session.value);
   }
 
   return {

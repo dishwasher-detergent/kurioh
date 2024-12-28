@@ -53,7 +53,7 @@ export function isValidUrl(url: string): boolean {
   }
 }
 
-export async function createProject(organizationId: string, name: string) {
+export async function createProject(name: string, organizationId?: string) {
   const { database } = await createClient();
   const user = await getLoggedInUser();
 
@@ -213,11 +213,19 @@ export async function createOrganization(name: string) {
   }
 }
 
-export async function deleteOrganization(organizationId: string) {
+export async function deleteOrganization(organizationId?: string) {
   const { database, team } = await createClient();
   const user = await getLoggedInUser();
 
   if (!user) {
+    toast.error(
+      "Failed to delete organization, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  if (!organizationId) {
+    toast.error("Failed to delete organization, no organization was given.");
     return;
   }
 

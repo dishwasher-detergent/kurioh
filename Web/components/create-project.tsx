@@ -43,7 +43,6 @@ import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 export function CreateProject() {
@@ -120,13 +119,8 @@ function CreateForm({ className, setOpen }: FormProps) {
   async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateProject(true);
 
-    if (!organizationId) {
-      toast.error("No organization specified!");
-      return;
-    }
-
     const { database } = await createClient();
-    const data = await createProject(organizationId.id, values.title);
+    const data = await createProject(values.title, organizationId?.id);
 
     if (data) {
       setprojectId({

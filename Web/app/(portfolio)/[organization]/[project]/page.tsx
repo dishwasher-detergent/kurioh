@@ -2,6 +2,7 @@
 
 import { projectIdAtom } from "@/atoms/project";
 import ProjectForm from "@/components/forms/project/form";
+import ProjectFormLoading from "@/components/forms/project/loading";
 import {
   Card,
   CardContent,
@@ -13,7 +14,7 @@ import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 
 import { useSetAtom } from "jotai";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Params = {
@@ -25,9 +26,12 @@ export default function ProjectPage() {
   const setProjectId = useSetAtom(projectIdAtom);
   const { project: projectParam } = useParams<Params>();
   const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function validateProject() {
+      setLoading(true);
       try {
         const { database } = await createClient();
         const project = await database.getDocument<Project>(
@@ -41,8 +45,10 @@ export default function ProjectPage() {
           title: project.title,
           id: project.$id,
         });
+        setLoading(false);
       } catch {
         setProjectId(null);
+        router.push("/");
       }
     }
 
@@ -59,6 +65,7 @@ export default function ProjectPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {loading && <ProjectFormLoading />}
             {project && <ProjectForm {...project} setProject={setProject} />}
           </CardContent>
         </Card>

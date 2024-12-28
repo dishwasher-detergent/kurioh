@@ -28,11 +28,9 @@ export function OrganizationSettings() {
   const router = useRouter();
 
   async function handleDeleteOrganization() {
-    if (!organizationId) return;
-
     setLoading(true);
 
-    await deleteOrganization(organizationId.id);
+    await deleteOrganization(organizationId?.id);
 
     setOrganizationId(null);
     setLoading(false);

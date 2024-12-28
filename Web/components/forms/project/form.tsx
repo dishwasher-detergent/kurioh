@@ -1,9 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LucideLoader2, LucideSave } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,29 +19,65 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import projectSchema from "./schema";
+import MultipleSelector from "@/components/ui/multiple-selector";
+import { Project } from "@/interfaces/project.interface";
+import { updateProject } from "@/lib/utils";
+import { TAGS } from "./options";
+import projectSchema, {
+  descriptionMaxLength,
+  shortDescriptionMaxLength,
+  titleMaxLength,
+} from "./schema";
 
-export default function ProjectForm() {
+interface ProjectFormProps extends Project {
+  setProject: (project: Project) => void;
+}
+
+export default function ProjectForm({
+  setProject,
+  $id,
+  title,
+  description,
+  short_description,
+  tags,
+  links,
+  images_ids,
+}: ProjectFormProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      short_description: "",
-      tags: [],
-      links: [],
-      images_ids: [],
+      title: title ?? "",
+      description: description ?? "",
+      short_description: short_description ?? "",
+      tags: tags.map((tag) => ({ label: tag, value: tag })),
+      links: links.map((link) => ({ label: link, value: link })),
+      images_ids: images_ids,
     },
   });
 
-  function onSubmit(values: z.infer<typeof projectSchema>) {
-    console.log("test");
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof projectSchema>) {
+    setLoading(true);
+
+    const formData = {
+      ...values,
+      tags: values?.tags?.map((tag) => tag.value) ?? [],
+      links: values?.links?.map((link) => link.value) ?? [],
+    };
+
+    const updatedProject = await updateProject($id, formData);
+
+    if (updatedProject) {
+      setProject(updatedProject);
+    }
+
+    setLoading(false);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -45,16 +85,139 @@ export default function ProjectForm() {
             <FormItem>
               <FormLabel>Project</FormLabel>
               <FormControl>
-                <Input placeholder="Sample Project" {...field} />
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="Sample Project"
+                    className="truncate pr-20"
+                    maxLength={titleMaxLength}
+                  />
+                  <Badge
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                    variant="secondary"
+                  >
+                    {field?.value?.length}/{titleMaxLength}
+                  </Badge>
+                </div>
+              </FormControl>
+              <FormDescription>Name your project.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <AutosizeTextarea
+                    {...field}
+                    placeholder="This is a full length description."
+                    className="pb-8"
+                    maxLength={descriptionMaxLength}
+                  />
+                  <Badge
+                    className="absolute bottom-2 left-2"
+                    variant="secondary"
+                  >
+                    {field?.value?.length}/{descriptionMaxLength}
+                  </Badge>
+                </div>
+              </FormControl>
+              <FormDescription>Describe your project here.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="short_description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Short Description</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <AutosizeTextarea
+                    {...field}
+                    placeholder="This is a short description."
+                    className="pb-8"
+                    maxLength={shortDescriptionMaxLength}
+                  />
+                  <Badge
+                    className="absolute bottom-2 left-2"
+                    variant="secondary"
+                  >
+                    {field?.value?.length}/{shortDescriptionMaxLength}
+                  </Badge>
+                </div>
               </FormControl>
               <FormDescription>
-                This is the name of your project.
+                Give your projects elevator pitch here.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tags</FormLabel>
+              <FormControl>
+                <MultipleSelector
+                  {...field}
+                  defaultOptions={TAGS}
+                  creatable
+                  emptyIndicator={
+                    <p className="text-center leading-10 text-gray-600 dark:text-gray-400">
+                      No results found.
+                    </p>
+                  }
+                />
+              </FormControl>
+              <FormDescription>
+                Let people, at a glance, know how you've built your project.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="links"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Links</FormLabel>
+              <FormControl>
+                <MultipleSelector
+                  {...field}
+                  creatable
+                  emptyIndicator={
+                    <p className="text-center leading-10 text-gray-600 dark:text-gray-400">
+                      No results found.
+                    </p>
+                  }
+                />
+              </FormControl>
+              <FormDescription>
+                Add links to your projects site, repo, or anything else.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={loading}>
+          {loading ? (
+            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+          ) : (
+            <LucideSave className="mr-2 size-3.5" />
+          )}
+          Save
+        </Button>
       </form>
     </Form>
   );

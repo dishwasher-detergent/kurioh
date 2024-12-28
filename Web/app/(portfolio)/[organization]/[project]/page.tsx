@@ -2,6 +2,12 @@
 
 import { projectIdAtom } from "@/atoms/project";
 import ProjectForm from "@/components/forms/project/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
 import { Project } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
@@ -46,20 +52,16 @@ export default function ProjectPage() {
   return (
     <>
       <main className="mx-auto max-w-4xl space-y-4 p-4 px-4 md:px-8">
-        {/* <Card>
+        <Card>
           <CardHeader>
-            <CardDescription>{project?.slug}</CardDescription>
-            <CardTitle>{project?.title}</CardTitle>
+            <CardDescription className="text-xs">
+              {project?.slug}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>{project?.description}</p>
-            <p>{project?.short_description}</p>
-            <p>{project?.tags}</p>
-            <p>{project?.links}</p>
-            <p>{project?.images_ids}</p>
+            {project && <ProjectForm {...project} setProject={setProject} />}
           </CardContent>
-        </Card> */}
-        <ProjectForm />
+        </Card>
       </main>
     </>
   );

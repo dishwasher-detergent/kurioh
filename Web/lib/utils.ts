@@ -67,9 +67,42 @@ export async function createProject(organizationId: string, name: string) {
     toast.success(`${data.title} has been created!`);
     return data;
   } catch (err) {
-    console.error(err);
-
     toast.error(`Failed to create project!`);
+    return;
+  }
+}
+
+export async function updateProject(id: string, values: any) {
+  const { database } = await createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    toast.error(
+      "Failed to update project, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  try {
+    const data = await database.updateDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_COLLECTION_ID,
+      id,
+      {
+        title: values.title,
+        short_description: values.short_description,
+        description: values.description,
+        ordinal: 1,
+        slug: createSlug(values.title),
+        tags: values.tags,
+        links: values.links,
+      },
+    );
+
+    toast.success(`${data.title} has been updated!`);
+    return data;
+  } catch (err) {
+    toast.error(`Failed to update project!`);
     return;
   }
 }

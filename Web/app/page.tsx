@@ -69,7 +69,9 @@ export default function Home() {
             Looks like you don&apos;t have any orgnaizations created yet.
           </h1>
           <p>Lets get started!</p>
-          <CreateOrg />
+          <div>
+            <CreateOrg />
+          </div>
         </div>
       )}
     </main>

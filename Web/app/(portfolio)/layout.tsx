@@ -1,4 +1,4 @@
-import { Nav } from "@/components/nav";
+import { Nav } from "@/components/ui/nav";
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
 import { redirect } from "next/navigation";

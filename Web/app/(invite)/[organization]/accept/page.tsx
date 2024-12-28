@@ -10,14 +10,16 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { LucideLoader2 } from "lucide-react";
+import { Models } from "appwrite";
 
+import { LucideLoader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Invite() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [team, setTeam] = useState<Models.Team<any> | null>(null);
   const [state, setState] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -49,6 +51,17 @@ export default function Invite() {
     setLoading(false);
   }
 
+  useEffect(() => {
+    async function fetchTeamInfo() {
+      const { team } = await createClient();
+      const data = await team.get(teamId);
+
+      setTeam(data);
+    }
+
+    fetchTeamInfo();
+  }, [teamId]);
+
   return (
     <Card className="w-full max-w-sm bg-muted/25">
       <CardHeader>
@@ -68,7 +81,7 @@ export default function Invite() {
           ) : null}
           <div className="grid gap-2">
             <Label>Organization</Label>
-            <p className="font-bold">{teamId}</p>
+            <p className="font-bold">{team?.name}</p>
           </div>
           <input name="teamId" value={teamId} readOnly className="hidden" />
           <input

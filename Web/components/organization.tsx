@@ -95,7 +95,7 @@ export function Organization() {
             <PopoverTrigger asChild>
               <div className="flex items-center">
                 <Link
-                  href={`/${organizationId!.id}`}
+                  href={`/${organizationId?.id}`}
                   onClick={() => setProjectId(null)}
                   className={buttonVariants({
                     variant: "ghost",

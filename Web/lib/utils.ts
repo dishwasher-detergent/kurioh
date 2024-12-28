@@ -186,7 +186,7 @@ export async function createOrganization(name: string) {
   const organizationId = ID.unique();
 
   try {
-    const teamData = await team.create(organizationId, organizationId);
+    const teamData = await team.create(organizationId, name);
 
     const data = await database.createDocument<Organization>(
       DATABASE_ID,
@@ -224,7 +224,7 @@ export async function deleteOrganization(organizationId: string) {
   let response;
   const queries = [
     Query.limit(50),
-    Query.equal("organizationId", organizationId),
+    Query.equal("organization_id", organizationId),
   ];
 
   do {
@@ -235,13 +235,7 @@ export async function deleteOrganization(organizationId: string) {
     );
 
     await Promise.all(
-      response.documents.map((document) =>
-        database.deleteDocument(
-          DATABASE_ID,
-          PROJECTS_COLLECTION_ID,
-          document.$id,
-        ),
-      ),
+      response.documents.map((document) => deleteProject(document.$id)),
     );
   } while (response.documents.length > 0);
 

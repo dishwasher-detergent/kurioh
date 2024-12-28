@@ -2,7 +2,6 @@ import { LucideEdit, LucideLoader2, LucideTrash } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Images } from "@/components/images";
 import { Badges } from "@/components/ui/badges";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Images } from "@/components/ui/images";
 import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
 import { deleteProject } from "@/lib/utils";

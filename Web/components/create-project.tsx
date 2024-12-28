@@ -20,15 +20,27 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn, createProject } from "@/lib/utils";
 
-import { useAtom, useAtomValue } from "jotai";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAtomValue, useSetAtom } from "jotai";
 import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { Badge } from "./ui/badge";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 
 export function CreateProject() {
   const [open, setOpen] = useState(false);
@@ -47,7 +59,7 @@ export function CreateProject() {
           <DialogHeader>
             <DialogTitle>Create Project</DialogTitle>
           </DialogHeader>
-          <Form setOpen={(e: boolean) => setOpen(e)} />
+          <CreateForm setOpen={(e: boolean) => setOpen(e)} />
         </DialogContent>
       </Dialog>
     );
@@ -65,7 +77,7 @@ export function CreateProject() {
         <DrawerHeader className="text-left">
           <DrawerTitle>Create Project</DrawerTitle>
         </DrawerHeader>
-        <Form className="px-4" setOpen={(e: boolean) => setOpen(e)} />
+        <CreateForm className="px-4" setOpen={(e: boolean) => setOpen(e)} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -80,28 +92,35 @@ interface FormProps extends React.ComponentProps<"form"> {
   setOpen: (e: boolean) => void;
 }
 
-function Form({ className, setOpen }: FormProps) {
+const titleMaxLength = 64;
+
+const schema = z.object({
+  title: z.string().min(1).max(titleMaxLength),
+});
+
+function CreateForm({ className, setOpen }: FormProps) {
   const [loadingCreateProject, setLoadingCreateProject] =
     useState<boolean>(false);
-  const [name, setName] = useState<string | null>(null);
   const router = useRouter();
   const organizationId = useAtomValue(organizationIdAtom);
-  const [projectId, setprojectId] = useAtom(projectIdAtom);
+  const setprojectId = useSetAtom(projectIdAtom);
 
-  async function create() {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateProject(true);
-
-    if (!name) {
-      toast.error("No project name specified!");
-      return;
-    }
 
     if (!organizationId) {
       toast.error("No organization specified!");
       return;
     }
 
-    const data = await createProject(organizationId.id, name);
+    const data = await createProject(organizationId.id, values.title);
 
     if (data) {
       setprojectId({
@@ -116,30 +135,47 @@ function Form({ className, setOpen }: FormProps) {
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        create();
-      }}
-      className={cn("grid items-start gap-4", className)}
-    >
-      <div className="grid gap-2">
-        <Label htmlFor="email">Project Name</Label>
-        <Input
-          id="email"
-          required
-          placeholder="Sample Project"
-          onChange={(e) => setName(e.target.value)}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("grid items-start gap-4", className)}
+      >
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Project Name</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="Sample Project"
+                    className="truncate pr-20"
+                    maxLength={titleMaxLength}
+                  />
+                  <Badge
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                    variant="secondary"
+                  >
+                    {field?.value?.length}/{titleMaxLength}
+                  </Badge>
+                </div>
+              </FormControl>
+              <FormDescription>Name your project.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <Button type="submit" disabled={loadingCreateProject}>
-        {loadingCreateProject ? (
-          <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
-        ) : (
-          <LucidePlus className="mr-2 size-3.5" />
-        )}
-        Create
-      </Button>
-    </form>
+        <Button type="submit" disabled={loadingCreateProject}>
+          {loadingCreateProject ? (
+            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+          ) : (
+            <LucidePlus className="mr-2 size-3.5" />
+          )}
+          Create
+        </Button>
+      </form>
+    </Form>
   );
 }

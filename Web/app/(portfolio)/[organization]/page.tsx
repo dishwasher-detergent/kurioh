@@ -8,7 +8,7 @@ import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useEffect } from "react";
 
 type Params = {
@@ -17,7 +17,6 @@ type Params = {
 
 export default function OrganizationPage() {
   const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
-  const router = useRouter();
   const { projects } = useProjects();
   const { organization: organizationParam } = useParams<Params>();
 
@@ -47,7 +46,7 @@ export default function OrganizationPage() {
   }, []);
 
   return (
-    <main className="mx-auto grid max-w-4xl grid-cols-1 items-start gap-4 p-4 px-4 md:grid-cols-2 md:px-8 xl:grid-cols-3">
+    <main className="mx-auto max-w-4xl columns-sm items-start gap-4 space-y-4 p-4 px-4 md:px-8">
       {projects.map((x) => (
         <ProjectCard key={x.$id} {...x} />
       ))}

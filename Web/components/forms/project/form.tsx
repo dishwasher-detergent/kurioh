@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,9 +20,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiplePhotoSelector } from "@/components/ui/multiple-photo-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { Project } from "@/interfaces/project.interface";
-import { updateProject } from "@/lib/utils";
+import { deleteFile, updateProject, uploadFile } from "@/lib/utils";
+import { useAtomValue } from "jotai";
 import { TAGS } from "./options";
 import projectSchema, {
   descriptionMaxLength,
@@ -41,9 +44,10 @@ export default function ProjectForm({
   short_description,
   tags,
   links,
-  images_ids,
+  image_ids,
 }: ProjectFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
+  const organizationId = useAtomValue(organizationIdAtom);
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
@@ -53,17 +57,20 @@ export default function ProjectForm({
       short_description: short_description ?? "",
       tags: tags.map((tag) => ({ label: tag, value: tag })),
       links: links.map((link) => ({ label: link, value: link })),
-      images_ids: images_ids,
+      image_ids: image_ids,
     },
   });
 
   async function onSubmit(values: z.infer<typeof projectSchema>) {
     setLoading(true);
 
+    const images = await handleFiles(values.image_ids);
+
     const formData = {
       ...values,
       tags: values?.tags?.map((tag) => tag.value) ?? [],
       links: values?.links?.map((link) => link.value) ?? [],
+      image_ids: images,
     };
 
     const updatedProject = await updateProject($id, formData);
@@ -73,6 +80,33 @@ export default function ProjectForm({
     }
 
     setLoading(false);
+  }
+
+  async function handleFiles(images: any[] | undefined) {
+    if (!images || !organizationId) {
+      return;
+    }
+
+    const uploadedImages = await Promise.all(
+      images.map(async (image) => {
+        if (image instanceof File) {
+          const data = await uploadFile(image, organizationId.id);
+          return data ? data.$id : null;
+        }
+        return image;
+      }),
+    );
+
+    const validUploadedImages = uploadedImages.filter(Boolean);
+    const removedImages = image_ids.filter(
+      (image_id) => !images.includes(image_id),
+    );
+
+    await Promise.all(
+      removedImages.map(async (image_id) => await deleteFile(image_id)),
+    );
+
+    return validUploadedImages;
   }
 
   return (
@@ -156,6 +190,22 @@ export default function ProjectForm({
               </FormControl>
               <FormDescription>
                 Give your projects elevator pitch here.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="image_ids"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Images</FormLabel>
+              <FormControl>
+                <MultiplePhotoSelector {...field} />
+              </FormControl>
+              <FormDescription>
+                Let people, at a glance, know how you've built your project.
               </FormDescription>
               <FormMessage />
             </FormItem>

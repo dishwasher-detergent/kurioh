@@ -18,5 +18,9 @@ export const ARTICLES_COLLECTION_ID = process.env
 export const PROJECTS_COLLECTION_ID = process.env
   .NEXT_PUBLIC_PROJECTS_COLLECTION_ID as string;
 
+// Buckets
+export const PROJECTS_BUCKET_ID = process.env
+  .NEXT_PUBLIC_PROJECTS_BUCKET_ID as string;
+
 // Cookie
 export const COOKIE_KEY = `a_session_${PROJECT_ID}`;

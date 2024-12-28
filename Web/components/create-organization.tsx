@@ -1,6 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSetAtom } from "jotai";
+import { LucideLoader2, LucidePlus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { organizationIdAtom } from "@/atoms/organization";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,16 +27,18 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn, createOrganization } from "@/lib/utils";
-
-import { useAtom } from "jotai";
-import { LucideLoader2, LucidePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export function CreateOrg() {
   const [open, setOpen] = useState(false);
@@ -46,7 +57,7 @@ export function CreateOrg() {
           <DialogHeader>
             <DialogTitle>Create Organization</DialogTitle>
           </DialogHeader>
-          <Form setOpen={(e: boolean) => setOpen(e)} />
+          <CreateForm setOpen={(e: boolean) => setOpen(e)} />
         </DialogContent>
       </Dialog>
     );
@@ -64,7 +75,7 @@ export function CreateOrg() {
         <DrawerHeader className="text-left">
           <DrawerTitle>Create Organization</DrawerTitle>
         </DrawerHeader>
-        <Form className="px-4" setOpen={(e: boolean) => setOpen(e)} />
+        <CreateForm className="px-4" setOpen={(e: boolean) => setOpen(e)} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -79,22 +90,29 @@ interface FormProps extends React.ComponentProps<"form"> {
   setOpen: (e: boolean) => void;
 }
 
-function Form({ className, setOpen }: FormProps) {
+const titleMaxLength = 64;
+
+const schema = z.object({
+  title: z.string().min(1).max(titleMaxLength),
+});
+
+function CreateForm({ className, setOpen }: FormProps) {
   const [loadingCreateOrganization, setLoadingCreateOrganization] =
     useState<boolean>(false);
-  const [name, setName] = useState<string | null>(null);
   const router = useRouter();
-  const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
+  const setorganizationId = useSetAtom(organizationIdAtom);
 
-  async function create() {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateOrganization(true);
 
-    if (!name) {
-      toast.error("No organization name specified!");
-      return;
-    }
-
-    const data = await createOrganization(name);
+    const data = await createOrganization(values.title);
 
     if (data) {
       setorganizationId({
@@ -109,30 +127,47 @@ function Form({ className, setOpen }: FormProps) {
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        create();
-      }}
-      className={cn("grid items-start gap-4", className)}
-    >
-      <div className="grid gap-2">
-        <Label htmlFor="email">Organization Name</Label>
-        <Input
-          id="email"
-          required
-          placeholder="Sample Organization"
-          onChange={(e) => setName(e.target.value)}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("grid items-start gap-4", className)}
+      >
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Organization Name</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="Sample Project"
+                    className="truncate pr-20"
+                    maxLength={titleMaxLength}
+                  />
+                  <Badge
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                    variant="secondary"
+                  >
+                    {field?.value?.length}/{titleMaxLength}
+                  </Badge>
+                </div>
+              </FormControl>
+              <FormDescription>Name your organization.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <Button type="submit" disabled={loadingCreateOrganization}>
-        {loadingCreateOrganization ? (
-          <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
-        ) : (
-          <LucidePlus className="mr-2 size-3.5" />
-        )}
-        Create
-      </Button>
-    </form>
+        <Button type="submit" disabled={loadingCreateOrganization}>
+          {loadingCreateOrganization ? (
+            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+          ) : (
+            <LucidePlus className="mr-2 size-3.5" />
+          )}
+          Create
+        </Button>
+      </form>
+    </Form>
   );
 }

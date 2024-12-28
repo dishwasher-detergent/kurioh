@@ -151,7 +151,9 @@ const FormMessage = React.forwardRef<
   let body = error ? <p>{String(error?.message)}</p> : children;
 
   if (Array.isArray(error)) {
-    body = error.map((err, index) => <p key={index}>{err.value.message}</p>);
+    body = error.map((err, index) => (
+      <p key={index}>{err.value?.message ?? err?.message}</p>
+    ));
   }
 
   if (!body) {

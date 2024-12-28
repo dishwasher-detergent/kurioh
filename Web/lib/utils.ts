@@ -5,6 +5,7 @@ import {
   DATABASE_ID,
   HOSTNAME,
   PORTFOLIOS_COLLECTION_ID,
+  PROJECTS_BUCKET_ID,
   PROJECTS_COLLECTION_ID,
 } from "@/lib/constants";
 
@@ -22,6 +23,34 @@ export function createSlug(title: string) {
     .toLowerCase()
     .replace(/ /g, "-")
     .replace(/[^\w-]+/g, "");
+}
+
+export function formatDate(date: Date | string): string {
+  date = new Date(date);
+  const day = `${date.getDate() < 10 ? "0" : ""}${date.getDate()}`;
+  const month = `${date.getMonth() + 1 < 10 ? "0" : ""}${date.getMonth() + 1}`;
+  const year = date.getFullYear();
+  return `${year}-${month}-${day}`;
+}
+
+export function extractWebsiteName(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    const parts = urlObj.hostname.split(".");
+    return parts[parts.length - 2];
+  } catch (e) {
+    console.error(e);
+    return "";
+  }
+}
+
+export function isValidUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export async function createProject(organizationId: string, name: string) {
@@ -51,7 +80,6 @@ export async function createProject(organizationId: string, name: string) {
         title: name,
         short_description: null,
         description: null,
-        ordinal: 1,
         slug: createSlug(name),
         organization_id: organizationId,
         createdBy: user.$id,
@@ -92,10 +120,10 @@ export async function updateProject(id: string, values: any) {
         title: values.title,
         short_description: values.short_description,
         description: values.description,
-        ordinal: 1,
         slug: createSlug(values.title),
         tags: values.tags,
         links: values.links,
+        image_ids: values.image_ids,
       },
     );
 
@@ -103,6 +131,39 @@ export async function updateProject(id: string, values: any) {
     return data;
   } catch (err) {
     toast.error(`Failed to update project!`);
+    return;
+  }
+}
+
+export async function deleteProject(id: string) {
+  const { database, storage } = await createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    toast.error(
+      "Failed to delete project, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  try {
+    const data = await database.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_COLLECTION_ID,
+      id,
+    );
+
+    Promise.all(
+      data.image_ids.map((imageId) =>
+        storage.deleteFile(PROJECTS_BUCKET_ID, imageId),
+      ),
+    );
+
+    await database.deleteDocument(DATABASE_ID, PROJECTS_COLLECTION_ID, id);
+    toast.success(`Project has been deleted!`);
+    return;
+  } catch (err) {
+    toast.error(`Failed to delete project!`);
     return;
   }
 }
@@ -271,4 +332,57 @@ export async function shareOrganization(organizationId: string, email: string) {
 
   toast.success(`${email} has been invited to ${organizationId}`);
   return;
+}
+
+export async function uploadFile(file: File, organizationId: string) {
+  const { storage } = await createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    toast.error(
+      "Failed to upload file, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  try {
+    const response = await storage.createFile(
+      PROJECTS_BUCKET_ID,
+      ID.unique(),
+      file,
+      [
+        Permission.read(Role.any()),
+        Permission.read(Role.user(user.$id)),
+        Permission.write(Role.user(user.$id)),
+        Permission.read(Role.team(organizationId)),
+        Permission.write(Role.team(organizationId)),
+      ],
+    );
+
+    return response;
+  } catch {
+    toast.error(`Failed to upload ${file.name}.`);
+    return;
+  }
+}
+
+export async function deleteFile(id: string) {
+  const { storage } = await createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    toast.error(
+      "Failed to upload file, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  try {
+    const response = await storage.deleteFile(PROJECTS_BUCKET_ID, id);
+
+    return response;
+  } catch {
+    toast.error("Failed to delete file.");
+    return;
+  }
 }

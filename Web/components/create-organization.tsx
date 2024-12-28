@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { organizationIdAtom } from "@/atoms/organization";
+import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +38,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Organization } from "@/interfaces/organization.interface";
+import { createClient } from "@/lib/client/appwrite";
+import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
 import { cn, createOrganization } from "@/lib/utils";
 
 export function CreateOrg() {
@@ -101,6 +104,7 @@ function CreateForm({ className, setOpen }: FormProps) {
     useState<boolean>(false);
   const router = useRouter();
   const setorganizationId = useSetAtom(organizationIdAtom);
+  const setOrganizations = useSetAtom(organizationsAtom);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -112,6 +116,7 @@ function CreateForm({ className, setOpen }: FormProps) {
   async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateOrganization(true);
 
+    const { database } = await createClient();
     const data = await createOrganization(values.title);
 
     if (data) {
@@ -119,6 +124,14 @@ function CreateForm({ className, setOpen }: FormProps) {
         title: data.title,
         id: data.$id,
       });
+
+      const organizations = await database.listDocuments<Organization>(
+        DATABASE_ID,
+        PORTFOLIOS_COLLECTION_ID,
+      );
+
+      setOrganizations(organizations.documents);
+
       router.push(`/${data.$id}`);
     }
 

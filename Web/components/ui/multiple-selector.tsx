@@ -6,6 +6,7 @@ import * as React from "react";
 import { forwardRef, useEffect } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandGroup,
@@ -13,7 +14,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { Button } from "./button";
 
 export interface Option {
   value: string;

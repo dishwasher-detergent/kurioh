@@ -2,11 +2,9 @@ import { LucideEdit, LucideLoader2, LucideTrash } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Project } from "@/interfaces/project.interface";
-import { deleteProject } from "@/lib/utils";
-import { Images } from "./images";
-import { Badges } from "./ui/badges";
-import { Button } from "./ui/button";
+import { Images } from "@/components/images";
+import { Badges } from "@/components/ui/badges";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,8 +12,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Links } from "./ui/links";
+} from "@/components/ui/card";
+import { Links } from "@/components/ui/links";
+import { Project } from "@/interfaces/project.interface";
+import { deleteProject } from "@/lib/utils";
 
 export default function ProjectCard({
   $id,

@@ -1,7 +1,8 @@
 "use client";
 
 import { organizationIdAtom } from "@/atoms/organization";
-import { projectIdAtom } from "@/atoms/project";
+import { projectIdAtom, projectsAtom } from "@/atoms/project";
+import { CreateProject } from "@/components/create-project";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -21,21 +22,20 @@ import { Project as ProjectItem } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { Query } from "appwrite";
 
+import { Query } from "appwrite";
 import { useAtom, useAtomValue } from "jotai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CreateProject } from "./create-project";
 
 export function Project() {
   const router = useRouter();
 
   const organizationId = useAtomValue(organizationIdAtom);
   const [projectId, setprojectId] = useAtom(projectIdAtom);
+  const [projects, setProjects] = useAtom(projectsAtom);
   const [open, setOpen] = useState(false);
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   async function fetchProjects() {

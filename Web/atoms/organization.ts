@@ -1,11 +1,13 @@
+import { Organization } from "@/interfaces/organization.interface";
+
 import { atomWithStorage } from "jotai/utils";
 
-interface Organization {
+interface SelectedOrganization {
   id: string;
   title: string;
 }
 
-export const organizationIdAtom = atomWithStorage<Organization | null>(
+export const organizationIdAtom = atomWithStorage<SelectedOrganization | null>(
   "ORGANIZATION_ID",
   null,
   undefined,
@@ -14,6 +16,16 @@ export const organizationIdAtom = atomWithStorage<Organization | null>(
   },
 );
 
+export const organizationsAtom = atomWithStorage<Organization[]>(
+  "ORGANIZATIONS",
+  [],
+  undefined,
+  {
+    getOnInit: true,
+  },
+);
+
 if (process.env.NODE_ENV !== "production") {
   organizationIdAtom.debugLabel = "Selected Organization";
+  organizationsAtom.debugLabel = "Organizations";
 }

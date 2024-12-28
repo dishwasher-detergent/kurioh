@@ -1,12 +1,12 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Card, CardContent, CardHeader } from "./ui/card";
 
 export interface RequestProps {
   timestamp: string;

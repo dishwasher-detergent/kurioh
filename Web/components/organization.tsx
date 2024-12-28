@@ -1,7 +1,8 @@
 "use client";
 
-import { organizationIdAtom } from "@/atoms/organization";
+import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
 import { projectIdAtom } from "@/atoms/project";
+import { CreateOrg } from "@/components/create-organization";
 import { Share } from "@/components/share";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -24,23 +25,20 @@ import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 import { Query } from "appwrite";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CreateOrg } from "./create-organization";
 
 export function Organization() {
   const router = useRouter();
 
-  const [projectId, setProjectId] = useAtom(projectIdAtom);
+  const setProjectId = useSetAtom(projectIdAtom);
   const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
+  const [organizations, setOrganizations] = useAtom(organizationsAtom);
   const [open, setOpen] = useState(false);
-  const [organizations, setOrganizations] = useState<OrganizationItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingCreateOrganization, setLoadingCreateOrganization] =
-    useState<boolean>(false);
   const [owner, setOwner] = useState<boolean>(false);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
 

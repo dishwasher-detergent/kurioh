@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "./badge";
+import { Badge } from "@/components/ui/badge";
 
 interface BadgesProps {
   badges: string[];

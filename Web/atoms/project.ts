@@ -1,11 +1,12 @@
+import { Project } from "@/interfaces/project.interface";
 import { atomWithStorage } from "jotai/utils";
 
-interface Project {
+interface SelectedProject {
   id: string;
   title: string;
 }
 
-export const projectIdAtom = atomWithStorage<Project | null>(
+export const projectIdAtom = atomWithStorage<SelectedProject | null>(
   "PROJECT_ID",
   null,
   undefined,
@@ -14,6 +15,16 @@ export const projectIdAtom = atomWithStorage<Project | null>(
   },
 );
 
+export const projectsAtom = atomWithStorage<Project[]>(
+  "PROJECTS",
+  [],
+  undefined,
+  {
+    getOnInit: true,
+  },
+);
+
 if (process.env.NODE_ENV !== "production") {
   projectIdAtom.debugLabel = "Selected Project";
+  projectsAtom.debugLabel = "Projects";
 }

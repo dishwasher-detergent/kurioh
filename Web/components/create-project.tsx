@@ -1,7 +1,8 @@
 "use client";
 
 import { organizationIdAtom } from "@/atoms/organization";
-import { projectIdAtom } from "@/atoms/project";
+import { projectIdAtom, projectsAtom } from "@/atoms/project";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,19 +20,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { cn, createProject } from "@/lib/utils";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomValue, useSetAtom } from "jotai";
-import { LucideLoader2, LucidePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { Badge } from "./ui/badge";
 import {
   Form,
   FormControl,
@@ -40,7 +28,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Project } from "@/interfaces/project.interface";
+import { createClient } from "@/lib/client/appwrite";
+import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
+import { cn, createProject } from "@/lib/utils";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Query } from "appwrite";
+import { useAtomValue, useSetAtom } from "jotai";
+import { LucideLoader2, LucidePlus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 export function CreateProject() {
   const [open, setOpen] = useState(false);
@@ -104,6 +108,7 @@ function CreateForm({ className, setOpen }: FormProps) {
   const router = useRouter();
   const organizationId = useAtomValue(organizationIdAtom);
   const setprojectId = useSetAtom(projectIdAtom);
+  const setProjects = useSetAtom(projectsAtom);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -120,6 +125,7 @@ function CreateForm({ className, setOpen }: FormProps) {
       return;
     }
 
+    const { database } = await createClient();
     const data = await createProject(organizationId.id, values.title);
 
     if (data) {
@@ -127,6 +133,15 @@ function CreateForm({ className, setOpen }: FormProps) {
         id: data.$id,
         title: data.title,
       });
+
+      const projects = await database.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECTS_COLLECTION_ID,
+        [Query.equal("organization_id", organizationId!.id)],
+      );
+
+      setProjects(projects.documents);
+
       router.push(`/${organizationId?.id}/${data.$id}`);
     }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAtomValue } from "jotai";
 import { LucideLoader2, LucideSave } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,7 +25,6 @@ import { MultiplePhotoSelector } from "@/components/ui/multiple-photo-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { Project } from "@/interfaces/project.interface";
 import { deleteFile, updateProject, uploadFile } from "@/lib/utils";
-import { useAtomValue } from "jotai";
 import { TAGS } from "./options";
 import projectSchema, {
   descriptionMaxLength,

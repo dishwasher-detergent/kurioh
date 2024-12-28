@@ -16,7 +16,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${font.className} min-h-dvh overflow-x-hidden antialiased`}
+        className={`${font.className} min-h-dvh overflow-x-hidden bg-muted/50 antialiased`}
       >
         {children}
         <Dev />

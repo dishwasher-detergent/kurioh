@@ -6,6 +6,8 @@ export interface ImagesProps {
 }
 
 export function Images({ images }: ImagesProps) {
+  if (images.length === 0) return null;
+
   return (
     <div className="space-y-1">
       <div className="h-full w-full overflow-hidden rounded-lg">

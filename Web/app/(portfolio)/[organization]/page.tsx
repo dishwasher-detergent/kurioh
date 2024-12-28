@@ -1,7 +1,15 @@
 "use client";
 
 import { organizationIdAtom } from "@/atoms/organization";
+import { CreateProject } from "@/components/create-project";
 import ProjectCard from "@/components/project-card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useProjects } from "@/hooks/useProjects";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
@@ -50,6 +58,19 @@ export default function OrganizationPage() {
       {projects.map((x) => (
         <ProjectCard key={x.$id} {...x} />
       ))}
+      {projects.length === 0 && (
+        <Card className="overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
+          <CardHeader>
+            <CardDescription className="text-xs">Uh oh!</CardDescription>
+            <CardTitle className="text-xl">No Projects Found</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex w-full">
+              <CreateProject />
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </main>
   );
 }

@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Query } from 'node-appwrite';
 
 import {
+  EXPERIENCE_COLLECTION_ID,
   INFORMATION_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
   PROJECTS_BUCKET_ID,
@@ -9,7 +10,12 @@ import {
   database_service,
   storage_service,
 } from '../lib/appwrite.js';
-import { Information, Organization, Project } from '../types/types.js';
+import {
+  Experience,
+  Information,
+  Organization,
+  Project,
+} from '../types/types.js';
 
 export function Organizations(app: Hono, cacheDuration: number = 1440) {
   app.get('/organizations/:organization_id', async (c) => {
@@ -27,6 +33,11 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
+        [Query.equal('organization_id', organization_id)]
+      );
+
+      const experience = await database_service.list<Experience>(
+        EXPERIENCE_COLLECTION_ID,
         [Query.equal('organization_id', organization_id)]
       );
 
@@ -48,12 +59,24 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
         links: project.links,
       }));
 
+      const formattedExperience = experience.documents.map((exp) => ({
+        id: exp.$id,
+        title: exp.title,
+        description: exp.description,
+        skills: exp.skills,
+        start_date: exp.start_date,
+        end_date: exp.end_date,
+        company: exp.company,
+        website: exp.website,
+      }));
+
       const prunedResponse = {
         id: organization.$id,
         title: organization.title,
         slug: organization.slug,
         information: formattedInformation,
         projects: formattedProject,
+        experience: formattedExperience,
       };
 
       return c.json(prunedResponse, 200, {

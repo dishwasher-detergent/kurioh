@@ -40,7 +40,7 @@ import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
+import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
 import { cn, createOrganization } from "@/lib/utils";
 
 export function CreateOrg() {
@@ -127,7 +127,7 @@ function CreateForm({ className, setOpen }: FormProps) {
 
       const organizations = await database.listDocuments<Organization>(
         DATABASE_ID,
-        PORTFOLIOS_COLLECTION_ID,
+        ORGANIZATION_COLLECTION_ID,
       );
 
       setOrganizations(organizations.documents);

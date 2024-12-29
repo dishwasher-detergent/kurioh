@@ -1,10 +1,12 @@
+import { Information } from "@/interfaces/information.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import {
   DATABASE_ID,
   HOSTNAME,
-  PORTFOLIOS_COLLECTION_ID,
+  INFORMATION_COLLECTION_ID,
+  ORGANIZATION_COLLECTION_ID,
   PROJECTS_BUCKET_ID,
   PROJECTS_COLLECTION_ID,
 } from "@/lib/constants";
@@ -188,13 +190,31 @@ export async function createOrganization(name: string) {
   try {
     const teamData = await team.create(organizationId, name);
 
+    const information = await database.createDocument<Information>(
+      DATABASE_ID,
+      INFORMATION_COLLECTION_ID,
+      organizationId,
+      {
+        title: name,
+        createdBy: user.$id,
+        organization_id: organizationId,
+      },
+      [
+        Permission.read(Role.team(teamData.$id)),
+        Permission.write(Role.team(teamData.$id)),
+        Permission.read(Role.user(user?.$id)),
+        Permission.write(Role.user(user?.$id)),
+      ],
+    );
+
     const data = await database.createDocument<Organization>(
       DATABASE_ID,
-      PORTFOLIOS_COLLECTION_ID,
+      ORGANIZATION_COLLECTION_ID,
       organizationId,
       {
         title: name,
         slug: createSlug(name),
+        information_id: information.$id,
         createdBy: user.$id,
       },
       [
@@ -250,13 +270,19 @@ export async function deleteOrganization(organizationId?: string) {
   await team.delete(organizationId);
   await database.deleteDocument(
     DATABASE_ID,
-    PORTFOLIOS_COLLECTION_ID,
+    ORGANIZATION_COLLECTION_ID,
+    organizationId,
+  );
+
+  await database.deleteDocument(
+    DATABASE_ID,
+    INFORMATION_COLLECTION_ID,
     organizationId,
   );
 
   const data = await database.listDocuments(
     DATABASE_ID,
-    PORTFOLIOS_COLLECTION_ID,
+    ORGANIZATION_COLLECTION_ID,
     [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
@@ -301,7 +327,7 @@ export async function leaveOrganization(organizationId: string) {
 
   const data = await database.listDocuments(
     DATABASE_ID,
-    PORTFOLIOS_COLLECTION_ID,
+    ORGANIZATION_COLLECTION_ID,
     [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
@@ -334,6 +360,38 @@ export async function shareOrganization(organizationId: string, email: string) {
 
   toast.success(`${email} has been invited to ${organizationId}`);
   return;
+}
+
+export async function updateInformation(id: string, values: any) {
+  const { database } = await createClient();
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    toast.error(
+      "Failed to update information, no user is defined. Please try logging out and back in.",
+    );
+    return;
+  }
+
+  try {
+    const data = await database.updateDocument<Information>(
+      DATABASE_ID,
+      INFORMATION_COLLECTION_ID,
+      id,
+      {
+        title: values.title,
+        description: values.description,
+        socials: values.socials,
+        image_id: values.image_id,
+      },
+    );
+
+    toast.success(`${data.title} has been updated!`);
+    return data;
+  } catch (err) {
+    toast.error(`Failed to update information!`);
+    return;
+  }
 }
 
 export async function uploadFile(file: File, organizationId: string) {

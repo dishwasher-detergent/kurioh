@@ -4,7 +4,7 @@ import { organizationIdAtom } from "@/atoms/organization";
 import { CreateOrg } from "@/components/create-organization";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
+import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
 import { LucideLoader2 } from "lucide-react";
@@ -37,7 +37,7 @@ export default function Home() {
 
       const data = await database.listDocuments<Organization>(
         DATABASE_ID,
-        PORTFOLIOS_COLLECTION_ID,
+        ORGANIZATION_COLLECTION_ID,
         [Query.orderDesc("$createdAt"), Query.limit(1)],
       );
 

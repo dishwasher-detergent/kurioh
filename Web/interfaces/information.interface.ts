@@ -3,8 +3,10 @@ import { Models } from "appwrite";
 export interface Information extends Models.Document {
   title: string;
   description: string;
-  icon: string;
-  social: Social[] | string[];
+  image_id: string;
+  socials: string[];
+  organization_id: string;
+  createdBy: string;
 }
 
 export interface Social {

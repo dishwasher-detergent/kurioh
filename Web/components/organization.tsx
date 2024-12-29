@@ -21,7 +21,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Organization as OrganizationItem } from "@/interfaces/organization.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
+import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 import { Query } from "appwrite";
@@ -48,7 +48,7 @@ export function Organization() {
 
     const data = await database.listDocuments<OrganizationItem>(
       DATABASE_ID,
-      PORTFOLIOS_COLLECTION_ID,
+      ORGANIZATION_COLLECTION_ID,
     );
 
     setOrganizations(data.documents);

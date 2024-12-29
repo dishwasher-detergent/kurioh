@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProjects } from "@/hooks/useProjects";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, PORTFOLIOS_COLLECTION_ID } from "@/lib/constants";
+import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
 
 import { useSetAtom } from "jotai";
 import { useParams, useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ export default function OrganizationPage() {
         const { database } = await createClient();
         const org = await database.getDocument<Organization>(
           DATABASE_ID,
-          PORTFOLIOS_COLLECTION_ID,
+          ORGANIZATION_COLLECTION_ID,
           organizationParam,
         );
 

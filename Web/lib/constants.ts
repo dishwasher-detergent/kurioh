@@ -9,8 +9,8 @@ export const API_KEY = process.env.APPWRITE_API_KEY as string;
 // Collections
 export const EXPERIENCE_COLLECTION_ID = process.env
   .NEXT_PUBLIC_EXPERIENCE_COLLECTION_ID as string;
-export const PORTFOLIOS_COLLECTION_ID = process.env
-  .NEXT_PUBLIC_PORTFOLIOS_COLLECTION_ID as string;
+export const ORGANIZATION_COLLECTION_ID = process.env
+  .NEXT_PUBLIC_ORGANIZATION_COLLECTION_ID as string;
 export const INFORMATION_COLLECTION_ID = process.env
   .NEXT_PUBLIC_INFORMATION_COLLECTION_ID as string;
 export const ARTICLES_COLLECTION_ID = process.env
@@ -21,6 +21,8 @@ export const PROJECTS_COLLECTION_ID = process.env
 // Buckets
 export const PROJECTS_BUCKET_ID = process.env
   .NEXT_PUBLIC_PROJECTS_BUCKET_ID as string;
+export const ORGANIZATION_BUCKET_ID = process.env
+  .NEXT_PUBLIC_ORGANIZATION_BUCKET_ID as string;
 
 // Cookie
 export const COOKIE_KEY = `a_session_${PROJECT_ID}`;

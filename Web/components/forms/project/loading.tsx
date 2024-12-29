@@ -32,7 +32,7 @@ export default function ProjectFormLoading() {
         <Label>Images</Label>
         <Skeleton className="h-24 w-full" />
         <p className="text-[0.8rem] text-muted-foreground">
-          Let people, at a glance, know how you've built your project.
+          Let people, at a glance, know how you&apos;ve built your project.
         </p>
       </div>
 
@@ -40,7 +40,7 @@ export default function ProjectFormLoading() {
         <Label>Tags</Label>
         <Skeleton className="h-8 w-full" />
         <p className="text-[0.8rem] text-muted-foreground">
-          Let people, at a glance, know how you've built your project.
+          Let people, at a glance, know how you&apos;ve built your project.
         </p>
       </div>
 

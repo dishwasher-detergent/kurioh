@@ -205,7 +205,8 @@ export default function ProjectForm({
                 <MultiplePhotoSelector {...field} />
               </FormControl>
               <FormDescription>
-                Let people, at a glance, know how you've built your project.
+                Let people, at a glance, know how you&apos;ve built your
+                project.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -230,7 +231,8 @@ export default function ProjectForm({
                 />
               </FormControl>
               <FormDescription>
-                Let people, at a glance, know how you've built your project.
+                Let people, at a glance, know how you&apos;ve built your
+                project.
               </FormDescription>
               <FormMessage />
             </FormItem>

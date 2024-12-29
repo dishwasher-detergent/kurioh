@@ -3,13 +3,8 @@
 import { organizationIdAtom } from "@/atoms/organization";
 import InformationForm from "@/components/forms/information/form";
 import InformationFormLoading from "@/components/forms/information/loading";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { OrganizationSettings } from "@/components/organization-settings";
+import { Card, CardContent } from "@/components/ui/card";
 import { Information } from "@/interfaces/information.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
@@ -27,7 +22,7 @@ type Params = {
   organization: string;
 };
 
-export default function EditOrganization() {
+export default function OrganizationInformation() {
   const setOrganizationId = useSetAtom(organizationIdAtom);
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [information, setInformation] = useState<Information | null>(null);
@@ -72,14 +67,17 @@ export default function EditOrganization() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-4xl space-y-4 p-4 px-4 md:px-8">
-      <Card>
-        <CardHeader>
-          <CardDescription className="text-xs">
-            {organization?.slug}
-          </CardDescription>
-          <CardTitle>{organization?.title}</CardTitle>
-        </CardHeader>
+    <main className="mx-auto min-h-full max-w-4xl p-4 px-4 md:px-8">
+      <header className="mb-8 flex items-center justify-between">
+        <div>
+          <p className="text-sm text-muted-foreground">{organization?.slug}</p>
+          <h1 className="text-3xl font-bold">{organization?.title}</h1>
+        </div>
+        <div>
+          <OrganizationSettings />
+        </div>
+      </header>
+      <Card className="p-4">
         <CardContent>
           {loading && <InformationFormLoading />}
           {information && (

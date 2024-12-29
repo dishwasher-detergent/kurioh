@@ -13,7 +13,8 @@ import { deleteOrganization } from "@/lib/utils";
 import { useAtom } from "jotai";
 
 import {
-  LucideEdit,
+  LucideBookOpenText,
+  LucideBriefcase,
   LucideEllipsisVertical,
   LucideLoader2,
   LucideTrash,
@@ -49,9 +50,21 @@ export function OrganizationSettings() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`${organizationId?.id}/edit`}>
-              <LucideEdit />
-              Edit
+            <Link
+              href={`/${organizationId?.id}/information`}
+              className="cursor-pointer"
+            >
+              <LucideBookOpenText />
+              Information
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              href={`/${organizationId?.id}/experience`}
+              className="cursor-pointer"
+            >
+              <LucideBriefcase />
+              Experience
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

@@ -224,7 +224,7 @@ export default function ProjectForm({
                   defaultOptions={TAGS}
                   creatable
                   emptyIndicator={
-                    <p className="text-center leading-10 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
                       No results found.
                     </p>
                   }
@@ -249,7 +249,7 @@ export default function ProjectForm({
                   {...field}
                   creatable
                   emptyIndicator={
-                    <p className="text-center leading-10 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
                       No results found.
                     </p>
                   }

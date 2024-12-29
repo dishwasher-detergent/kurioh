@@ -81,7 +81,7 @@ export default function OrganizationExperience() {
       <Card>
         <CardContent className="p-4">
           {loading && <ExperienceFormLoading />}
-          {experience && <ExperienceForm experience={experience} />}
+          {experience && !loading && <ExperienceForm experience={experience} />}
         </CardContent>
       </Card>
     </main>

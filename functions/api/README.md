@@ -1,20 +1,20 @@
-# projects
+# api
 
 ## 🧰 Usage
 
-### GET /
+### GET /ping
 
-- Returns a "Hello, World!" message.
+- Returns a "Pong" message.
 
 **Response**
 
 Sample `200` Response:
 
 ```text
-Hello, World!
+Pong
 ```
 
-### POST, PUT, PATCH, DELETE /
+### GET, POST, PUT, PATCH, DELETE /
 
 - Returns a "Learn More" JSON response.
 
@@ -34,7 +34,7 @@ Sample `200` Response:
 ## ⚙️ Configuration
 
 | Setting           | Value         |
-|-------------------|---------------|
+| ----------------- | ------------- |
 | Runtime           | Node (18.0)   |
 | Entrypoint        | `src/main.js` |
 | Build Commands    | `npm install` |

@@ -1,26 +1,24 @@
-import { Client, Databases, Models, Storage } from 'node-appwrite';
+import { Client, Databases, ImageFormat, Models, Storage } from 'node-appwrite';
 import { ImagePreview } from '../types/types.js';
+import { arrayBufferToBase64 } from './utils.js';
 
-export const ENDPOINT =
-  process.env.APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
-export const PROJECT_ID = process.env.APPWRITE_PROJECT_ID as string;
+export const ENDPOINT = process.env.APPWRITE_FUNCTION_API_ENDPOINT as string;
+export const PROJECT_ID = process.env.APPWRITE_FUNCTION_PROJECT_ID as string;
+export const API_KEY = process.env.API_KEY as string;
 export const DATABASE_ID = process.env.DATABASE_ID as string;
-export const API_KEY = process.env.APPWRITE_API_KEY as string;
 
 // Collections
+export const EXPERIENCE_COLLECTION_ID = process.env
+  .EXPERIENCE_COLLECTION_ID as string;
+export const ORGANIZATION_COLLECTION_ID = process.env
+  .ORGANIZATION_COLLECTION_ID as string;
 export const INFORMATION_COLLECTION_ID = process.env
   .INFORMATION_COLLECTION_ID as string;
 export const PROJECTS_COLLECTION_ID = process.env
   .PROJECTS_COLLECTION_ID as string;
-export const ARTICLES_COLLECTION_ID = process.env
-  .ARTICLES_COLLECTION_ID as string;
-export const PORTFOLIO_COLLECTION_ID = process.env
-  .PROTFOLIO_COLLECTION_ID as string;
 
 // Buckets
-export const PORTFOLIO_BUCKET_ID = process.env.PORTFOLIO_BUCKET_ID as string;
 export const PROJECTS_BUCKET_ID = process.env.PROJECTS_BUCKET_ID as string;
-export const ARTICLES_BUCKET_ID = process.env.ARTICLES_BUCKET_ID as string;
 
 const client = new Client();
 client.setEndpoint(ENDPOINT).setProject(PROJECT_ID).setKey(API_KEY);
@@ -106,7 +104,7 @@ export const storage_service = {
       opacity: undefined,
       rotation: undefined,
       background: undefined,
-      output: undefined,
+      output: ImageFormat.Png,
     };
 
     const combinedOptions = {
@@ -114,22 +112,26 @@ export const storage_service = {
       ...options,
     };
 
-    const response = await storage.getFilePreview(
-      bucketId,
-      id,
-      combinedOptions.width,
-      combinedOptions.height,
-      combinedOptions.gravity,
-      combinedOptions.quality,
-      combinedOptions.borderWidth,
-      combinedOptions.borderColor,
-      combinedOptions.borderRadius,
-      combinedOptions.opacity,
-      combinedOptions.rotation,
-      combinedOptions.background,
-      combinedOptions.output
-    );
+    try {
+      const response = await storage.getFilePreview(
+        bucketId,
+        id,
+        combinedOptions.width,
+        combinedOptions.height,
+        combinedOptions.gravity,
+        combinedOptions.quality,
+        combinedOptions.borderWidth,
+        combinedOptions.borderColor,
+        combinedOptions.borderRadius,
+        combinedOptions.opacity,
+        combinedOptions.rotation,
+        combinedOptions.background,
+        combinedOptions.output
+      );
 
-    return response.toString('base64');
+      return arrayBufferToBase64(response);
+    } catch (err) {
+      return null;
+    }
   },
 };

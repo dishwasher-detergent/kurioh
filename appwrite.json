@@ -1,0 +1,392 @@
+{
+  "projectId": "portfoliocms",
+  "projectName": "portfoliocms",
+  "settings": {
+    "services": {
+      "account": true,
+      "avatars": true,
+      "databases": true,
+      "locale": true,
+      "health": true,
+      "storage": true,
+      "teams": true,
+      "users": true,
+      "functions": true,
+      "graphql": true,
+      "messaging": true
+    },
+    "auth": {
+      "methods": {
+        "jwt": true,
+        "phone": true,
+        "invites": true,
+        "anonymous": true,
+        "email-otp": true,
+        "magic-url": true,
+        "email-password": true
+      },
+      "security": {
+        "duration": 31536000,
+        "limit": 0,
+        "sessionsLimit": 10,
+        "passwordHistory": 0,
+        "passwordDictionary": false,
+        "personalDataCheck": false,
+        "sessionAlerts": false,
+        "mockNumbers": []
+      }
+    }
+  },
+  "databases": [
+    {
+      "$id": "portfolio",
+      "name": "portfolio",
+      "enabled": true
+    }
+  ],
+  "collections": [
+    {
+      "$id": "organization",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "organization",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 80,
+          "default": null
+        },
+        {
+          "key": "project_ids",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "experience_id",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 129,
+          "default": null
+        },
+        {
+          "key": "createdBy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "information_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "project",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "project",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "short_description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1024,
+          "default": null
+        },
+        {
+          "key": "image_ids",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "tags",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null
+        },
+        {
+          "key": "links",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "format": "url",
+          "default": null
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 80,
+          "default": null
+        },
+        {
+          "key": "organization_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "createdBy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "experience",
+      "$permissions": [],
+      "databaseId": "portfolio",
+      "name": "experience",
+      "enabled": true,
+      "documentSecurity": false,
+      "attributes": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 512,
+          "default": null
+        },
+        {
+          "key": "start_date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "end_date",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "portfolio_ids",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "company",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "website",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "format": "url",
+          "default": null
+        },
+        {
+          "key": "skills",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null
+        },
+        {
+          "key": "createdBy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "info",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "info",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 512,
+          "default": null
+        },
+        {
+          "key": "socials",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "createdBy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "organization_id",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 32,
+          "default": null
+        },
+        {
+          "key": "image_id",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "buckets": [
+    {
+      "$id": "projects",
+      "$permissions": ["create(\"users\")", "read(\"users\")"],
+      "fileSecurity": true,
+      "name": "projects",
+      "enabled": true,
+      "maximumFileSize": 50000000,
+      "allowedFileExtensions": [],
+      "compression": "none",
+      "encryption": true,
+      "antivirus": true
+    },
+    {
+      "$id": "organization",
+      "$permissions": [],
+      "fileSecurity": false,
+      "name": "organization",
+      "enabled": true,
+      "maximumFileSize": 50000000,
+      "allowedFileExtensions": [],
+      "compression": "none",
+      "encryption": true,
+      "antivirus": true
+    }
+  ],
+  "teams": [
+    {
+      "$id": "6770a32e0005597e321a",
+      "name": "test"
+    },
+    {
+      "$id": "6770a5f3002015e196eb",
+      "name": "test"
+    }
+  ],
+  "functions": [
+    {
+      "$id": "6771997c001a806800aa",
+      "name": "api",
+      "runtime": "node-22",
+      "execute": ["any"],
+      "events": [],
+      "scopes": [
+        "databases.read",
+        "collections.read",
+        "documents.read",
+        "files.read",
+        "buckets.read"
+      ],
+      "schedule": "",
+      "timeout": 15,
+      "enabled": true,
+      "logging": true,
+      "entrypoint": "dist/main.js",
+      "commands": "npm install && npm run build",
+      "path": "functions/api"
+    }
+  ]
+}

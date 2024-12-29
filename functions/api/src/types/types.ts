@@ -1,4 +1,4 @@
-import { Models } from 'node-appwrite';
+import { ImageFormat, ImageGravity, Models } from 'node-appwrite';
 
 export interface Context {
   req: any;
@@ -7,49 +7,56 @@ export interface Context {
   error: (msg: any) => void;
 }
 
-export interface Projects extends Models.Document {
+export interface Project extends Models.Document {
   title: string;
-  slug: string;
   short_description: string;
   description: string;
-  images: string[];
-  position: number;
+  image_ids: string[];
   tags: string[];
-  color: string;
   links: string[];
+  slug: string;
+  organization_id: string;
 }
 
 export interface Information extends Models.Document {
   title: string;
   description: string;
-  icon: string;
-  social: string[];
+  image_id: string;
+  socials: string[];
+  organization_id: string;
+  createdBy: string;
 }
 
-export interface Portfolios extends Models.Document {
+export interface Social {
+  url: string;
+  value: string;
+}
+
+export interface Organization extends Models.Document {
   title: string;
   slug: string;
-  projects: Projects[];
-  information: Information[];
-  experience: Experience[];
+  information_id: string;
+  project_ids: string[];
+  experience_id: string | null;
+  createdBy: string;
 }
 
 export interface Experience extends Models.Document {
   company: string;
+  website: string;
   title: string;
   description: string;
+  languages: string[];
   start: Date;
   end: Date;
-  portfolios: Portfolios;
+  organizations: Organization;
   creator: string;
-  website: string;
-  languages: string[];
 }
 
 export interface ImagePreview {
   width?: number;
   height?: number;
-  gravity?: string;
+  gravity?: ImageGravity;
   quality?: number;
   borderWidth?: number;
   borderColor?: string;
@@ -57,5 +64,5 @@ export interface ImagePreview {
   opacity?: number;
   rotation?: number;
   background?: string;
-  output?: string;
+  output?: ImageFormat;
 }

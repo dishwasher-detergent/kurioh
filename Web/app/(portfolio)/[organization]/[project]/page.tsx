@@ -3,12 +3,7 @@
 import { projectIdAtom } from "@/atoms/project";
 import ProjectForm from "@/components/forms/project/form";
 import ProjectFormLoading from "@/components/forms/project/loading";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
 import { Project } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
@@ -70,12 +65,7 @@ export default function ProjectPage() {
           endpoint={`${API_ENDPOINT}/organizations/${project?.organization_id}/projects/${project?.$id}`}
         />
         <Card>
-          <CardHeader>
-            <CardDescription className="text-xs">
-              {project?.slug}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             {loading && <ProjectFormLoading />}
             {project && <ProjectForm {...project} setProject={setProject} />}
           </CardContent>

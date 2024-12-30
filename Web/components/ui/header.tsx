@@ -27,7 +27,7 @@ export function Header({
         {!loading ? (
           <h1 className="text-3xl font-bold">{title}</h1>
         ) : (
-          <Skeleton className="h-10 w-36 max-w-full" />
+          <Skeleton className="h-8 w-36 max-w-full" />
         )}
         {!loading && endpoint ? (
           <p className="text-sm">

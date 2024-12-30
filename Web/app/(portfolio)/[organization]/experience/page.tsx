@@ -5,6 +5,7 @@ import ExperienceForm from "@/components/forms/experience/form";
 import ExperienceFormLoading from "@/components/forms/experience/loading";
 import { OrganizationSettings } from "@/components/organization-settings";
 import { Card, CardContent } from "@/components/ui/card";
+import { Header } from "@/components/ui/header";
 import { Experience } from "@/interfaces/experience.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
@@ -17,7 +18,6 @@ import {
 import { Query } from "appwrite";
 
 import { useSetAtom } from "jotai";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -71,29 +71,14 @@ export default function OrganizationExperience() {
 
   return (
     <main className="mx-auto min-h-full max-w-6xl p-4 px-4 md:px-8">
-      {!loading && (
-        <header className="mb-8 flex items-center justify-between">
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
-              {organization?.slug}
-            </p>
-            <h1 className="text-3xl font-bold">{organization?.title}</h1>
-            <p className="text-sm">
-              Endpoint:&nbsp;
-              <Link
-                href={`${API_ENDPOINT}/organizations/${organization?.$id}`}
-                target="_blank"
-              >
-                {API_ENDPOINT}
-                /organizations/{organization?.$id}
-              </Link>
-            </p>
-          </div>
-          <div>
-            <OrganizationSettings />
-          </div>
-        </header>
-      )}
+      <Header
+        title={organization?.title}
+        slug={organization?.slug}
+        loading={loading}
+        endpoint={`${API_ENDPOINT}/organizations/${organization?.$id}`}
+      >
+        <OrganizationSettings />
+      </Header>
       <Card>
         <CardContent className="p-4">
           {loading && <ExperienceFormLoading />}

@@ -9,6 +9,7 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
+import { Header } from "@/components/ui/header";
 import { Project } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import {
@@ -18,7 +19,6 @@ import {
 } from "@/lib/constants";
 
 import { useSetAtom } from "jotai";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -63,25 +63,12 @@ export default function ProjectPage() {
   return (
     <>
       <main className="mx-auto max-w-6xl space-y-4 p-4 px-4 md:px-8">
-        {!loading && (
-          <header className="mb-8 flex items-center justify-between">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">{project?.slug}</p>
-              <h1 className="text-3xl font-bold">{project?.title}</h1>
-              <p className="text-sm">
-                Endpoint:&nbsp;
-                <Link
-                  href={`${API_ENDPOINT}/organizations/${project?.organization_id}/projects/${project?.$id}`}
-                  target="_blank"
-                >
-                  {API_ENDPOINT}
-                  /organizations/{project?.organization_id}/projects/
-                  {project?.$id}
-                </Link>
-              </p>
-            </div>
-          </header>
-        )}
+        <Header
+          title={project?.title}
+          slug={project?.slug}
+          loading={loading}
+          endpoint={`${API_ENDPOINT}/organizations/${project?.organization_id}/projects/${project?.$id}`}
+        />
         <Card>
           <CardHeader>
             <CardDescription className="text-xs">

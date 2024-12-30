@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Header } from "@/components/ui/header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjects } from "@/hooks/useProjects";
 import { Organization } from "@/interfaces/organization.interface";
@@ -22,7 +23,6 @@ import {
 } from "@/lib/constants";
 
 import { useSetAtom } from "jotai";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -63,29 +63,14 @@ export default function OrganizationPage() {
 
   return (
     <main className="mx-auto min-h-full max-w-6xl p-4 px-4 md:px-8">
-      {!loading && (
-        <header className="mb-8 flex items-center justify-between">
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
-              {organization?.slug}
-            </p>
-            <h1 className="text-3xl font-bold">{organization?.title}</h1>
-            <p className="text-sm">
-              Endpoint:&nbsp;
-              <Link
-                href={`${API_ENDPOINT}/organizations/${organization?.$id}`}
-                target="_blank"
-              >
-                {API_ENDPOINT}
-                /organizations/{organization?.$id}
-              </Link>
-            </p>
-          </div>
-          <div>
-            <OrganizationSettings />
-          </div>
-        </header>
-      )}
+      <Header
+        title={organization?.title}
+        slug={organization?.slug}
+        loading={loading}
+        endpoint={`${API_ENDPOINT}/organizations/${organization?.$id}`}
+      >
+        <OrganizationSettings />
+      </Header>
       <section className="min-h-full columns-xs items-start gap-4 space-y-4">
         {loading &&
           [...Array(5)].map((_, index) => (

@@ -75,6 +75,19 @@ export default function OrganizationPage() {
               className="h-48 w-full break-inside-avoid-column"
             />
           ))}
+        {!loading && (
+          <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
+            <CardHeader>
+              <CardDescription className="text-xs">Ooh Aah!</CardDescription>
+              <CardTitle className="text-xl">Made something new?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex w-full">
+                <CreateProject />
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {!loading && projects.map((x) => <ProjectCard key={x.$id} {...x} />)}
         {!loading && projects.length === 0 && (
           <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">

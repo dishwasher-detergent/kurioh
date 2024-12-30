@@ -282,7 +282,7 @@ export async function deleteOrganization(organizationId?: string) {
     organizationId,
   );
 
-  const data = await database.listDocuments(
+  const data = await database.listDocuments<Organization>(
     DATABASE_ID,
     ORGANIZATION_COLLECTION_ID,
     [Query.orderDesc("$createdAt"), Query.limit(1)],
@@ -290,11 +290,7 @@ export async function deleteOrganization(organizationId?: string) {
 
   toast.error(`${organizationId} has been deleted!`);
 
-  if (data.documents.length > 0) {
-    return data.documents[0].$id;
-  }
-
-  return null;
+  return data;
 }
 
 export async function leaveOrganization(organizationId: string) {

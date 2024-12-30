@@ -1,4 +1,4 @@
-import { organizationIdAtom } from "@/atoms/organization";
+import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteOrganization } from "@/lib/utils";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import {
   LucideBookOpenText,
@@ -22,20 +22,30 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function OrganizationSettings() {
   const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
+  const setOrganizations = useSetAtom(organizationsAtom);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleDeleteOrganization() {
     setLoading(true);
 
-    await deleteOrganization(organizationId?.id);
+    const promise = async () => {
+      const data = await deleteOrganization(organizationId?.id);
+      setOrganizations(data?.documents ?? []);
+      setOrganizationId(null);
+      setLoading(false);
+      router.push(`/${data?.documents[0]?.id}`);
+    };
 
-    setOrganizationId(null);
-    setLoading(false);
-    router.push("/");
+    toast.promise(promise, {
+      loading: "Deleting organization...",
+      success: "Organization deleted successfully!",
+      error: "Failed to delete organization!",
+    });
   }
 
   return (

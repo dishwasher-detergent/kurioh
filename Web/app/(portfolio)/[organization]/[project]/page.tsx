@@ -57,7 +57,7 @@ export default function ProjectPage() {
 
   return (
     <>
-      <main className="mx-auto max-w-4xl space-y-4 p-4 px-4 md:px-8">
+      <main className="mx-auto max-w-5xl space-y-4 p-4 px-4 md:px-8">
         <Card>
           <CardHeader>
             <CardDescription className="text-xs">

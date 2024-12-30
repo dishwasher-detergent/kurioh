@@ -67,7 +67,7 @@ export default function OrganizationInformation() {
   }, []);
 
   return (
-    <main className="mx-auto min-h-full max-w-4xl p-4 px-4 md:px-8">
+    <main className="mx-auto min-h-full max-w-5xl p-4 px-4 md:px-8">
       <header className="mb-8 flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground">{organization?.slug}</p>

@@ -10,7 +10,7 @@ export function Images({ images }: ImagesProps) {
 
   return (
     <div className="space-y-1">
-      <div className="h-full w-full overflow-hidden rounded-lg">
+      <div className="aspect-square w-full overflow-hidden rounded-lg">
         <img
           className="h-full w-full object-cover"
           src={`${ENDPOINT}/storage/buckets/${PROJECTS_BUCKET_ID}/files/${images[0]}/view?project=${PROJECT_ID}`}
@@ -35,7 +35,7 @@ export function Images({ images }: ImagesProps) {
           return (
             <div
               key={image}
-              className="h-full w-full overflow-hidden rounded-lg"
+              className="aspect-square h-full w-full overflow-hidden rounded-lg"
             >
               <img
                 className="h-full w-full object-cover"

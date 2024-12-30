@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUpWithEmail } from "./action";
 
+import { LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
@@ -24,7 +25,10 @@ const initialState = {
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [state, formAction] = useActionState(signUpWithEmail, initialState);
+  const [state, formAction, isPending] = useActionState(
+    signUpWithEmail,
+    initialState,
+  );
 
   useEffect(() => {
     if (state.success) {
@@ -70,8 +74,12 @@ export default function SignUpPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" type="submit">
-            Create Account
+          <Button className="w-full" type="submit" disabled={isPending}>
+            {isPending ? (
+              <LucideLoader2 className="size-3.5 animate-spin" />
+            ) : (
+              "Create"
+            )}
           </Button>
         </CardFooter>
         <CardFooter>

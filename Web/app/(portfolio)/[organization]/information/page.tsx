@@ -78,7 +78,7 @@ export default function OrganizationInformation() {
             </p>
             <h1 className="text-3xl font-bold">{organization?.title}</h1>
             <p className="text-sm">
-              Endpoint:
+              Endpoint:&nbsp;
               <Link
                 href={`${API_ENDPOINT}/organizations/${organization?.$id}`}
                 target="_blank"

@@ -69,7 +69,7 @@ export default function ProjectPage() {
               <p className="text-sm text-muted-foreground">{project?.slug}</p>
               <h1 className="text-3xl font-bold">{project?.title}</h1>
               <p className="text-sm">
-                Endpoint:
+                Endpoint:&nbsp;
                 <Link
                   href={`${API_ENDPOINT}/organizations/${project?.organization_id}/projects/${project?.$id}`}
                   target="_blank"

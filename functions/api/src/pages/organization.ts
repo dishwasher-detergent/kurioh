@@ -54,7 +54,7 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
         slug: project.slug,
         short_description: project.short_description,
         description: project.description,
-        images_ids: project.image_ids,
+        image_ids: project.image_ids,
         tags: project.tags,
         links: project.links,
       }));

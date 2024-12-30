@@ -9,6 +9,7 @@ import { Experience } from "@/interfaces/experience.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
 import {
+  API_ENDPOINT,
   DATABASE_ID,
   EXPERIENCE_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
@@ -16,6 +17,7 @@ import {
 import { Query } from "appwrite";
 
 import { useSetAtom } from "jotai";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -68,16 +70,30 @@ export default function OrganizationExperience() {
   }, []);
 
   return (
-    <main className="mx-auto min-h-full max-w-5xl p-4 px-4 md:px-8">
-      <header className="mb-8 flex items-center justify-between">
-        <div>
-          <p className="text-sm text-muted-foreground">{organization?.slug}</p>
-          <h1 className="text-3xl font-bold">{organization?.title}</h1>
-        </div>
-        <div>
-          <OrganizationSettings />
-        </div>
-      </header>
+    <main className="mx-auto min-h-full max-w-6xl p-4 px-4 md:px-8">
+      {!loading && (
+        <header className="mb-8 flex items-center justify-between">
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              {organization?.slug}
+            </p>
+            <h1 className="text-3xl font-bold">{organization?.title}</h1>
+            <p className="text-sm">
+              Endpoint:
+              <Link
+                href={`${API_ENDPOINT}/organizations/${organization?.$id}`}
+                target="_blank"
+              >
+                {API_ENDPOINT}
+                /organizations/{organization?.$id}
+              </Link>
+            </p>
+          </div>
+          <div>
+            <OrganizationSettings />
+          </div>
+        </header>
+      )}
       <Card>
         <CardContent className="p-4">
           {loading && <ExperienceFormLoading />}

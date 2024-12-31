@@ -1,5 +1,3 @@
-"use client";
-
 import InformationForm from "@/components/forms/information/form";
 import { OrganizationSettings } from "@/components/organization-settings";
 import { SetOrganization } from "@/components/set-organization";

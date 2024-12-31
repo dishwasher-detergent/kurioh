@@ -7,10 +7,10 @@ import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
 
 import { useAtom } from "jotai";
-import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
+import Loading from "./(portfolio)/[organization]/loading";
 
 export default function Home() {
   const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
@@ -54,24 +54,21 @@ export default function Home() {
   }, [organizationId]);
 
   return (
-    <main className="grid min-h-dvh w-full place-items-center">
-      {loading && (
-        <p className="flex flex-row items-center gap-2">
-          <LucideLoader2 className="size-4 animate-spin" />
-          Checking for existing organizations
-        </p>
-      )}
+    <>
+      {loading && <Loading />}
       {!loading && (
-        <div className="flex flex-col items-center gap-2">
-          <h1 className="text-xl font-bold">
-            Looks like you don&apos;t have any orgnaizations created yet.
-          </h1>
-          <p>Lets get started!</p>
-          <div>
-            <CreateOrg />
+        <main className="mx-auto grid h-full min-h-dvh max-w-6xl place-items-center space-y-4 p-4 px-4 md:px-8">
+          <div className="flex h-full flex-col items-center justify-center space-y-4">
+            <h1 className="text-xl font-bold">
+              Looks like you don&apos;t have any orgnaizations created yet.
+            </h1>
+            <p>Lets get started!</p>
+            <div>
+              <CreateOrg />
+            </div>
           </div>
-        </div>
+        </main>
       )}
-    </main>
+    </>
   );
 }

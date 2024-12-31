@@ -30,12 +30,9 @@ import informationSchema, {
   titleMaxLength,
 } from "./schema";
 
-interface InformationFormProps extends Information {
-  setInformation: (organization: Information) => void;
-}
+interface InformationFormProps extends Information {}
 
 export default function InformationForm({
-  setInformation,
   $id,
   title,
   description,
@@ -66,11 +63,7 @@ export default function InformationForm({
       image_id: uploadedImage?.$id ?? "",
     };
 
-    const updatedInformation = await updateInformation($id, formData);
-
-    if (updatedInformation) {
-      setInformation(updatedInformation);
-    }
+    await updateInformation($id, formData);
 
     setLoading(false);
   }

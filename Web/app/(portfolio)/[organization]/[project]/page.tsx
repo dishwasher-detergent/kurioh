@@ -1,59 +1,55 @@
-"use client";
-
-import { projectIdAtom } from "@/atoms/project";
 import ProjectForm from "@/components/forms/project/form";
-import ProjectFormLoading from "@/components/forms/project/loading";
+import { SetProject } from "@/components/set-project";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
+import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
-import { createClient } from "@/lib/client/appwrite";
 import {
   API_ENDPOINT,
   DATABASE_ID,
+  ORGANIZATION_COLLECTION_ID,
   PROJECTS_COLLECTION_ID,
 } from "@/lib/constants";
+import { createSessionClient } from "@/lib/server/appwrite";
 
-import { useSetAtom } from "jotai";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { notFound, redirect } from "next/navigation";
 
-type Params = {
-  organization: string;
-  project: string;
-};
+async function validateProject(projectId: string) {
+  try {
+    const { database } = await createSessionClient();
+    const project = await database.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_COLLECTION_ID,
+      projectId,
+    );
 
-export default function ProjectPage() {
-  const setProjectId = useSetAtom(projectIdAtom);
-  const { project: projectParam } = useParams<Params>();
-  const [project, setProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+    return project;
+  } catch {
+    notFound();
+  }
+}
 
-  useEffect(() => {
-    async function validateProject() {
-      setLoading(true);
-      try {
-        const { database } = await createClient();
-        const project = await database.getDocument<Project>(
-          DATABASE_ID,
-          PROJECTS_COLLECTION_ID,
-          projectParam,
-        );
+async function validateOrganization(organizationId: string) {
+  try {
+    const { database } = await createSessionClient();
+    await database.getDocument<Organization>(
+      DATABASE_ID,
+      ORGANIZATION_COLLECTION_ID,
+      organizationId,
+    );
+  } catch {
+    redirect(`/${organizationId}`);
+  }
+}
 
-        setProject(project);
-        setProjectId({
-          title: project.title,
-          id: project.$id,
-        });
-        setLoading(false);
-      } catch {
-        setProjectId(null);
-        router.push("/");
-      }
-    }
-
-    validateProject();
-  }, []);
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ project: string; organization: string }>;
+}) {
+  const { project: projectId, organization: organizationId } = await params;
+  await validateOrganization(organizationId);
+  const project = await validateProject(projectId);
 
   return (
     <>
@@ -61,15 +57,14 @@ export default function ProjectPage() {
         <Header
           title={project?.title}
           slug={project?.slug}
-          loading={loading}
           endpoint={`${API_ENDPOINT}/organizations/${project?.organization_id}/projects/${project?.$id}`}
         />
         <Card>
           <CardContent className="p-4">
-            {loading && <ProjectFormLoading />}
-            {project && <ProjectForm {...project} setProject={setProject} />}
+            <ProjectForm {...project} />
           </CardContent>
         </Card>
+        <SetProject {...project} />
       </main>
     </>
   );

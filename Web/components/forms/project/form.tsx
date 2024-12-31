@@ -32,9 +32,7 @@ import projectSchema, {
   titleMaxLength,
 } from "./schema";
 
-interface ProjectFormProps extends Project {
-  setProject: (project: Project) => void;
-}
+interface ProjectFormProps extends Project {}
 
 export default function ProjectForm({
   setProject,

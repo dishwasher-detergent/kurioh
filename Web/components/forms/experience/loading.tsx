@@ -3,7 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function InformationFormLoading() {
+export default function ExperienceFormLoading() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">

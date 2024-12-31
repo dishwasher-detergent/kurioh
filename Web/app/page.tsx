@@ -14,8 +14,6 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
-  const [loadingCreateOrganization, setLoadingCreateOrganization] =
-    useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 

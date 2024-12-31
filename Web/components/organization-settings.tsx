@@ -1,3 +1,5 @@
+"use client";
+
 import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
 import { Button } from "@/components/ui/button";
 import {

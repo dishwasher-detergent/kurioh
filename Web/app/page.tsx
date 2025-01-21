@@ -27,10 +27,20 @@ export default function Home() {
         router.push("/login");
         return;
       }
-
+      
       if (organizationId) {
-        router.push(organizationId.id);
-        return;
+          try {
+            const org = await database.getDocument<Organization>(
+              DATABASE_ID,
+              ORGANIZATION_COLLECTION_ID,
+              organizationId
+            );
+            
+            router.push(org.$id);
+            return;
+          } catch (err) {
+            console.error("Couldn't find organization");
+          }
       }
 
       const data = await database.listDocuments<Organization>(

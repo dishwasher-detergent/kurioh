@@ -51,7 +51,7 @@ export default async function OrganizationInformation({
     await validateOrganization(organizationId);
 
   return (
-    <main className="mx-auto min-h-full max-w-6xl p-4 px-4 md:px-8">
+    <main className="mx-auto max-w-6xl space-y-4 p-4 px-4 md:px-8">
       <Header
         title={organization?.title}
         slug={organization?.slug}
@@ -59,7 +59,7 @@ export default async function OrganizationInformation({
       >
         <OrganizationSettings />
       </Header>
-      <Card className="p-4">
+      <Card>
         <CardContent>
           <InformationForm {...information} />
         </CardContent>

@@ -1,6 +1,6 @@
-import { organizationIdAtom } from "@/atoms/organization";
 import { ListProjects } from "@/components/list-projects";
 import { OrganizationSettings } from "@/components/organization-settings";
+import { SetOrganization } from "@/components/set-organization";
 import { Header } from "@/components/ui/header";
 import { Organization } from "@/interfaces/organization.interface";
 import {
@@ -9,7 +9,6 @@ import {
   ORGANIZATION_COLLECTION_ID,
 } from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
-import { useHydrateAtoms } from "jotai/utils";
 
 import { notFound } from "next/navigation";
 
@@ -35,12 +34,6 @@ export default async function OrganizationPage({
 }) {
   const { organization: organizationId } = await params;
   const organization = await validateOrganization(organizationId);
-  useHydrateAtoms([
-    [organizationIdAtom, {
-      id: organization.$id,
-      title: organization.title
-    }],
-  ]);
 
   return (
     <main className="mx-auto min-h-full max-w-6xl p-4 px-4 md:px-8">
@@ -52,6 +45,7 @@ export default async function OrganizationPage({
         <OrganizationSettings />
       </Header>
       <ListProjects />
+      <SetOrganization />
     </main>
   );
 }

@@ -45,7 +45,7 @@ export default async function OrganizationPage({
         <OrganizationSettings />
       </Header>
       <ListProjects />
-      <SetOrganization />
+      <SetOrganization {...organization} />
     </main>
   );
 }

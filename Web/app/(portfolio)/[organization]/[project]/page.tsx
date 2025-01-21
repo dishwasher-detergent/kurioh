@@ -1,5 +1,6 @@
 import ProjectForm from "@/components/forms/project/form";
 import { SetProject } from "@/components/set-project";
+import { SetOrganization } from "@/components/set-organization";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
 import { Organization } from "@/interfaces/organization.interface";
@@ -32,7 +33,7 @@ async function validateProject(projectId: string) {
 async function validateOrganization(organizationId: string) {
   try {
     const { database } = await createSessionClient();
-    await database.getDocument<Organization>(
+    return await database.getDocument<Organization>(
       DATABASE_ID,
       ORGANIZATION_COLLECTION_ID,
       organizationId,
@@ -48,7 +49,7 @@ export default async function ProjectPage({
   params: Promise<{ project: string; organization: string }>;
 }) {
   const { project: projectId, organization: organizationId } = await params;
-  await validateOrganization(organizationId);
+  const organization = await validateOrganization(organizationId);
   const project = await validateProject(projectId);
 
   return (
@@ -65,6 +66,7 @@ export default async function ProjectPage({
           </CardContent>
         </Card>
         <SetProject {...project} />
+        <SetOrganization {...organization} />
       </main>
     </>
   );

@@ -33,7 +33,7 @@ export default function Home() {
             const org = await database.getDocument<Organization>(
               DATABASE_ID,
               ORGANIZATION_COLLECTION_ID,
-              organizationId
+              organizationId.id
             );
             
             router.push(org.$id);

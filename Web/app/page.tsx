@@ -29,8 +29,18 @@ export default function Home() {
       }
 
       if (organizationId) {
-        router.push(`/organization/${organizationId.id}`);
-        return;
+        try {
+          const org = await database.getDocument<Organization>(
+            DATABASE_ID,
+            ORGANIZATION_COLLECTION_ID,
+            organizationId.id,
+          );
+
+          router.push(`/organization/${org.$id}`);
+          return;
+        } catch (err) {
+          console.error("Couldn't find organization");
+        }
       }
 
       const data = await database.listDocuments<Organization>(

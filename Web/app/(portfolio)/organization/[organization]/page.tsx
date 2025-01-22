@@ -1,5 +1,6 @@
 import { ListProjects } from "@/components/list-projects";
 import { OrganizationSettings } from "@/components/organization-settings";
+import { SetOrganization } from "@/components/set-organization";
 import { Header } from "@/components/ui/header";
 import { Organization } from "@/interfaces/organization.interface";
 import {
@@ -44,6 +45,7 @@ export default async function OrganizationPage({
         <OrganizationSettings />
       </Header>
       <ListProjects />
+      <SetOrganization {...organization} />
     </main>
   );
 }

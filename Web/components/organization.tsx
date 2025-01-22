@@ -94,16 +94,22 @@ export function Organization() {
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <div className="flex items-center">
-                <Link
-                  href={`/organization/${organizationId?.id}`}
-                  onClick={() => setProjectId(null)}
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "sm",
-                  })}
-                >
-                  {organizationId?.title}
-                </Link>
+                {organizationId?.id ? (
+                  <Link
+                    href={`/organization/${organizationId?.id}`}
+                    onClick={() => setProjectId(null)}
+                    className={buttonVariants({
+                      variant: "ghost",
+                      size: "sm",
+                    })}
+                  >
+                    {organizationId?.title}
+                  </Link>
+                ) : (
+                  <p className="px-2 text-xs font-semibold">
+                    Select An Organization
+                  </p>
+                )}
                 <Button
                   onClick={() => setOpen(!open)}
                   size="icon"

@@ -53,13 +53,11 @@ export function Project() {
   }
 
   useEffect(() => {
-    console.log("test");
-
     if (!organizationId) return;
     fetchProjects();
   }, [organizationId]);
 
-  if (!organizationId) return <Skeleton className="h-8 min-w-32" />;
+  if (!organizationId) return null;
 
   return (
     <>

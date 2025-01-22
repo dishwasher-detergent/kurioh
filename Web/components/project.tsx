@@ -53,6 +53,8 @@ export function Project() {
   }
 
   useEffect(() => {
+    console.log("test");
+
     if (!organizationId) return;
     fetchProjects();
   }, [organizationId]);
@@ -102,7 +104,9 @@ export function Project() {
                             id: currentValue,
                           });
                           setOpen(false);
-                          router.push(`/${organizationId.id}/${currentValue}`);
+                          router.push(
+                            `/organization/${organizationId.id}/project/${currentValue}`,
+                          );
                         }}
                         className="cursor-pointer text-xs"
                       >

@@ -95,7 +95,7 @@ export function Organization() {
             <PopoverTrigger asChild>
               <div className="flex items-center">
                 <Link
-                  href={`/${organizationId?.id}`}
+                  href={`/organization/${organizationId?.id}`}
                   onClick={() => setProjectId(null)}
                   className={buttonVariants({
                     variant: "ghost",
@@ -136,7 +136,7 @@ export function Organization() {
                             title: organization.title,
                           });
                           setOpen(false);
-                          router.push(`/${currentValue}`);
+                          router.push(`/organization/${currentValue}`);
                         }}
                         className="cursor-pointer text-xs"
                       >

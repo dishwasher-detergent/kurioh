@@ -2,7 +2,7 @@
 
 import { projectIdAtom } from "@/atoms/project";
 
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 interface SetProjectProps {
@@ -11,9 +11,11 @@ interface SetProjectProps {
 }
 
 export function SetProject({ title, $id }: SetProjectProps) {
-  const setProjectId = useSetAtom(projectIdAtom);
+  const [projectId, setProjectId] = useAtom(projectIdAtom);
 
   useEffect(() => {
+    if (projectId?.id === $id && projectId?.title === title) return;
+
     if (!$id || !title) {
       setProjectId(null);
       return;

@@ -40,7 +40,7 @@ export function OrganizationSettings() {
       setOrganizations(data?.documents ?? []);
       setOrganizationId(null);
       setLoading(false);
-      router.push(`/${data?.documents[0]?.id}`);
+      router.push(`/organization/${data?.documents[0]?.id}`);
     };
 
     toast.promise(promise, {
@@ -63,7 +63,7 @@ export function OrganizationSettings() {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${organizationId?.id}/information`}
+              href={`/organization/${organizationId?.id}/information`}
               className="cursor-pointer"
             >
               <LucideBookOpenText />
@@ -72,7 +72,7 @@ export function OrganizationSettings() {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${organizationId?.id}/experience`}
+              href={`/organization/${organizationId?.id}/experience`}
               className="cursor-pointer"
             >
               <LucideBriefcase />

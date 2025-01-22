@@ -132,7 +132,7 @@ function CreateForm({ className, setOpen }: FormProps) {
 
       setOrganizations(organizations.documents);
 
-      router.push(`/${data.$id}`);
+      router.push(`/organization/${data.$id}`);
     }
 
     setLoadingCreateOrganization(false);

@@ -10,7 +10,7 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
-import Loading from "./(portfolio)/[organization]/loading";
+import Loading from "./(portfolio)/organization/[organization]/loading";
 
 export default function Home() {
   const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
@@ -29,7 +29,7 @@ export default function Home() {
       }
 
       if (organizationId) {
-        router.push(organizationId.id);
+        router.push(`/organization/${organizationId.id}`);
         return;
       }
 

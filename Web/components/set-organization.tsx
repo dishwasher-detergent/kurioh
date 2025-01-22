@@ -2,7 +2,7 @@
 
 import { organizationIdAtom } from "@/atoms/organization";
 
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 interface SetOrganizationProps {
@@ -11,9 +11,11 @@ interface SetOrganizationProps {
 }
 
 export function SetOrganization({ title, $id }: SetOrganizationProps) {
-  const setOrganizationId = useSetAtom(organizationIdAtom);
+  const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
 
   useEffect(() => {
+    if (organizationId?.id === $id && organizationId?.title === title) return;
+
     if (!$id || !title) {
       setOrganizationId(null);
       return;

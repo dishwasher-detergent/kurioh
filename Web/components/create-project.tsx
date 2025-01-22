@@ -136,7 +136,7 @@ function CreateForm({ className, setOpen }: FormProps) {
 
       setProjects(projects.documents);
 
-      router.push(`/${organizationId?.id}/${data.$id}`);
+      router.push(`/organization/${organizationId?.id}/project/${data.$id}`);
     }
 
     setLoadingCreateProject(false);

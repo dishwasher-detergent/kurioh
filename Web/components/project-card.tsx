@@ -51,7 +51,7 @@ export default function ProjectCard({
       </CardContent>
       <CardFooter className="flex flex-row gap-1">
         <Button asChild className="flex-1" size="sm" variant="secondary">
-          <Link href={`/${organization_id}/${$id}`}>
+          <Link href={`/organization/${organization_id}/project/${$id}`}>
             <LucideEdit className="mr-2 h-4 w-4" />
             Edit
           </Link>

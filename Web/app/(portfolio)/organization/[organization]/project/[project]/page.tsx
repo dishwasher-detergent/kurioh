@@ -1,12 +1,11 @@
 import ProjectForm from "@/components/forms/project/form";
-import { SetProject } from "@/components/set-project";
 import { SetOrganization } from "@/components/set-organization";
+import { SetProject } from "@/components/set-project";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
 import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
 import {
-  API_ENDPOINT,
   DATABASE_ID,
   ORGANIZATION_COLLECTION_ID,
   PROJECTS_COLLECTION_ID,
@@ -54,20 +53,14 @@ export default async function ProjectPage({
 
   return (
     <>
-      <main className="mx-auto max-w-6xl space-y-4 p-4 px-4 md:px-8">
-        <Header
-          title={project?.title}
-          slug={project?.slug}
-          endpoint={`${API_ENDPOINT}/organizations/${project?.organization_id}/projects/${project?.$id}`}
-        />
-        <Card>
-          <CardContent className="p-4">
-            <ProjectForm {...project} />
-          </CardContent>
-        </Card>
-        <SetProject {...project} />
-        <SetOrganization {...organization} />
-      </main>
+      <Header title={project?.title} slug={project?.slug} />
+      <Card>
+        <CardContent className="p-4">
+          <ProjectForm {...project} />
+        </CardContent>
+      </Card>
+      <SetProject {...project} />
+      <SetOrganization {...organization} />
     </>
   );
 }

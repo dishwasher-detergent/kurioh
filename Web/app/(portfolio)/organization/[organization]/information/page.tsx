@@ -6,7 +6,6 @@ import { Header } from "@/components/ui/header";
 import { Information } from "@/interfaces/information.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import {
-  API_ENDPOINT,
   DATABASE_ID,
   INFORMATION_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
@@ -51,20 +50,16 @@ export default async function OrganizationInformation({
     await validateOrganization(organizationId);
 
   return (
-    <main className="mx-auto max-w-6xl space-y-4 p-4 px-4 md:px-8">
-      <Header
-        title={organization?.title}
-        slug={organization?.slug}
-        endpoint={`${API_ENDPOINT}/organizations/${organization?.$id}`}
-      >
+    <>
+      <Header title={organization?.title} slug={organization?.slug}>
         <OrganizationSettings />
       </Header>
       <Card>
-        <CardContent>
+        <CardContent className="p-4">
           <InformationForm {...information} />
         </CardContent>
       </Card>
       <SetOrganization {...organization} />
-    </main>
+    </>
   );
 }

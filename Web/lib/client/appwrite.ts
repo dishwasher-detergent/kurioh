@@ -44,3 +44,13 @@ export async function getLoggedInUser() {
     return null;
   }
 }
+
+export async function signOut() {
+  const { account } = await createClient();
+
+  Cookies.remove(COOKIE_KEY);
+  Cookies.remove(`${COOKIE_KEY}_legacy`);
+
+  await account.deleteSession("current");
+  await fetch("/api/auth/sign-out");
+}

@@ -1,5 +1,3 @@
-import { LucideExternalLink } from "lucide-react";
-import Link from "next/link";
 import { Skeleton } from "./skeleton";
 
 interface HeaderProps {
@@ -13,7 +11,6 @@ interface HeaderProps {
 export function Header({
   title,
   slug,
-  endpoint,
   loading = false,
   children,
 }: HeaderProps) {
@@ -29,17 +26,6 @@ export function Header({
           <h1 className="truncate text-3xl font-bold">{title}</h1>
         ) : (
           <Skeleton className="h-8 w-36 max-w-full" />
-        )}
-        {!loading && endpoint ? (
-          <p className="text-sm">
-            Endpoint:&nbsp;
-            <Link href={endpoint} target="_blank" className="break-all">
-              {endpoint}
-              <LucideExternalLink className="ml-2 inline size-3.5" />
-            </Link>
-          </p>
-        ) : (
-          <Skeleton className="h-6 w-96 max-w-full" />
         )}
       </div>
       <div>{children}</div>

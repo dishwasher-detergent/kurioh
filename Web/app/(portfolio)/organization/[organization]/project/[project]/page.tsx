@@ -3,44 +3,10 @@ import { SetOrganization } from "@/components/set-organization";
 import { SetProject } from "@/components/set-project";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
-import { Organization } from "@/interfaces/organization.interface";
-import { Project } from "@/interfaces/project.interface";
-import {
-  DATABASE_ID,
-  ORGANIZATION_COLLECTION_ID,
-  PROJECTS_COLLECTION_ID,
-} from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
+import { getOrganization, getProject } from "@/lib/shared";
 
-import { notFound, redirect } from "next/navigation";
-
-async function validateProject(projectId: string) {
-  try {
-    const { database } = await createSessionClient();
-    const project = await database.getDocument<Project>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      projectId,
-    );
-
-    return project;
-  } catch {
-    notFound();
-  }
-}
-
-async function validateOrganization(organizationId: string) {
-  try {
-    const { database } = await createSessionClient();
-    return await database.getDocument<Organization>(
-      DATABASE_ID,
-      ORGANIZATION_COLLECTION_ID,
-      organizationId,
-    );
-  } catch {
-    redirect(`/${organizationId}`);
-  }
-}
+import { notFound } from "next/navigation";
 
 export default async function ProjectPage({
   params,
@@ -48,8 +14,15 @@ export default async function ProjectPage({
   params: Promise<{ project: string; organization: string }>;
 }) {
   const { project: projectId, organization: organizationId } = await params;
-  const organization = await validateOrganization(organizationId);
-  const project = await validateProject(projectId);
+  const { database } = await createSessionClient();
+  const org = await getOrganization(organizationId, database);
+  const project = await getProject(projectId, database);
+
+  if (!org || !project) {
+    notFound();
+  }
+
+  const { organization } = org;
 
   return (
     <>

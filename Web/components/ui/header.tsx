@@ -15,7 +15,7 @@ export function Header({
   children,
 }: HeaderProps) {
   return (
-    <header className="mb-8 flex w-full items-start justify-between gap-4">
+    <header className="mb-4 flex w-full items-start justify-between gap-4">
       <div className="space-y-2">
         {!loading ? (
           <p className="truncate text-sm text-muted-foreground">{slug}</p>

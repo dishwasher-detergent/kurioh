@@ -48,7 +48,7 @@ export const getOrganization = unstable_cache(
     }
   },
   ["organization"],
-  { revalidate: 3600, tags: ["organization"] },
+  { revalidate: false, tags: ["organization"] },
 );
 
 export const getProject = unstable_cache(
@@ -66,5 +66,5 @@ export const getProject = unstable_cache(
     }
   },
   ["project"],
-  { revalidate: 3600, tags: ["project"] },
+  { revalidate: false, tags: ["project"] },
 );

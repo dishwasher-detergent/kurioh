@@ -95,7 +95,7 @@ export function MultiplePhotoSelector({
 
   return (
     <div>
-      <Card className="p-2">
+      <Card className="bg-background p-2 shadow-none">
         <ul className="flex flex-row flex-wrap gap-2">
           <li>
             <label className="cursor-pointer">

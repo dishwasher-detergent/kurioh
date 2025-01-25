@@ -183,7 +183,7 @@ export default function InformationForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" size="sm" disabled={loading}>
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (

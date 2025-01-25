@@ -458,7 +458,7 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            "min-h-10 rounded-md border border-input text-base ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:text-sm",
+            "min-h-10 rounded-md border border-input bg-background text-base ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:text-sm",
             {
               "p-2": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
@@ -475,6 +475,7 @@ const MultipleSelector = React.forwardRef<
               return (
                 <Badge
                   key={option.value}
+                  variant="secondary"
                   className={cn(
                     "data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground",
                     "data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground",

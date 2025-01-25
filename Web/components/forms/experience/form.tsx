@@ -354,11 +354,12 @@ export default function ExperienceForm({ experience }: ExperienceFormProps) {
             />
             <Button
               type="button"
+              size="sm"
               onClick={() => remove(index)}
               variant="destructive"
             >
               <LucideTrash className="mr-2 size-3.5" />
-              Remove
+              Remove Experience
             </Button>
             <FormField
               control={form.control}
@@ -375,7 +376,7 @@ export default function ExperienceForm({ experience }: ExperienceFormProps) {
         ))}
         <div className="flex flex-row gap-2">
           {(experience.length > 0 || fields.length > 0) && (
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" size="sm" disabled={loading}>
               {loading ? (
                 <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
               ) : (
@@ -385,7 +386,7 @@ export default function ExperienceForm({ experience }: ExperienceFormProps) {
             </Button>
           )}
           <Button
-            variant="ghost"
+            size="sm"
             type="button"
             onClick={() =>
               append({

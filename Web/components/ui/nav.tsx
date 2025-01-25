@@ -57,6 +57,7 @@ export function Nav() {
       <div className="mx-auto flex max-w-6xl flex-row items-center justify-between gap-2 p-4 md:px-8">
         <div className="flex flex-row items-center gap-2">
           <Organization />
+          /
           <Project />
         </div>
         <div>

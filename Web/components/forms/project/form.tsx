@@ -46,6 +46,7 @@ export default function ProjectForm({
   image_ids,
 }: ProjectFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
+  const [initialImages, setInitialImages] = useState<string[]>(image_ids);
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
@@ -63,6 +64,7 @@ export default function ProjectForm({
     setLoading(true);
 
     const images = await handleFiles(values.image_ids);
+    setInitialImages(images ?? initialImages);
 
     const formData = {
       ...values,
@@ -124,9 +126,11 @@ export default function ProjectForm({
     );
 
     const validUploadedImages = uploadedImages.filter(Boolean);
-    const removedImages = image_ids.filter(
+    const removedImages = initialImages.filter(
       (image_id) => !images.includes(image_id),
     );
+
+    console.log(removedImages);
 
     await Promise.all(
       removedImages.map(

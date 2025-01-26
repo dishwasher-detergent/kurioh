@@ -5,8 +5,14 @@ import { useAtomValue } from "jotai";
 import { LucideLoader2, LucideSave } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import {
+  deleteFile,
+  submitForm,
+  uploadFile,
+} from "@/app/(portfolio)/organization/[organization]/information/action";
 import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +30,6 @@ import { Input } from "@/components/ui/input";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { PhotoSelector } from "@/components/ui/photo-selector";
 import { Information } from "@/interfaces/information.interface";
-import { deleteFile, updateInformation, uploadFile } from "@/lib/utils";
 import informationSchema, {
   descriptionMaxLength,
   titleMaxLength,
@@ -45,6 +50,7 @@ export default function InformationForm({
   const form = useForm<z.infer<typeof informationSchema>>({
     resolver: zodResolver(informationSchema),
     defaultValues: {
+      id: $id,
       title: title ?? "",
       description: description ?? "",
       socials: socials.map((link) => ({ label: link, value: link })),
@@ -57,13 +63,34 @@ export default function InformationForm({
 
     const uploadedImage = await handleFile(values.image_id);
 
-    const formData = {
+    if (uploadedImage?.errors) {
+      toast.error(uploadedImage?.errors.message);
+
+      setLoading(false);
+      return;
+    }
+
+    const formattedData = {
       ...values,
-      socials: values?.socials?.map((link) => link.value) ?? [],
-      image_id: uploadedImage?.$id ?? "",
+      socials: values?.socials ?? [],
+      image_id: uploadedImage?.data.$id ?? "",
     };
 
-    await updateInformation($id, formData);
+    const formData = new FormData();
+
+    Object.entries(formattedData).forEach(([key, value]) => {
+      if (typeof value === "string") {
+        formData.append(key, value);
+      } else {
+        formData.append(key, JSON.stringify(value));
+      }
+    });
+
+    const uploadedData = await submitForm(formData);
+
+    if (uploadedData?.errors) {
+      toast.error(uploadedData.errors.message);
+    }
 
     setLoading(false);
   }

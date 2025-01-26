@@ -15,6 +15,7 @@ function checkFileType(file: File) {
 }
 
 const informationSchema = z.object({
+  id: z.string(),
   title: z.string().min(1).max(titleMaxLength),
   description: z.string().max(descriptionMaxLength).optional(),
   socials: z.array(linkSchema).optional(),

@@ -17,6 +17,7 @@ import { ID, Permission, Query, Role } from "appwrite";
 import { clsx, type ClassValue } from "clsx";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,6 +56,13 @@ export function isValidUrl(url: string): boolean {
   } catch (e) {
     return false;
   }
+}
+
+export function transformZodErrors(error: z.ZodError) {
+  return error.issues.map((issue) => ({
+    path: issue.path.join("."),
+    message: issue.message,
+  }));
 }
 
 export async function createProject(name: string, organizationId?: string) {
@@ -486,59 +494,6 @@ export async function removeExperience(id: string) {
     return data;
   } catch (err) {
     toast.error(`Failed to remove experience!`);
-    return;
-  }
-}
-
-export async function uploadFile(file: File, organizationId: string) {
-  const { storage } = await createClient();
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    toast.error(
-      "Failed to upload file, no user is defined. Please try logging out and back in.",
-    );
-    return;
-  }
-
-  try {
-    const response = await storage.createFile(
-      PROJECTS_BUCKET_ID,
-      ID.unique(),
-      file,
-      [
-        Permission.read(Role.any()),
-        Permission.read(Role.user(user.$id)),
-        Permission.write(Role.user(user.$id)),
-        Permission.read(Role.team(organizationId)),
-        Permission.write(Role.team(organizationId)),
-      ],
-    );
-
-    return response;
-  } catch {
-    toast.error(`Failed to upload ${file.name}.`);
-    return;
-  }
-}
-
-export async function deleteFile(id: string) {
-  const { storage } = await createClient();
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    toast.error(
-      "Failed to upload file, no user is defined. Please try logging out and back in.",
-    );
-    return;
-  }
-
-  try {
-    const response = await storage.deleteFile(PROJECTS_BUCKET_ID, id);
-
-    return response;
-  } catch {
-    toast.error("Failed to delete file.");
     return;
   }
 }

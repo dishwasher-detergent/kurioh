@@ -35,8 +35,6 @@ export function Organization() {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [owner, setOwner] = useState<boolean>(false);
-  const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
   const [organizations, setOrganizations] = useState<OrganizationInterface[]>(
     [],
   );

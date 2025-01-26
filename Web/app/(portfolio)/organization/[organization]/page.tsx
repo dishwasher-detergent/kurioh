@@ -11,7 +11,7 @@ import {
 import { Header } from "@/components/ui/header";
 import { getOrganization, getProjects } from "@/lib/server/utils";
 
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function OrganizationPage({
   params,
@@ -23,7 +23,7 @@ export default async function OrganizationPage({
   const { data: projectData } = await getProjects(organizationId);
 
   if (org?.errors) {
-    notFound();
+    redirect("/");
   }
 
   const { data: orgData } = org;

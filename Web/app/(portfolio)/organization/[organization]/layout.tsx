@@ -1,4 +1,7 @@
-import { setLastVisitedOrganization } from "@/lib/server/utils";
+import {
+  getOrganization,
+  setLastVisitedOrganization,
+} from "@/lib/server/utils";
 
 export default async function Layout({
   children,
@@ -9,7 +12,9 @@ export default async function Layout({
 }>) {
   const { organization: organizationId } = await params;
 
-  if (organizationId) {
+  const org = await getOrganization(organizationId);
+
+  if (!org.errors) {
     await setLastVisitedOrganization(organizationId);
   }
 

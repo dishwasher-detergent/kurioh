@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
 import { getOrganization, getProject } from "@/lib/server/utils";
 
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function ProjectPage({
   params,
@@ -15,7 +15,7 @@ export default async function ProjectPage({
   const project = await getProject(projectId);
 
   if (org.errors || project.errors) {
-    notFound();
+    redirect("/");
   }
 
   const { data } = org;

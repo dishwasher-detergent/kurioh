@@ -28,8 +28,6 @@ export default async function OrganizationPage({
 
   const { data: orgData } = org;
 
-  console.log(projectData);
-
   return (
     <>
       <Header

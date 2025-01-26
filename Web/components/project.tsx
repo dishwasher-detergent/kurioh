@@ -54,7 +54,7 @@ export function Project() {
 
   useEffect(() => {
     fetchProjects();
-  }, [organization]);
+  }, [organization, project]);
 
   return (
     <>

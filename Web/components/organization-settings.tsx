@@ -10,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteOrganization } from "@/lib/utils";
+import { deleteOrganization } from "@/lib/server/utils";
+
 import { useAtom, useSetAtom } from "jotai";
 
 import {
@@ -33,10 +34,18 @@ export function OrganizationSettings() {
 
     const promise = async () => {
       const data = await deleteOrganization(organizationId?.id);
-      setOrganizations(data?.documents ?? []);
-      setOrganizationId(null);
-      setLoading(false);
-      router.push(`/organization/${data?.documents[0]?.id}`);
+
+      if (data?.errors) {
+        toast.error(data.errors.message);
+        return;
+      }
+
+      if (data?.data) {
+        setOrganizations(data?.data.documents ?? []);
+        setOrganizationId(null);
+        setLoading(false);
+        router.push(`/organization/${data?.data.documents[0]?.id}`);
+      }
     };
 
     toast.promise(promise, {

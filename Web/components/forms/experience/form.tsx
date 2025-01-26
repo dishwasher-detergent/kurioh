@@ -15,11 +15,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-  addExperience,
-  removeExperience,
-  updateExperience,
-} from "@/app/(portfolio)/organization/[organization]/experience/action";
 import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +37,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Experience } from "@/interfaces/experience.interface";
+import {
+  addExperience,
+  removeExperience,
+  updateExperience,
+} from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 import experienceArraySchema, {
   companyMaxLength,

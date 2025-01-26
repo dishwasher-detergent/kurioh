@@ -8,11 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-  deleteFile,
-  submitForm,
-  uploadFile,
-} from "@/app/(portfolio)/organization/[organization]/information/action";
 import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { PhotoSelector } from "@/components/ui/photo-selector";
 import { Information } from "@/interfaces/information.interface";
+import { deleteFile, updateInformation, uploadFile } from "@/lib/server/utils";
 import informationSchema, {
   descriptionMaxLength,
   titleMaxLength,
@@ -76,7 +72,7 @@ export default function InformationForm({
       image_id: uploadedImage?.data.$id ?? "",
     };
 
-    const uploadedData = await submitForm(data);
+    const uploadedData = await updateInformation(data);
 
     if (uploadedData?.errors) {
       toast.error(uploadedData.errors.message);

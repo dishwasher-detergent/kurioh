@@ -6,6 +6,7 @@ import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
@@ -41,7 +42,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Organization } from "@/interfaces/organization.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
-import { cn, createOrganization } from "@/lib/utils";
+import { createOrganization } from "@/lib/server/utils";
+import { cn } from "@/lib/utils";
 
 export function CreateOrg() {
   const [open, setOpen] = useState(false);
@@ -119,10 +121,14 @@ function CreateForm({ className, setOpen }: FormProps) {
     const { database } = await createClient();
     const data = await createOrganization(values.title);
 
-    if (data) {
+    if (data.errors) {
+      toast.error(data.errors.message);
+    }
+
+    if (data.data) {
       setorganizationId({
-        title: data.title,
-        id: data.$id,
+        title: data.data.title,
+        id: data.data.$id,
       });
 
       const organizations = await database.listDocuments<Organization>(
@@ -132,7 +138,7 @@ function CreateForm({ className, setOpen }: FormProps) {
 
       setOrganizations(organizations.documents);
 
-      router.push(`/organization/${data.$id}`);
+      router.push(`/organization/${data.data.$id}`);
     }
 
     setLoadingCreateOrganization(false);

@@ -23,7 +23,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { cn, shareOrganization } from "@/lib/utils";
+import { shareOrganization } from "@/lib/server/utils";
+import { cn } from "@/lib/utils";
 
 import { useAtom } from "jotai";
 import { LucideLoader2, LucideShare2 } from "lucide-react";
@@ -105,7 +106,12 @@ function Form({ className, setOpen }: FormProps) {
       return;
     }
 
-    await shareOrganization(organizationId.id, email);
+    const data = await shareOrganization(organizationId.id, email);
+
+    if (data.errors) {
+      toast.error(data.errors.message);
+      return;
+    }
 
     setLoadingShareOrganization(false);
     setOpen(false);

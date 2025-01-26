@@ -3,6 +3,7 @@
 import { LucideEdit, LucideLoader2, LucideTrash } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Badges } from "@/components/ui/badges";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import {
 import { Images } from "@/components/ui/images";
 import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
-import { deleteProject } from "@/lib/utils";
+import { deleteProject } from "@/lib/server/utils";
 
 export default function ProjectCard({
   $id,
@@ -34,7 +35,11 @@ export default function ProjectCard({
   async function handleDeleteProject(id: string) {
     setIsDeleting(true);
 
-    await deleteProject(id);
+    const data = await deleteProject(id);
+
+    if (data.errors) {
+      toast.error(data.errors.message);
+    }
 
     setIsDeleting(false);
   }

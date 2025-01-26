@@ -34,7 +34,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Project } from "@/interfaces/project.interface";
 import { createClient } from "@/lib/client/appwrite";
 import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
-import { cn, createProject } from "@/lib/utils";
+import { createProject } from "@/lib/server/utils";
+import { cn } from "@/lib/utils";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Query } from "appwrite";
@@ -43,6 +44,7 @@ import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export function CreateProject() {
@@ -122,10 +124,14 @@ function CreateForm({ className, setOpen }: FormProps) {
     const { database } = await createClient();
     const data = await createProject(values.title, organizationId?.id);
 
-    if (data) {
+    if (data.errors) {
+      toast.error(data.errors.message);
+    }
+
+    if (data.data) {
       setprojectId({
-        id: data.$id,
-        title: data.title,
+        id: data.data.$id,
+        title: data.data.title,
       });
 
       const projects = await database.listDocuments<Project>(
@@ -136,7 +142,9 @@ function CreateForm({ className, setOpen }: FormProps) {
 
       setProjects(projects.documents);
 
-      router.push(`/organization/${organizationId?.id}/project/${data.$id}`);
+      router.push(
+        `/organization/${organizationId?.id}/project/${data.data.$id}`,
+      );
     }
 
     setLoadingCreateProject(false);

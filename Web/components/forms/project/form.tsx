@@ -8,11 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-  deleteFile,
-  uploadFile,
-} from "@/app/(portfolio)/organization/[organization]/information/action";
-import { updateProject } from "@/app/(portfolio)/organization/[organization]/project/[project]/action";
 import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { MultiplePhotoSelector } from "@/components/ui/multiple-photo-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { Project } from "@/interfaces/project.interface";
+import { deleteFile, updateProject, uploadFile } from "@/lib/server/utils";
 import { TAGS } from "./options";
 import projectSchema, {
   descriptionMaxLength,

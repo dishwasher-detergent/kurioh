@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Organization as OrganizationInterface } from "@/interfaces/organization.interface";
 import { getOrganizations } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,9 @@ export function Organization() {
   const [loading, setLoading] = useState<boolean>(true);
   const [owner, setOwner] = useState<boolean>(false);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
-  const [organizations, setOrganizations] = useState<any[]>([]);
+  const [organizations, setOrganizations] = useState<OrganizationInterface[]>(
+    [],
+  );
 
   async function fetchOrganizations() {
     setLoading(true);
@@ -103,7 +106,7 @@ export function Organization() {
                   >
                     {
                       organizations.find((org) => org.$id === organization)
-                        .title
+                        ?.title
                     }
                   </Link>
                 ) : (

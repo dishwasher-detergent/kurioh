@@ -76,6 +76,8 @@ export default function ProjectForm({
     if (updatedProject?.errors) {
       toast.error(updatedProject.errors.message);
       setLoading(false);
+
+      return;
     }
 
     form.reset({
@@ -95,6 +97,7 @@ export default function ProjectForm({
       image_ids: updatedProject.data?.image_ids ?? [],
     });
 
+    toast.success("Project updated successfully.");
     setLoading(false);
   }
 
@@ -113,6 +116,7 @@ export default function ProjectForm({
             return;
           }
 
+          toast.success("Image uploaded successfully.");
           return data ? data.data.$id : null;
         }
         return image;
@@ -125,7 +129,12 @@ export default function ProjectForm({
     );
 
     await Promise.all(
-      removedImages.map(async (image_id) => await deleteFile(image_id)),
+      removedImages.map(
+        async (image_id) =>
+          await deleteFile(image_id)
+            .then(() => toast.success("Image deleted successfully."))
+            .catch((error) => toast.error(error.message)),
+      ),
     );
 
     return validUploadedImages;

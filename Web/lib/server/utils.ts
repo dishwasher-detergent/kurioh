@@ -18,6 +18,175 @@ import { createSlug } from "@/lib/utils";
 
 import { ID, Permission, Query, Role } from "node-appwrite";
 
+export async function getOrganization(organizationId: string) {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return {
+      errors: {
+        message: "You must be logged in to perform this action.",
+      },
+      data: null,
+    };
+  }
+
+  const { database } = await createSessionClient();
+
+  try {
+    const org = await database.getDocument<Organization>(
+      DATABASE_ID,
+      ORGANIZATION_COLLECTION_ID,
+      organizationId,
+    );
+
+    if (!org) throw new Error("Missing organization.");
+
+    const exp = await database.listDocuments<Experience>(
+      DATABASE_ID,
+      EXPERIENCE_COLLECTION_ID,
+      [Query.equal("organization_id", organizationId)],
+    );
+
+    const information = await database.getDocument<Information>(
+      DATABASE_ID,
+      INFORMATION_COLLECTION_ID,
+      org.information_id,
+    );
+
+    return {
+      errors: null,
+      data: {
+        organization: org,
+        information: information,
+        experience: exp.documents,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      errors: {
+        message: "An unexpected error occurred. Could not get organization.",
+      },
+      data: null,
+    };
+  }
+}
+
+export async function getOrganizations() {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return {
+      errors: {
+        message: "You must be logged in to perform this action.",
+      },
+      data: null,
+    };
+  }
+
+  const { database } = await createSessionClient();
+
+  try {
+    const org = await database.listDocuments<Organization>(
+      DATABASE_ID,
+      ORGANIZATION_COLLECTION_ID,
+    );
+
+    return {
+      errors: null,
+      data: org.documents,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      errors: {
+        message: "An unexpected error occurred. Could not get organizations.",
+      },
+      data: null,
+    };
+  }
+}
+
+export async function getProject(projectId: string) {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return {
+      errors: {
+        message: "You must be logged in to perform this action.",
+      },
+      data: null,
+    };
+  }
+
+  const { database } = await createSessionClient();
+
+  try {
+    const project = await database.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_COLLECTION_ID,
+      projectId,
+    );
+
+    return {
+      errors: null,
+      data: project,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      errors: {
+        message: "An unexpected error occurred. Could not get project.",
+      },
+      data: null,
+    };
+  }
+}
+
+export async function getProjects(organizationId?: string) {
+  const user = await getLoggedInUser();
+
+  if (!user) {
+    return {
+      errors: {
+        message: "You must be logged in to perform this action.",
+      },
+      data: null,
+    };
+  }
+
+  if (!organizationId) {
+    return {
+      errors: {
+        message: "No organization was given.",
+      },
+      data: null,
+    };
+  }
+
+  const { database } = await createSessionClient();
+
+  try {
+    const project = await database.listDocuments<Project>(
+      DATABASE_ID,
+      PROJECTS_COLLECTION_ID,
+      [Query.equal("organization_id", organizationId)],
+    );
+
+    return {
+      errors: null,
+      data: project.documents,
+    };
+  } catch {
+    return {
+      errors: {
+        message: "An unexpected error occurred. Could not get projects.",
+      },
+      data: null,
+    };
+  }
+}
+
 export async function addExperience(values: any, organizationId: string) {
   const user = await getLoggedInUser();
 

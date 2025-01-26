@@ -3,8 +3,7 @@ import { SetOrganization } from "@/components/set-organization";
 import { SetProject } from "@/components/set-project";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
-import { createSessionClient } from "@/lib/server/appwrite";
-import { getOrganization, getProject } from "@/lib/shared";
+import { getOrganization, getProject } from "@/lib/server/utils";
 
 import { notFound } from "next/navigation";
 
@@ -14,26 +13,26 @@ export default async function ProjectPage({
   params: Promise<{ project: string; organization: string }>;
 }) {
   const { project: projectId, organization: organizationId } = await params;
-  const { database } = await createSessionClient();
-  const org = await getOrganization(organizationId, database);
-  const project = await getProject(projectId, database);
+  const org = await getOrganization(organizationId);
+  const project = await getProject(projectId);
 
-  if (!org || !project) {
+  if (org.errors || project.errors) {
     notFound();
   }
 
-  const { organization } = org;
+  const { data } = org;
+  const { data: projectData } = project;
 
   return (
     <>
-      <Header title={project?.title} slug={project?.slug} />
+      <Header title={projectData?.title} slug={projectData?.slug} />
       <Card>
         <CardContent className="p-4">
-          <ProjectForm {...project} />
+          <ProjectForm {...projectData} />
         </CardContent>
       </Card>
-      <SetProject {...project} />
-      <SetOrganization {...organization} />
+      <SetProject {...projectData} />
+      <SetOrganization {...data.organization} />
     </>
   );
 }

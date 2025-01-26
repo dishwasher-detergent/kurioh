@@ -2,8 +2,7 @@ import { OrganizationSettings } from "@/components/organization-settings";
 import { Request } from "@/components/request";
 import { Header } from "@/components/ui/header";
 import { API_ENDPOINT } from "@/lib/constants";
-import { createSessionClient } from "@/lib/server/appwrite";
-import { getOrganization } from "@/lib/shared";
+import { getOrganization } from "@/lib/server/utils";
 import { notFound } from "next/navigation";
 
 export default async function ApiPage({
@@ -17,18 +16,20 @@ export default async function ApiPage({
   const javascript = `const res = await fetch("${endpoint}");
 const data = await res.json();`;
 
-  const { database } = await createSessionClient();
-  const org = await getOrganization(organizationId, database);
+  const org = await getOrganization(organizationId);
 
-  if (!org) {
+  if (org.errors) {
     notFound();
   }
 
-  const { organization } = org;
+  const { data: orgData } = org;
 
   return (
     <>
-      <Header title={organization?.title} slug={organization?.slug}>
+      <Header
+        title={orgData?.organization?.title}
+        slug={orgData?.organization?.slug}
+      >
         <OrganizationSettings />
       </Header>
       <Request endpoint={endpoint} code={javascript} />

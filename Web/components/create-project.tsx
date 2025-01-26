@@ -31,14 +31,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Project } from "@/interfaces/project.interface";
-import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
-import { createProject } from "@/lib/server/utils";
+import { createProject, getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Query } from "appwrite";
 import { useAtomValue, useSetAtom } from "jotai";
 import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -121,7 +117,6 @@ function CreateForm({ className, setOpen }: FormProps) {
   async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateProject(true);
 
-    const { database } = await createClient();
     const data = await createProject(values.title, organizationId?.id);
 
     if (data.errors) {
@@ -134,17 +129,19 @@ function CreateForm({ className, setOpen }: FormProps) {
         title: data.data.title,
       });
 
-      const projects = await database.listDocuments<Project>(
-        DATABASE_ID,
-        PROJECTS_COLLECTION_ID,
-        [Query.equal("organization_id", organizationId!.id)],
-      );
+      const projects = await getProjects(organizationId?.id);
 
-      setProjects(projects.documents);
+      if (projects?.errors) {
+        toast.error(projects.errors.message);
+        router.push(`/organization/${organizationId?.id}`);
+      }
 
-      router.push(
-        `/organization/${organizationId?.id}/project/${data.data.$id}`,
-      );
+      if (projects?.data) {
+        setProjects(projects.data);
+        router.push(
+          `/organization/${organizationId?.id}/project/${data.data.$id}`,
+        );
+      }
     }
 
     setLoadingCreateProject(false);

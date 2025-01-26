@@ -19,17 +19,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Organization as OrganizationItem } from "@/interfaces/organization.interface";
-import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
-import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
+import { getOrganizations } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { Query } from "appwrite";
 import { useAtom, useSetAtom } from "jotai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function Organization() {
   const router = useRouter();
@@ -44,14 +42,16 @@ export function Organization() {
 
   async function fetchOrganizations() {
     setLoading(true);
-    const { database } = await createClient();
 
-    const data = await database.listDocuments<OrganizationItem>(
-      DATABASE_ID,
-      ORGANIZATION_COLLECTION_ID,
-    );
+    const data = await getOrganizations();
 
-    setOrganizations(data.documents);
+    if (data?.errors) {
+      toast.error("Failed to fetch organizations");
+    }
+
+    if (data?.data) {
+      setOrganizations(data.data);
+    }
     setLoading(false);
   }
 
@@ -63,18 +63,18 @@ export function Organization() {
     async function checkAuthorization() {
       setLoadingAuth(true);
       setOwner(false);
-      const { team } = await createClient();
-      const user = await getLoggedInUser();
+      // const { team } = await createClient();
+      // const user = await getLoggedInUser();
 
-      if (user && organizationId) {
-        const memberships = await team.listMemberships(organizationId.id, [
-          Query.equal("userId", user.$id),
-        ]);
+      // if (user && organizationId) {
+      //   const memberships = await team.listMemberships(organizationId.id, [
+      //     Query.equal("userId", user.$id),
+      //   ]);
 
-        if (memberships.memberships[0].roles.includes("owner")) {
-          setOwner(true);
-        }
-      }
+      //   if (memberships.memberships[0].roles.includes("owner")) {
+      //     setOwner(true);
+      //   }
+      // }
       setLoadingAuth(false);
     }
 

@@ -39,10 +39,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Organization } from "@/interfaces/organization.interface";
-import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, ORGANIZATION_COLLECTION_ID } from "@/lib/constants";
-import { createOrganization } from "@/lib/server/utils";
+import { createOrganization, getOrganizations } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
 export function CreateOrg() {
@@ -118,7 +115,6 @@ function CreateForm({ className, setOpen }: FormProps) {
   async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateOrganization(true);
 
-    const { database } = await createClient();
     const data = await createOrganization(values.title);
 
     if (data.errors) {
@@ -131,14 +127,16 @@ function CreateForm({ className, setOpen }: FormProps) {
         id: data.data.$id,
       });
 
-      const organizations = await database.listDocuments<Organization>(
-        DATABASE_ID,
-        ORGANIZATION_COLLECTION_ID,
-      );
+      const organizations = await getOrganizations();
 
-      setOrganizations(organizations.documents);
+      if (organizations.errors) {
+        toast.error(organizations.errors.message);
+      }
 
-      router.push(`/organization/${data.data.$id}`);
+      if (organizations.data) {
+        setOrganizations(organizations.data);
+        router.push(`/organization/${data.data.$id}`);
+      }
     }
 
     setLoadingCreateOrganization(false);

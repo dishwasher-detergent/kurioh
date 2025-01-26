@@ -9,8 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
-import { createSessionClient } from "@/lib/server/appwrite";
-import { getOrganization } from "@/lib/shared";
+import { getOrganization } from "@/lib/server/utils";
 
 import { notFound } from "next/navigation";
 
@@ -20,18 +19,17 @@ export default async function OrganizationInformation({
   params: Promise<{ organization: string }>;
 }) {
   const { organization: organizationId } = await params;
-  const { database } = await createSessionClient();
-  const org = await getOrganization(organizationId, database);
+  const org = await getOrganization(organizationId);
 
-  if (!org) {
+  if (org.errors) {
     notFound();
   }
 
-  const { information, organization } = org;
+  const { data } = org;
 
   return (
     <>
-      <Header title={organization?.title} slug={organization?.slug}>
+      <Header title={data.organization?.title} slug={data.organization?.slug}>
         <OrganizationSettings />
       </Header>
       <Card>
@@ -40,10 +38,10 @@ export default async function OrganizationInformation({
           <CardDescription>Basic portfolio information.</CardDescription>
         </CardHeader>
         <CardContent>
-          <InformationForm {...information} />
+          <InformationForm {...data.information} />
         </CardContent>
       </Card>
-      <SetOrganization {...organization} />
+      <SetOrganization {...data.organization} />
     </>
   );
 }

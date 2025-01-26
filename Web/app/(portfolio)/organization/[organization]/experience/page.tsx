@@ -9,8 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
-import { createSessionClient } from "@/lib/server/appwrite";
-import { getOrganization } from "@/lib/shared";
+import { getOrganization } from "@/lib/server/utils";
+
 import { notFound } from "next/navigation";
 
 export default async function OrganizationExperience({
@@ -19,18 +19,17 @@ export default async function OrganizationExperience({
   params: Promise<{ organization: string }>;
 }) {
   const { organization: organizationId } = await params;
-  const { database } = await createSessionClient();
-  const org = await getOrganization(organizationId, database);
+  const org = await getOrganization(organizationId);
 
-  if (!org) {
+  if (org.errors) {
     notFound();
   }
 
-  const { experience, organization } = org;
+  const { data } = org;
 
   return (
     <>
-      <Header title={organization?.title} slug={organization?.slug}>
+      <Header title={data.organization?.title} slug={data.organization?.slug}>
         <OrganizationSettings />
       </Header>
       <Card>
@@ -41,10 +40,10 @@ export default async function OrganizationExperience({
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-2">
-          <ExperienceForm experience={experience} />
+          <ExperienceForm experience={data.experience} />
         </CardContent>
       </Card>
-      <SetOrganization {...organization} />
+      <SetOrganization {...data.organization} />
     </>
   );
 }

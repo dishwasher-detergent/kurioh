@@ -18,16 +18,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Project as ProjectItem } from "@/interfaces/project.interface";
-import { createClient } from "@/lib/client/appwrite";
-import { DATABASE_ID, PROJECTS_COLLECTION_ID } from "@/lib/constants";
+import { getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { Query } from "appwrite";
 import { useAtom, useAtomValue } from "jotai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function Project() {
   const router = useRouter();
@@ -40,15 +38,17 @@ export function Project() {
 
   async function fetchProjects() {
     setLoading(true);
-    const { database } = await createClient();
 
-    const data = await database.listDocuments<ProjectItem>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      [Query.equal("organization_id", organizationId!.id)],
-    );
+    const data = await getProjects();
 
-    setProjects(data.documents);
+    if (data?.errors) {
+      toast.error("Failed to fetch projects");
+    }
+
+    if (data?.data) {
+      setProjects(data.data);
+    }
+
     setLoading(false);
   }
 

@@ -10,8 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
-import { createSessionClient } from "@/lib/server/appwrite";
-import { getOrganization, getProjects } from "@/lib/shared";
+import { getOrganization, getProjects } from "@/lib/server/utils";
 
 import { notFound } from "next/navigation";
 
@@ -21,23 +20,25 @@ export default async function OrganizationPage({
   params: Promise<{ organization: string }>;
 }) {
   const { organization: organizationId } = await params;
-  const { database } = await createSessionClient();
-  const org = await getOrganization(organizationId, database);
-  const projects = await getProjects(organizationId, database);
+  const org = await getOrganization(organizationId);
+  const { data: projectData } = await getProjects(organizationId);
 
-  if (!org) {
+  if (org?.errors) {
     notFound();
   }
 
-  const { organization } = org;
+  const { data: orgData } = org;
 
   return (
     <>
-      <Header title={organization?.title} slug={organization?.slug}>
+      <Header
+        title={orgData?.organization.title}
+        slug={orgData?.organization?.slug}
+      >
         <OrganizationSettings />
       </Header>
       <section className="min-h-full columns-xs items-start gap-4 space-y-4">
-        {projects && projects.length > 0 && (
+        {projectData && projectData.length > 0 && (
           <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
             <CardHeader>
               <CardDescription className="text-xs">Ooh Aah!</CardDescription>
@@ -50,8 +51,9 @@ export default async function OrganizationPage({
             </CardContent>
           </Card>
         )}
-        {projects && projects.map((x) => <ProjectCard key={x.$id} {...x} />)}
-        {!projects && (
+        {projectData &&
+          projectData.map((x) => <ProjectCard key={x.$id} {...x} />)}
+        {!projectData && (
           <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
             <CardHeader>
               <CardDescription className="text-xs">Uh oh!</CardDescription>
@@ -65,7 +67,7 @@ export default async function OrganizationPage({
           </Card>
         )}
       </section>
-      <SetOrganization {...organization} />
+      <SetOrganization {...orgData?.organization} />
     </>
   );
 }

@@ -7,7 +7,6 @@ import { Project } from "@/interfaces/project.interface";
 import {
   DATABASE_ID,
   EXPERIENCE_COLLECTION_ID,
-  HOSTNAME,
   INFORMATION_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
   PROJECTS_BUCKET_ID,
@@ -790,7 +789,7 @@ export async function leaveOrganization(organizationId: string) {
   };
 }
 
-export async function shareOrganization(organizationId: string, email: string) {
+export async function setLastVisitedOrganization(organizationId: string) {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -802,29 +801,26 @@ export async function shareOrganization(organizationId: string, email: string) {
     };
   }
 
-  const { team } = await createSessionClient();
+  const { account } = await createSessionClient();
 
   try {
-    await team.createMembership(
-      organizationId,
-      [],
-      email,
-      undefined,
-      undefined,
-      `${location.protocol}//${HOSTNAME}/${organizationId}/accept`,
-      undefined,
-    );
-  } catch {
+    await account.updatePrefs({
+      lastVisitedOrg: organizationId,
+    });
+
+    return {
+      errors: null,
+      data: null,
+    };
+  } catch (error) {
+    console.error(error);
+
     return {
       errors: {
-        message: `Failed to invite ${email} to ${organizationId}`,
+        message:
+          "An unexpected error occurred. Could not set last visited organization.",
       },
       data: null,
     };
   }
-
-  return {
-    errors: null,
-    data: null,
-  };
 }

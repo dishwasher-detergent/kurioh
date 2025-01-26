@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await getLoggedInUser();
 
+  console.log("user", user);
+
   if (!user) {
     redirect("/login");
   }

@@ -9,7 +9,7 @@ export default async function Home() {
 
   if (!user) {
     console.error("User not logged in, redirecting to login page", user);
-    redirect("/login");
+    // redirect("/login");
   }
 
   if (user.prefs.lastVisitedOrg) {

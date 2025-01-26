@@ -27,7 +27,7 @@ export function Logout() {
   }
 
   return (
-    <Button variant="ghost" onClick={signOutFunc} disabled={loading}>
+    <Button variant="ghost" size="sm" onClick={signOutFunc} disabled={loading}>
       {loading && <LucideLoader2 className="mr-2 size-3.5 animate-spin" />}
       <span className="hidden md:block">Logout</span>
       <LucideLogOut className="size-3.5 md:ml-2" />

@@ -8,6 +8,7 @@ export default async function Home() {
   const user = await getLoggedInUser();
 
   if (!user) {
+    console.error("User not logged in, redirecting to login page", user);
     redirect("/login");
   }
 

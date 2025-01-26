@@ -7,10 +7,10 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await getLoggedInUser();
 
-  console.log("user", user);
+  console.log(user);
 
   if (!user) {
-    redirect("/login");
+    return;
   }
 
   if (user.prefs.lastVisitedOrg) {
@@ -37,5 +37,3 @@ export default async function Home() {
     </main>
   );
 }
-
-export const fetchCache = "force-no-store";

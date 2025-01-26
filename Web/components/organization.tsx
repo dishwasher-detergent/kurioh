@@ -1,7 +1,6 @@
 "use client";
 
 import { CreateOrg } from "@/components/create-organization";
-import { Share } from "@/components/share";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Command,
@@ -60,28 +59,6 @@ export function Organization() {
   useEffect(() => {
     fetchOrganizations();
   }, [organization]);
-
-  useEffect(() => {
-    async function checkAuthorization() {
-      setLoadingAuth(true);
-      setOwner(false);
-      // const { team } = await createClient();
-      // const user = await getLoggedInUser();
-
-      // if (user && organizationId) {
-      //   const memberships = await team.listMemberships(organizationId.id, [
-      //     Query.equal("userId", user.$id),
-      //   ]);
-
-      //   if (memberships.memberships[0].roles.includes("owner")) {
-      //     setOwner(true);
-      //   }
-      // }
-      setLoadingAuth(false);
-    }
-
-    checkAuthorization();
-  }, []);
 
   return (
     <>
@@ -161,7 +138,6 @@ export function Organization() {
               </Command>
               <div className="flex flex-row justify-end gap-1 border-t p-1 md:justify-start">
                 <CreateOrg />
-                {!loadingAuth && <>{owner && <Share />}</>}
               </div>
             </PopoverContent>
           </Popover>

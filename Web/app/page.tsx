@@ -10,9 +10,7 @@ export default async function Home() {
   console.log("user", user);
 
   if (!user) {
-    // redirect("/login");
-
-    return <div>{user}</div>;
+    redirect("/login");
   }
 
   if (user.prefs.lastVisitedOrg) {
@@ -39,3 +37,5 @@ export default async function Home() {
     </main>
   );
 }
+
+export const fetchCache = "force-no-store";

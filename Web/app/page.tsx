@@ -10,7 +10,9 @@ export default async function Home() {
   console.log("user", user);
 
   if (!user) {
-    redirect("/login");
+    // redirect("/login");
+
+    return <div>{user}</div>;
   }
 
   if (user.prefs.lastVisitedOrg) {

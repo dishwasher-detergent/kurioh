@@ -68,3 +68,21 @@ export const getProject = unstable_cache(
   ["project"],
   { revalidate: false, tags: ["project"] },
 );
+
+export const getProjects = unstable_cache(
+  async (projectId: string, database: Databases) => {
+    try {
+      const project = await database.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECTS_COLLECTION_ID,
+        [Query.equal("organization_id", projectId)],
+      );
+
+      return project.documents;
+    } catch {
+      return null;
+    }
+  },
+  ["project"],
+  { revalidate: false, tags: ["projects"] },
+);

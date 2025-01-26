@@ -1,3 +1,5 @@
+"use client";
+
 import { LucideEdit, LucideLoader2, LucideTrash } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

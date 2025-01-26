@@ -1,4 +1,5 @@
 import { Organization } from "@/interfaces/organization.interface";
+import { atom } from "jotai";
 
 import { atomWithStorage } from "jotai/utils";
 
@@ -16,14 +17,7 @@ export const organizationIdAtom = atomWithStorage<SelectedOrganization | null>(
   },
 );
 
-export const organizationsAtom = atomWithStorage<Organization[]>(
-  "ORGANIZATIONS",
-  [],
-  undefined,
-  {
-    getOnInit: true,
-  },
-);
+export const organizationsAtom = atom<Organization[]>([]);
 
 if (process.env.NODE_ENV !== "production") {
   organizationIdAtom.debugLabel = "Selected Organization";

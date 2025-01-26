@@ -13,12 +13,12 @@ export function Nav() {
   const segments = useSelectedLayoutSegments();
 
   const subNav = useMemo<React.ReactNode>(() => {
-    if (segments[2] === "project") {
+    if (segments[3] === "project") {
       return (
         <>
           <Button asChild variant="ghost" size="sm">
             <Link
-              href={`/organization/${segments[1]}/project/${segments[3]}/api`}
+              href={`/organization/${segments[2]}/project/${segments[4]}/api`}
             >
               API
             </Link>
@@ -27,21 +27,21 @@ export function Nav() {
       );
     }
 
-    if (segments[0] === "organization") {
+    if (segments[1] === "organization") {
       return (
         <>
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/organization/${segments[1]}/information`}>
+            <Link href={`/organization/${segments[2]}/information`}>
               Information
             </Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/organization/${segments[1]}/experience`}>
+            <Link href={`/organization/${segments[2]}/experience`}>
               Experience
             </Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/organization/${segments[1]}/api`}>API</Link>
+            <Link href={`/organization/${segments[2]}/api`}>API</Link>
           </Button>
         </>
       );

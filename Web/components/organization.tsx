@@ -73,7 +73,8 @@ export function Organization() {
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <div className="flex items-center">
-                {organization ? (
+                {organizations.find((org) => org.$id === organization)
+                  ?.title ? (
                   <Link
                     href={`/organization/${organization}`}
                     className={buttonVariants({

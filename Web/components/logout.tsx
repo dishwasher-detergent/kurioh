@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LucideLoader2 } from "lucide-react";
+import { LucideLoader2, LucideLogOut } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,7 +28,8 @@ export function Logout() {
   return (
     <Button variant="ghost" onClick={signOutFunc} disabled={loading}>
       {loading && <LucideLoader2 className="mr-2 size-3.5 animate-spin" />}
-      Logout
+      <span className="hidden md:block">Logout</span>
+      <LucideLogOut className="size-3.5 md:ml-2" />
     </Button>
   );
 }

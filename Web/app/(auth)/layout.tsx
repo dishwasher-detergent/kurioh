@@ -1,5 +1,7 @@
 import { getLoggedInUser } from "@/lib/server/appwrite";
 
+import { redirect } from "next/navigation";
+
 export default async function Layout({
   children,
 }: Readonly<{
@@ -8,7 +10,7 @@ export default async function Layout({
   const user = await getLoggedInUser();
 
   if (user) {
-    // redirect("/");
+    redirect("/");
   }
 
   return (

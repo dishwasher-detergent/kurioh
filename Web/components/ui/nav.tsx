@@ -52,6 +52,8 @@ export function Nav() {
     return "";
   }, [segments]);
 
+  if (segments[0] != "(portfolio)") return null;
+
   return (
     <header className="sticky top-0 z-10 w-full border-b bg-background/90 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl flex-row items-center justify-between gap-2 p-4 md:px-8">

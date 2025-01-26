@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { signOut } from "@/lib/server/utils";
 import { LucideLoader2, LucideLogOut } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -15,7 +16,7 @@ export function Logout() {
     setLoading(true);
 
     try {
-      await fetch("/api/auth/sign-out");
+      await signOut();
 
       toast.success("Signed out successfully");
       router.push("/login");

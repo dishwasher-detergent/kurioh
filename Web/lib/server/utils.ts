@@ -5,6 +5,7 @@ import { Information } from "@/interfaces/information.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
 import {
+  COOKIE_KEY,
   DATABASE_ID,
   EXPERIENCE_COLLECTION_ID,
   INFORMATION_COLLECTION_ID,
@@ -14,6 +15,7 @@ import {
 } from "@/lib/constants";
 import { createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { createSlug } from "@/lib/utils";
+import { cookies } from "next/headers";
 
 import { ID, Permission, Query, Role } from "node-appwrite";
 
@@ -823,4 +825,11 @@ export async function setLastVisitedOrganization(organizationId: string) {
       data: null,
     };
   }
+}
+
+export async function signOut() {
+  const { account } = await createSessionClient();
+
+  account.deleteSession("current");
+  (await cookies()).delete(COOKIE_KEY);
 }

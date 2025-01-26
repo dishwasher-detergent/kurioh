@@ -59,7 +59,7 @@ export function Organization() {
 
   useEffect(() => {
     fetchOrganizations();
-  }, []);
+  }, [organization]);
 
   useEffect(() => {
     async function checkAuthorization() {

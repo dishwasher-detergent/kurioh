@@ -726,10 +726,8 @@ export async function deleteOrganization(organizationId?: string) {
   );
 
   return {
-    errors: {
-      message: "Failed to delete organization, no organization was given.",
-    },
-    data: data,
+    errors: null,
+    data: data.documents,
   };
 }
 

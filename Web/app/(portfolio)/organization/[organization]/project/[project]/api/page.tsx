@@ -1,5 +1,8 @@
 import { Request } from "@/components/request";
+import { Header } from "@/components/ui/header";
 import { API_ENDPOINT } from "@/lib/constants";
+import { getProject } from "@/lib/server/utils";
+import { notFound } from "next/navigation";
 
 export default async function ApiPage({
   params,
@@ -12,5 +15,18 @@ export default async function ApiPage({
   const javascript = `const res = await fetch("${endpoint}");
 const data = await res.json();`;
 
-  return <Request endpoint={endpoint} code={javascript} />;
+  const project = await getProject(projectId);
+
+  if (project.errors) {
+    notFound();
+  }
+
+  const { data: projectData } = project;
+
+  return (
+    <>
+      <Header title={projectData?.title} slug={projectData?.slug} />
+      <Request endpoint={endpoint} code={javascript} />
+    </>
+  );
 }

@@ -8,7 +8,7 @@ export default function Loading() {
       <Header loading={true} />
       <Card>
         <CardContent className="p-4">
-          <Skeleton className="h-36 w-full" />
+          <Skeleton className="h-24 w-full" />
         </CardContent>
       </Card>
     </>

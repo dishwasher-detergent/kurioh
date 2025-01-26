@@ -28,6 +28,8 @@ export default async function OrganizationPage({
 
   const { data: orgData } = org;
 
+  console.log(projectData);
+
   return (
     <>
       <Header
@@ -52,7 +54,7 @@ export default async function OrganizationPage({
         )}
         {projectData &&
           projectData.map((x) => <ProjectCard key={x.$id} {...x} />)}
-        {!projectData && (
+        {projectData && projectData.length == 0 && (
           <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
             <CardHeader>
               <CardDescription className="text-xs">Uh oh!</CardDescription>

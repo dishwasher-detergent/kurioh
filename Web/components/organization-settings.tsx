@@ -41,7 +41,7 @@ export function OrganizationSettings() {
 
       if (data?.data) {
         setLoading(false);
-        router.push(`/organization/${data?.data.documents[0]?.id}`);
+        router.push(`/organization/${data?.data[0]?.$id}`);
       }
     };
 

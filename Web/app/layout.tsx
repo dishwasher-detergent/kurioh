@@ -2,7 +2,6 @@ import { Nav } from "@/components/ui/nav";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
-import { Dev } from "@/providers/jotai-devtools";
 import { Noto_Sans_Mono as Font } from "next/font/google";
 
 const font = Font({
@@ -21,7 +20,6 @@ export default async function RootLayout({
       >
         <Nav />
         {children}
-        <Dev />
         <Toaster />
       </body>
     </html>

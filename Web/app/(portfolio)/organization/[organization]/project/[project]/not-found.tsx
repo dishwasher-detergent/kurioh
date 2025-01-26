@@ -1,5 +1,3 @@
-import { SetProject } from "@/components/set-project";
-
 export default function NotFound() {
   return (
     <main className="mx-auto max-w-6xl p-4 px-8">
@@ -9,7 +7,6 @@ export default function NotFound() {
         </h2>
         <p>Switch or create a new project above.</p>
       </div>
-      <SetProject />
     </main>
   );
 }

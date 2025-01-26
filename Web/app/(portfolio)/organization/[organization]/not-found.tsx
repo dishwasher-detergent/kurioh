@@ -1,5 +1,3 @@
-import { SetOrganization } from "@/components/set-organization";
-
 export default function NotFound() {
   return (
     <main className="mx-auto max-w-6xl p-4 px-8">
@@ -9,7 +7,6 @@ export default function NotFound() {
         </h2>
         <p>Switch or create a new organization above.</p>
       </div>
-      <SetOrganization />
     </main>
   );
 }

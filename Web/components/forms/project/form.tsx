@@ -1,14 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomValue } from "jotai";
 import { LucideLoader2, LucideSave } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,9 +31,12 @@ import projectSchema, {
   titleMaxLength,
 } from "./schema";
 
-interface ProjectFormProps extends Project {}
+interface ProjectFormProps extends Project {
+  orgId: string;
+}
 
 export default function ProjectForm({
+  orgId,
   $id,
   title,
   description,
@@ -45,7 +46,6 @@ export default function ProjectForm({
   image_ids,
 }: ProjectFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const organizationId = useAtomValue(organizationIdAtom);
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
@@ -99,14 +99,14 @@ export default function ProjectForm({
   }
 
   async function handleFiles(images: any[] | undefined) {
-    if (!images || !organizationId) {
+    if (!images || !orgId) {
       return;
     }
 
     const uploadedImages = await Promise.all(
       images.map(async (image) => {
         if (image instanceof File) {
-          const data = await uploadFile(image, organizationId.id);
+          const data = await uploadFile(image, orgId);
 
           if (data?.errors) {
             toast.error(data?.errors.message);

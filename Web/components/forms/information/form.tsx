@@ -1,14 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomValue } from "jotai";
 import { LucideLoader2, LucideSave } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,9 +29,12 @@ import informationSchema, {
   titleMaxLength,
 } from "./schema";
 
-interface InformationFormProps extends Information {}
+interface InformationFormProps extends Information {
+  orgId: string;
+}
 
 export default function InformationForm({
+  orgId,
   $id,
   title,
   description,
@@ -41,7 +42,6 @@ export default function InformationForm({
   image_id,
 }: InformationFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const organizationId = useAtomValue(organizationIdAtom);
 
   const form = useForm<z.infer<typeof informationSchema>>({
     resolver: zodResolver(informationSchema),
@@ -95,14 +95,14 @@ export default function InformationForm({
   }
 
   async function handleFile(image: any | undefined) {
-    if (!organizationId) {
+    if (!orgId) {
       return;
     }
 
     let data = undefined;
 
     if (image instanceof File) {
-      data = await uploadFile(image, organizationId.id);
+      data = await uploadFile(image, orgId);
     }
 
     if (image_id != image && image_id != null && image_id != "") {

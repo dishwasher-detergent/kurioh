@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useAtomValue } from "jotai";
 import {
   CalendarIcon,
   LucideLoader2,
@@ -15,7 +14,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -51,11 +49,14 @@ import experienceArraySchema, {
 
 interface ExperienceFormProps {
   experience: Experience[];
+  orgId: string;
 }
 
-export default function ExperienceForm({ experience }: ExperienceFormProps) {
+export default function ExperienceForm({
+  experience,
+  orgId,
+}: ExperienceFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const organizationId = useAtomValue(organizationIdAtom);
 
   const form = useForm<z.infer<typeof experienceArraySchema>>({
     resolver: zodResolver(experienceArraySchema),
@@ -98,7 +99,7 @@ export default function ExperienceForm({ experience }: ExperienceFormProps) {
   async function onSubmit(values: z.infer<typeof experienceArraySchema>) {
     setLoading(true);
 
-    if (!organizationId) return;
+    if (!orgId) return;
 
     const newExperience = values.experience.map((exp) => ({
       ...exp,
@@ -139,7 +140,7 @@ export default function ExperienceForm({ experience }: ExperienceFormProps) {
 
         toast.success("Experience updated successfully.");
       } else {
-        const added = await addExperience(exp, organizationId.id);
+        const added = await addExperience(exp, orgId);
 
         if (added.errors) {
           toast.error(added.errors.message);

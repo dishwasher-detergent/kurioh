@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSetAtom } from "jotai";
 import { LucideLoader2, LucidePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -9,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -102,8 +100,6 @@ function CreateForm({ className, setOpen }: FormProps) {
   const [loadingCreateOrganization, setLoadingCreateOrganization] =
     useState<boolean>(false);
   const router = useRouter();
-  const setorganizationId = useSetAtom(organizationIdAtom);
-  const setOrganizations = useSetAtom(organizationsAtom);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -122,11 +118,6 @@ function CreateForm({ className, setOpen }: FormProps) {
     }
 
     if (data.data) {
-      setorganizationId({
-        title: data.data.title,
-        id: data.data.$id,
-      });
-
       const organizations = await getOrganizations();
 
       if (organizations.errors) {
@@ -134,7 +125,6 @@ function CreateForm({ className, setOpen }: FormProps) {
       }
 
       if (organizations.data) {
-        setOrganizations(organizations.data);
         router.push(`/organization/${data.data.$id}`);
       }
     }

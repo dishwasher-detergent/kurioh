@@ -1,6 +1,5 @@
 "use client";
 
-import { organizationIdAtom } from "@/atoms/organization";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,8 +25,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { shareOrganization } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { useAtom } from "jotai";
 import { LucideLoader2, LucideShare2 } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -87,16 +86,18 @@ interface FormProps extends React.ComponentProps<"form"> {
 }
 
 function Form({ className, setOpen }: FormProps) {
-  const [organizationId, _] = useAtom(organizationIdAtom);
-
   const [loadingShareOrganization, setLoadingShareOrganization] =
     useState<boolean>(false);
   const [email, setEmail] = useState<string | null>(null);
+  const { organization, project } = useParams<{
+    organization: string;
+    project: string;
+  }>();
 
   async function share() {
     setLoadingShareOrganization(true);
 
-    if (!organizationId) {
+    if (!organization) {
       toast.error("No organization specified!");
       return;
     }
@@ -106,7 +107,7 @@ function Form({ className, setOpen }: FormProps) {
       return;
     }
 
-    const data = await shareOrganization(organizationId.id, email);
+    const data = await shareOrganization(organization, email);
 
     if (data.errors) {
       toast.error(data.errors.message);

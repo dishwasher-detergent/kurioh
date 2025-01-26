@@ -1,6 +1,5 @@
 import ExperienceForm from "@/components/forms/experience/form";
 import { OrganizationSettings } from "@/components/organization-settings";
-import { SetOrganization } from "@/components/set-organization";
 import {
   Card,
   CardContent,
@@ -40,10 +39,12 @@ export default async function OrganizationExperience({
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-2">
-          <ExperienceForm experience={data.experience} />
+          <ExperienceForm
+            experience={data.experience}
+            orgId={data.organization.$id}
+          />
         </CardContent>
       </Card>
-      <SetOrganization {...data.organization} />
     </>
   );
 }

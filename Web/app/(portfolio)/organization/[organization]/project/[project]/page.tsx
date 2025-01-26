@@ -1,6 +1,4 @@
 import ProjectForm from "@/components/forms/project/form";
-import { SetOrganization } from "@/components/set-organization";
-import { SetProject } from "@/components/set-project";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
 import { getOrganization, getProject } from "@/lib/server/utils";
@@ -28,11 +26,9 @@ export default async function ProjectPage({
       <Header title={projectData?.title} slug={projectData?.slug} />
       <Card>
         <CardContent className="p-4">
-          <ProjectForm {...projectData} />
+          <ProjectForm {...projectData} orgId={data.organization.$id} />
         </CardContent>
       </Card>
-      <SetProject {...projectData} />
-      <SetOrganization {...data.organization} />
     </>
   );
 }

@@ -1,7 +1,6 @@
 import { CreateProject } from "@/components/create-project";
 import { OrganizationSettings } from "@/components/organization-settings";
 import ProjectCard from "@/components/project-card";
-import { SetOrganization } from "@/components/set-organization";
 import {
   Card,
   CardContent,
@@ -67,7 +66,6 @@ export default async function OrganizationPage({
           </Card>
         )}
       </section>
-      <SetOrganization {...orgData?.organization} />
     </>
   );
 }

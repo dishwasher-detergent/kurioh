@@ -1,7 +1,5 @@
 "use client";
 
-import { organizationIdAtom } from "@/atoms/organization";
-import { projectIdAtom, projectsAtom } from "@/atoms/project";
 import { CreateProject } from "@/components/create-project";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,31 +16,33 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Project as ProjectInterface } from "@/interfaces/project.interface";
 import { getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { useAtom, useAtomValue } from "jotai";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function Project() {
   const router = useRouter();
+  const { organization, project } = useParams<{
+    organization: string;
+    project: string;
+  }>();
 
-  const organizationId = useAtomValue(organizationIdAtom);
-  const [projectId, setprojectId] = useAtom(projectIdAtom);
-  const [projects, setProjects] = useAtom(projectsAtom);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [projects, setProjects] = useState<ProjectInterface[]>([]);
 
   async function fetchProjects() {
     setLoading(true);
 
-    const data = await getProjects();
+    const data = await getProjects(organization);
 
     if (data?.errors) {
-      toast.error("Failed to fetch projects");
+      toast.error(data?.errors.message);
     }
 
     if (data?.data) {
@@ -53,16 +53,8 @@ export function Project() {
   }
 
   useEffect(() => {
-    if (!organizationId) {
-      setLoading(false);
-      return;
-    }
-
     fetchProjects();
-  }, [organizationId]);
-
-  if (!organizationId) return <Skeleton className="h-8 min-w-32" />;
-  if (!organizationId && !loading) return null;
+  }, []);
 
   return (
     <>
@@ -84,7 +76,8 @@ export function Project() {
                 aria-expanded={open}
                 className="text-muted-foreground"
               >
-                {projectId?.title ?? "Select Project..."}
+                {projects.find((x) => x.$id == project)?.title ??
+                  "Select Project..."}
                 <ChevronsUpDown className="ml-2 size-4" />
               </Button>
             </PopoverTrigger>
@@ -97,18 +90,14 @@ export function Project() {
                 <CommandList>
                   <CommandEmpty>No project found.</CommandEmpty>
                   <CommandGroup>
-                    {projects.map((project) => (
+                    {projects.map((projectItem) => (
                       <CommandItem
-                        key={project.$id}
-                        value={project.$id}
+                        key={projectItem.$id}
+                        value={projectItem.$id}
                         onSelect={(currentValue) => {
-                          setprojectId({
-                            title: project.title,
-                            id: currentValue,
-                          });
                           setOpen(false);
                           router.push(
-                            `/organization/${organizationId.id}/project/${currentValue}`,
+                            `/organization/${organization}/project/${currentValue}`,
                           );
                         }}
                         className="cursor-pointer text-xs"
@@ -116,12 +105,12 @@ export function Project() {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            projectId?.id === project.$id
+                            project == projectItem?.$id
                               ? "opacity-100"
                               : "opacity-0",
                           )}
                         />
-                        {project.title}
+                        {projectItem.title}
                       </CommandItem>
                     ))}
                   </CommandGroup>

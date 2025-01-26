@@ -1,6 +1,5 @@
 "use client";
 
-import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,20 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteOrganization } from "@/lib/server/utils";
 
-import { useAtom, useSetAtom } from "jotai";
-
 import {
   LucideEllipsisVertical,
   LucideLoader2,
   LucideTrash,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function OrganizationSettings() {
-  const [organizationId, setOrganizationId] = useAtom(organizationIdAtom);
-  const setOrganizations = useSetAtom(organizationsAtom);
+  const { organization, project } = useParams<{
+    organization: string;
+    project: string;
+  }>();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -33,7 +32,7 @@ export function OrganizationSettings() {
     setLoading(true);
 
     const promise = async () => {
-      const data = await deleteOrganization(organizationId?.id);
+      const data = await deleteOrganization(organization);
 
       if (data?.errors) {
         toast.error(data.errors.message);
@@ -41,8 +40,6 @@ export function OrganizationSettings() {
       }
 
       if (data?.data) {
-        setOrganizations(data?.data.documents ?? []);
-        setOrganizationId(null);
         setLoading(false);
         router.push(`/organization/${data?.data.documents[0]?.id}`);
       }

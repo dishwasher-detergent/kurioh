@@ -1,7 +1,5 @@
 "use client";
 
-import { organizationIdAtom, organizationsAtom } from "@/atoms/organization";
-import { projectIdAtom } from "@/atoms/project";
 import { CreateOrg } from "@/components/create-organization";
 import { Share } from "@/components/share";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -22,23 +20,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getOrganizations } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { useAtom, useSetAtom } from "jotai";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function Organization() {
   const router = useRouter();
+  const { organization, project } = useParams<{
+    organization: string;
+    project: string;
+  }>();
 
-  const setProjectId = useSetAtom(projectIdAtom);
-  const [organizationId, setorganizationId] = useAtom(organizationIdAtom);
-  const [organizations, setOrganizations] = useAtom(organizationsAtom);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [owner, setOwner] = useState<boolean>(false);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(true);
+  const [organizations, setOrganizations] = useState<any[]>([]);
 
   async function fetchOrganizations() {
     setLoading(true);
@@ -46,7 +45,7 @@ export function Organization() {
     const data = await getOrganizations();
 
     if (data?.errors) {
-      toast.error("Failed to fetch organizations");
+      toast.error(data?.errors.message);
     }
 
     if (data?.data) {
@@ -79,7 +78,7 @@ export function Organization() {
     }
 
     checkAuthorization();
-  }, [organizationId]);
+  }, []);
 
   return (
     <>
@@ -94,16 +93,18 @@ export function Organization() {
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <div className="flex items-center">
-                {organizationId?.id ? (
+                {organization ? (
                   <Link
-                    href={`/organization/${organizationId?.id}`}
-                    onClick={() => setProjectId(null)}
+                    href={`/organization/${organization}`}
                     className={buttonVariants({
                       variant: "ghost",
                       size: "sm",
                     })}
                   >
-                    {organizationId?.title}
+                    {
+                      organizations.find((org) => org.$id === organization)
+                        .title
+                    }
                   </Link>
                 ) : (
                   <p className="px-2 text-xs font-semibold">
@@ -131,16 +132,11 @@ export function Organization() {
                 <CommandList>
                   <CommandEmpty>No organization found.</CommandEmpty>
                   <CommandGroup>
-                    {organizations.map((organization) => (
+                    {organizations.map((organizationItem) => (
                       <CommandItem
-                        key={organization.$id}
-                        value={organization.$id}
+                        key={organizationItem.$id}
+                        value={organizationItem.$id}
                         onSelect={(currentValue) => {
-                          setProjectId(null);
-                          setorganizationId({
-                            id: currentValue,
-                            title: organization.title,
-                          });
                           setOpen(false);
                           router.push(`/organization/${currentValue}`);
                         }}
@@ -149,12 +145,12 @@ export function Organization() {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            organizationId?.id === organization.$id
+                            organization === organizationItem.$id
                               ? "opacity-100"
                               : "opacity-0",
                           )}
                         />
-                        {organization.title}
+                        {organizationItem.title}
                       </CommandItem>
                     ))}
                   </CommandGroup>

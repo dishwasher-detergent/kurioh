@@ -1,7 +1,5 @@
 "use client";
 
-import { organizationIdAtom } from "@/atoms/organization";
-import { projectIdAtom, projectsAtom } from "@/atoms/project";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,9 +33,8 @@ import { createProject, getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomValue, useSetAtom } from "jotai";
 import { LucideLoader2, LucidePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -103,9 +100,10 @@ function CreateForm({ className, setOpen }: FormProps) {
   const [loadingCreateProject, setLoadingCreateProject] =
     useState<boolean>(false);
   const router = useRouter();
-  const organizationId = useAtomValue(organizationIdAtom);
-  const setprojectId = useSetAtom(projectIdAtom);
-  const setProjects = useSetAtom(projectsAtom);
+  const { organization, project } = useParams<{
+    organization: string;
+    project: string;
+  }>();
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -117,30 +115,22 @@ function CreateForm({ className, setOpen }: FormProps) {
   async function onSubmit(values: z.infer<typeof schema>) {
     setLoadingCreateProject(true);
 
-    const data = await createProject(values.title, organizationId?.id);
+    const data = await createProject(values.title, organization);
 
     if (data.errors) {
       toast.error(data.errors.message);
     }
 
     if (data.data) {
-      setprojectId({
-        id: data.data.$id,
-        title: data.data.title,
-      });
-
-      const projects = await getProjects(organizationId?.id);
+      const projects = await getProjects(organization);
 
       if (projects?.errors) {
         toast.error(projects.errors.message);
-        router.push(`/organization/${organizationId?.id}`);
+        router.push(`/organization/${organization}`);
       }
 
       if (projects?.data) {
-        setProjects(projects.data);
-        router.push(
-          `/organization/${organizationId?.id}/project/${data.data.$id}`,
-        );
+        router.push(`/organization/${organization}/project/${data.data.$id}`);
       }
     }
 

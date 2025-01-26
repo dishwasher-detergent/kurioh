@@ -1,6 +1,5 @@
 import InformationForm from "@/components/forms/information/form";
 import { OrganizationSettings } from "@/components/organization-settings";
-import { SetOrganization } from "@/components/set-organization";
 import {
   Card,
   CardContent,
@@ -38,10 +37,12 @@ export default async function OrganizationInformation({
           <CardDescription>Basic portfolio information.</CardDescription>
         </CardHeader>
         <CardContent>
-          <InformationForm {...data.information} />
+          <InformationForm
+            {...data.information}
+            orgId={data.organization.$id}
+          />
         </CardContent>
       </Card>
-      <SetOrganization {...data.organization} />
     </>
   );
 }

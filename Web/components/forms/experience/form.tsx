@@ -12,8 +12,14 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import {
+  addExperience,
+  removeExperience,
+  updateExperience,
+} from "@/app/(portfolio)/organization/[organization]/experience/action";
 import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -36,12 +42,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Experience } from "@/interfaces/experience.interface";
-import {
-  addExperience,
-  cn,
-  removeExperience,
-  updateExperience,
-} from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import experienceArraySchema, {
   companyMaxLength,
   descriptionMaxLength,
@@ -115,16 +116,37 @@ export default function ExperienceForm({ experience }: ExperienceFormProps) {
     );
 
     for (const item of removedExperienceIds) {
-      await removeExperience(item.$id);
+      const deleted = await removeExperience(item.$id);
+
+      if (deleted.errors) {
+        toast.error(deleted.errors.message);
+        continue;
+      }
+
+      toast.success("Experience removed successfully.");
     }
 
     for (let i = 0; i < newExperience.length; i++) {
       const exp = newExperience[i];
 
       if (exp.id) {
-        await updateExperience(exp.id, exp);
+        const updated = await updateExperience(exp.id, exp);
+
+        if (updated.errors) {
+          toast.error(updated.errors.message);
+          continue;
+        }
+
+        toast.success("Experience updated successfully.");
       } else {
-        await addExperience(exp, organizationId.id);
+        const added = await addExperience(exp, organizationId.id);
+
+        if (added.errors) {
+          toast.error(added.errors.message);
+          continue;
+        }
+
+        toast.success("Experience added successfully.");
       }
     }
 

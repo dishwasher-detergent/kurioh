@@ -1,6 +1,5 @@
 "use server";
 
-import informationSchema from "@/components/forms/information/schema";
 import { Information } from "@/interfaces/information.interface";
 import {
   DATABASE_ID,
@@ -10,7 +9,7 @@ import {
 import { createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { ID, Permission, Role } from "node-appwrite";
 
-export async function submitForm(formData: FormData) {
+export async function submitForm(value: any) {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -24,32 +23,16 @@ export async function submitForm(formData: FormData) {
 
   const { database } = await createSessionClient();
 
-  const socials = JSON.parse(formData.get("socials")?.toString() ?? "[]");
-
   try {
-    const validatedFields = informationSchema.parse({
-      id: formData.get("id")?.valueOf(),
-      title: formData.get("title")?.valueOf(),
-      description: formData.get("description")?.valueOf(),
-      socials: socials,
-      image_id: formData.get("image_id")?.valueOf(),
-    });
-
     const data = await database.updateDocument<Information>(
       DATABASE_ID,
       INFORMATION_COLLECTION_ID,
-      validatedFields.id,
+      value.id,
       {
-        title: validatedFields.title,
-        description:
-          validatedFields.description === ""
-            ? undefined
-            : validatedFields.description,
-        socials: validatedFields.socials?.map((link) => link.value),
-        image_id:
-          validatedFields.image_id === ""
-            ? undefined
-            : validatedFields.image_id,
+        title: value.title,
+        description: value.description,
+        socials: value.socials,
+        image_id: value.image_id,
       },
     );
 
@@ -58,6 +41,8 @@ export async function submitForm(formData: FormData) {
       data: data,
     };
   } catch (error) {
+    console.error(error);
+
     return {
       errors: {
         message: "An unexpected error occurred. Could not update information.",
@@ -99,7 +84,9 @@ export async function uploadFile(file: File, organizationId: string) {
       errors: null,
       data: response,
     };
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return {
       errors: {
         message: "An unexpected error occurred. Could not upload file.",
@@ -130,7 +117,9 @@ export async function deleteFile(id: string) {
       errors: null,
       data: response,
     };
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
+
     return {
       errors: {
         message: "An unexpected error occurred. Could not delete file.",

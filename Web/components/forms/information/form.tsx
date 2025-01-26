@@ -70,28 +70,31 @@ export default function InformationForm({
       return;
     }
 
-    const formattedData = {
+    const data = {
       ...values,
-      socials: values?.socials ?? [],
+      socials: values?.socials?.map((x) => x.value) ?? [],
       image_id: uploadedImage?.data.$id ?? "",
     };
 
-    const formData = new FormData();
-
-    Object.entries(formattedData).forEach(([key, value]) => {
-      if (typeof value === "string") {
-        formData.append(key, value);
-      } else {
-        formData.append(key, JSON.stringify(value));
-      }
-    });
-
-    const uploadedData = await submitForm(formData);
+    const uploadedData = await submitForm(data);
 
     if (uploadedData?.errors) {
       toast.error(uploadedData.errors.message);
+      setLoading(false);
+      return;
     }
 
+    form.reset({
+      title: uploadedData.data.title,
+      description: uploadedData.data.description,
+      socials: uploadedData.data.socials.map((link) => ({
+        label: link,
+        value: link,
+      })),
+      image_id: uploadedData.data.image_id,
+    });
+
+    toast.success("Information updated successfully.");
     setLoading(false);
   }
 

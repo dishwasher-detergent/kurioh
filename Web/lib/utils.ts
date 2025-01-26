@@ -1,11 +1,9 @@
-import { Experience } from "@/interfaces/experience.interface";
 import { Information } from "@/interfaces/information.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
 import { createClient, getLoggedInUser } from "@/lib/client/appwrite";
 import {
   DATABASE_ID,
-  EXPERIENCE_COLLECTION_ID,
   HOSTNAME,
   INFORMATION_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
@@ -108,41 +106,6 @@ export async function createProject(name: string, organizationId?: string) {
     return data;
   } catch (err) {
     toast.error(`Failed to create project!`);
-    return;
-  }
-}
-
-export async function updateProject(id: string, values: any) {
-  const { database } = await createClient();
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    toast.error(
-      "Failed to update project, no user is defined. Please try logging out and back in.",
-    );
-    return;
-  }
-
-  try {
-    const data = await database.updateDocument<Project>(
-      DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      id,
-      {
-        title: values.title,
-        short_description: values.short_description,
-        description: values.description,
-        slug: createSlug(values.title),
-        tags: values.tags,
-        links: values.links,
-        image_ids: values.image_ids,
-      },
-    );
-
-    toast.success(`${data.title} has been updated!`);
-    return data;
-  } catch (err) {
-    toast.error(`Failed to update project!`);
     return;
   }
 }
@@ -396,104 +359,6 @@ export async function updateInformation(id: string, values: any) {
     return data;
   } catch (err) {
     toast.error(`Failed to update information!`);
-    return;
-  }
-}
-
-export async function addExperience(values: any, organizationId: string) {
-  const { database } = await createClient();
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    toast.error(
-      "Failed to add experience, no user is defined. Please try logging out and back in.",
-    );
-    return;
-  }
-
-  try {
-    const data = await database.createDocument<Experience>(
-      DATABASE_ID,
-      EXPERIENCE_COLLECTION_ID,
-      ID.unique(),
-      {
-        title: values.title,
-        description: values.description,
-        start_date: values.start_date,
-        end_date: values.end_date,
-        company: values.company,
-        skills: values.skills,
-        website: values.website,
-        createdBy: user.$id,
-        organization_id: organizationId,
-      },
-    );
-
-    toast.success(`${data.title} has been added!`);
-    return data;
-  } catch (err) {
-    toast.error(`Failed to add experience!`);
-    return;
-  }
-}
-
-export async function updateExperience(id: string, values: any) {
-  const { database } = await createClient();
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    toast.error(
-      "Failed to update experience, no user is defined. Please try logging out and back in.",
-    );
-    return;
-  }
-
-  try {
-    const data = await database.updateDocument<Experience>(
-      DATABASE_ID,
-      EXPERIENCE_COLLECTION_ID,
-      id,
-      {
-        title: values.title,
-        description: values.description,
-        start_date: values.start_date,
-        end_date: values.end_date,
-        company: values.company,
-        skills: values.skills,
-        website: values.website,
-      },
-    );
-
-    toast.success(`${data.title} has been updated!`);
-    return data;
-  } catch (err) {
-    toast.error(`Failed to update experience!`);
-    return;
-  }
-}
-
-export async function removeExperience(id: string) {
-  const { database } = await createClient();
-  const user = await getLoggedInUser();
-
-  if (!user) {
-    toast.error(
-      "Failed to add remove, no user is defined. Please try logging out and back in.",
-    );
-    return;
-  }
-
-  try {
-    const data = await database.deleteDocument(
-      DATABASE_ID,
-      EXPERIENCE_COLLECTION_ID,
-      id,
-    );
-
-    toast.success(`Experience has been removed!`);
-    return data;
-  } catch (err) {
-    toast.error(`Failed to remove experience!`);
     return;
   }
 }

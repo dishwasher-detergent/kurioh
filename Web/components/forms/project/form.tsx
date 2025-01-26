@@ -5,8 +5,14 @@ import { useAtomValue } from "jotai";
 import { LucideLoader2, LucideSave } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import {
+  deleteFile,
+  uploadFile,
+} from "@/app/(portfolio)/organization/[organization]/information/action";
+import { updateProject } from "@/app/(portfolio)/organization/[organization]/project/[project]/action";
 import { organizationIdAtom } from "@/atoms/organization";
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +30,6 @@ import { Input } from "@/components/ui/input";
 import { MultiplePhotoSelector } from "@/components/ui/multiple-photo-selector";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { Project } from "@/interfaces/project.interface";
-import { deleteFile, updateProject, uploadFile } from "@/lib/utils";
 import { TAGS } from "./options";
 import projectSchema, {
   descriptionMaxLength,
@@ -35,7 +40,6 @@ import projectSchema, {
 interface ProjectFormProps extends Project {}
 
 export default function ProjectForm({
-  setProject,
   $id,
   title,
   description,
@@ -73,9 +77,27 @@ export default function ProjectForm({
 
     const updatedProject = await updateProject($id, formData);
 
-    if (updatedProject) {
-      setProject(updatedProject);
+    if (updatedProject?.errors) {
+      toast.error(updatedProject.errors.message);
+      setLoading(false);
     }
+
+    form.reset({
+      title: updatedProject.data?.title ?? "",
+      description: updatedProject.data?.description ?? "",
+      short_description: updatedProject.data?.short_description ?? "",
+      tags:
+        updatedProject.data?.tags.map((tag) => ({
+          label: tag,
+          value: tag,
+        })) ?? [],
+      links:
+        updatedProject.data?.links.map((link) => ({
+          label: link,
+          value: link,
+        })) ?? [],
+      image_ids: updatedProject.data?.image_ids ?? [],
+    });
 
     setLoading(false);
   }
@@ -89,7 +111,13 @@ export default function ProjectForm({
       images.map(async (image) => {
         if (image instanceof File) {
           const data = await uploadFile(image, organizationId.id);
-          return data ? data.$id : null;
+
+          if (data?.errors) {
+            toast.error(data?.errors.message);
+            return;
+          }
+
+          return data ? data.data.$id : null;
         }
         return image;
       }),

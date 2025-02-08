@@ -15,8 +15,7 @@ import { signInWithEmail } from "./action";
 
 import { LucideLoader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 
 const initialState = {
   message: "",
@@ -24,17 +23,10 @@ const initialState = {
 };
 
 export default function LoginPage() {
-  const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     signInWithEmail,
     initialState,
   );
-
-  useEffect(() => {
-    if (state.success) {
-      router.push("/");
-    }
-  }, [state]);
 
   return (
     <Card className="w-full max-w-sm bg-muted/25">

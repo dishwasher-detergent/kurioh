@@ -166,7 +166,7 @@ const CommandEmpty = forwardRef<
   return (
     <div
       ref={forwardedRef}
-      className={cn("py-6 text-center text-sm", className)}
+      className={cn("py-6 text-center text-base", className)}
       cmdk-empty=""
       role="presentation"
       {...props}
@@ -458,7 +458,7 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            "min-h-10 rounded-md border border-input bg-background text-base ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:text-sm",
+            "border-input bg-background ring-offset-background focus-within:ring-ring min-h-10 rounded-md border text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
             {
               "p-2": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
@@ -487,7 +487,7 @@ const MultipleSelector = React.forwardRef<
                   {option.label}
                   <button
                     className={cn(
-                      "ml-1 rounded-full outline-hidden ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                      "ring-offset-background focus:ring-ring ml-1 rounded-full outline-hidden focus:ring-2 focus:ring-offset-2",
                       (disabled || option.fixed) && "hidden",
                     )}
                     onKeyDown={(e) => {
@@ -501,7 +501,7 @@ const MultipleSelector = React.forwardRef<
                     }}
                     onClick={() => handleUnselect(option)}
                   >
-                    <LucideX className="size-3 text-primary-foreground" />
+                    <LucideX className="text-primary-foreground size-3" />
                   </button>
                 </Badge>
               );
@@ -533,7 +533,7 @@ const MultipleSelector = React.forwardRef<
                   : placeholder
               }
               className={cn(
-                "flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground",
+                "placeholder:text-muted-foreground flex-1 bg-transparent outline-hidden",
                 {
                   "w-full": hidePlaceholderWhenSelected,
                   "p-2": selected.length === 0,
@@ -550,7 +550,7 @@ const MultipleSelector = React.forwardRef<
                 onChange?.(selected.filter((s) => s.fixed));
               }}
               className={cn(
-                "absolute -right-2 -top-1 grid h-8 w-8 place-items-center p-0",
+                "absolute -top-1 -right-2 grid h-8 w-8 place-items-center p-0",
                 (hideClearAllButton ||
                   disabled ||
                   selected.length < 1 ||
@@ -565,7 +565,7 @@ const MultipleSelector = React.forwardRef<
         <div className="relative">
           {open && (
             <CommandList
-              className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden animate-in"
+              className="bg-popover text-popover-foreground animate-in absolute top-1 z-10 w-full rounded-md border shadow-md outline-hidden"
               onMouseLeave={() => {
                 setOnScrollbar(false);
               }}
@@ -615,7 +615,7 @@ const MultipleSelector = React.forwardRef<
                               className={cn(
                                 "cursor-pointer",
                                 option.disable &&
-                                  "cursor-default text-muted-foreground",
+                                  "text-muted-foreground cursor-default",
                               )}
                             >
                               {option.label}

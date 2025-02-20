@@ -18,7 +18,7 @@ export function Header({
     <header className="mb-4 flex w-full items-start justify-between gap-4">
       <div className="space-y-2">
         {!loading ? (
-          <p className="truncate text-sm text-muted-foreground">{slug}</p>
+          <p className="text-muted-foreground truncate text-sm">{slug}</p>
         ) : (
           <Skeleton className="h-6 w-20" />
         )}

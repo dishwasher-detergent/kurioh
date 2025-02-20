@@ -45,7 +45,7 @@ export default function ProjectCard({
   }
 
   return (
-    <Card className="overflow-hidden transition-all hover:border-primary hover:ring-3 hover:ring-primary/10">
+    <Card className="break-inside-avoid-column rounded-md">
       <CardHeader>
         <CardDescription className="text-xs">{slug}</CardDescription>
         <CardTitle className="text-xl">{title}</CardTitle>
@@ -57,7 +57,7 @@ export default function ProjectCard({
         <p className="rounded-lg p-1 text-sm">{short_description}</p>
       </CardContent>
       <CardFooter className="flex flex-row gap-1">
-        <Button asChild className="flex-1" size="sm" variant="secondary">
+        <Button asChild className="flex-1" size="sm" variant="outline">
           <Link href={`/organization/${organization_id}/project/${$id}`}>
             <LucideEdit className="mr-2 h-4 w-4" />
             Edit

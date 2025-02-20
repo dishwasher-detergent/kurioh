@@ -96,7 +96,7 @@ export function Organization() {
                   variant="ghost"
                   role="combobox"
                   aria-expanded={open}
-                  className="size-8 text-muted-foreground"
+                  className="text-muted-foreground size-8"
                 >
                   <ChevronsUpDown className="size-4" />
                 </Button>

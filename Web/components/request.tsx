@@ -37,14 +37,14 @@ export function Request({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-2">
           <div className="flex flex-row items-start gap-2 overflow-hidden">
-            <Badge variant="get" className="uppercase text-white">
+            <Badge variant="get" className="text-white uppercase">
               GET
             </Badge>
-            <p className="overflow-hidden break-words text-sm">{endpoint}</p>
+            <p className="overflow-hidden text-sm break-words">{endpoint}</p>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="code mb-2 rounded-xl border border-dashed bg-background pt-2">
+          <div className="code bg-background mb-2 rounded-xl border border-dashed pt-2">
             <SyntaxHighlighter
               language="javascript"
               style={coy}
@@ -64,19 +64,19 @@ export function Request({
         </CardFooter>
       </Card>
       {data && (
-        <Card className="h-full w-full bg-muted/25">
+        <Card className="bg-muted/25 h-full w-full">
           <CardHeader className="flex flex-row items-center justify-between gap-2">
             <div className="flex flex-row items-center gap-2">
-              <Badge variant="get" className="uppercase text-white">
+              <Badge variant="get" className="text-white uppercase">
                 Status 200
               </Badge>
             </div>
           </CardHeader>
           <CardContent>
-            <h4 className="mb-2 ml-2 text-sm font-semibold text-foreground">
+            <h4 className="text-foreground mb-2 ml-2 text-sm font-semibold">
               Body
             </h4>
-            <div className="code rounded-xl border border-dashed bg-background pt-2">
+            <div className="code bg-background rounded-xl border border-dashed pt-2">
               <SyntaxHighlighter
                 language="js"
                 style={coy}

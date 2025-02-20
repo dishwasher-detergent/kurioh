@@ -3,22 +3,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -28,9 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { createProject, getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
+import { DyanmicDrawer } from "@/components/ui/dynamic-drawer";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucidePlus } from "lucide-react";
@@ -42,47 +26,24 @@ import { z } from "zod";
 
 export function CreateProject() {
   const [open, setOpen] = useState(false);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-
-  if (isDesktop) {
-    return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="flex-1" variant="outline" size="sm">
-            Create Project
-            <LucidePlus className="ml-2 size-3.5" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Create Project</DialogTitle>
-          </DialogHeader>
-          <CreateForm setOpen={(e: boolean) => setOpen(e)} />
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button className="flex-1" variant="outline" size="sm">
+    <DyanmicDrawer
+      title="Create Project"
+      description="Create a new project in your organization."
+      open={open}
+      setOpen={setOpen}
+      button={
+        <Button className="w-full" variant="outline" size="sm">
           Create Project
           <LucidePlus className="ml-2 size-3.5" />
         </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Create Project</DrawerTitle>
-        </DrawerHeader>
-        <CreateForm className="px-4" setOpen={(e: boolean) => setOpen(e)} />
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+      }
+    >
+      <div className="px-4">
+        <CreateForm setOpen={setOpen} />
+      </div>
+    </DyanmicDrawer>
   );
 }
 
@@ -159,7 +120,7 @@ function CreateForm({ className, setOpen }: FormProps) {
                     maxLength={titleMaxLength}
                   />
                   <Badge
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                    className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
                     {field?.value?.length}/{titleMaxLength}

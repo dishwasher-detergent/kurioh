@@ -40,7 +40,7 @@ export default async function OrganizationPage({
         {projectData && projectData.length > 0 && (
           <Card className="break-inside-avoid-column rounded-md">
             <CardHeader>
-              <CardDescription className="text-xs">Ooh Aah!</CardDescription>
+              <CardDescription className="text-sm">Ooh Aah!</CardDescription>
               <CardTitle className="text-xl">Made something new?</CardTitle>
             </CardHeader>
             <CardContent>
@@ -55,7 +55,7 @@ export default async function OrganizationPage({
         {projectData && projectData.length == 0 && (
           <Card className="break-inside-avoid-column rounded-md">
             <CardHeader>
-              <CardDescription className="text-xs">Uh oh!</CardDescription>
+              <CardDescription className="text-sm">Uh oh!</CardDescription>
               <CardTitle className="text-xl">No Projects Found</CardTitle>
             </CardHeader>
             <CardContent>

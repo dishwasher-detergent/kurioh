@@ -86,7 +86,7 @@ export function Organization() {
                     }
                   </Link>
                 ) : (
-                  <p className="px-2 text-xs font-semibold">
+                  <p className="px-2 text-sm font-semibold">
                     Select An Organization
                   </p>
                 )}
@@ -105,7 +105,7 @@ export function Organization() {
             <PopoverContent className="p-0" align="start">
               <Command>
                 <CommandInput
-                  className="h-8 text-xs"
+                  className="h-8 text-sm"
                   placeholder="Search organization..."
                 />
                 <CommandList>
@@ -119,17 +119,19 @@ export function Organization() {
                           setOpen(false);
                           router.push(`/organization/${currentValue}`);
                         }}
-                        className="cursor-pointer text-xs"
+                        className="cursor-pointer text-sm"
                       >
                         <Check
                           className={cn(
-                            "mr-2 h-4 w-4",
+                            "mr-2 h-4 w-4 flex-none",
                             organization === organizationItem.$id
                               ? "opacity-100"
                               : "opacity-0",
                           )}
                         />
-                        {organizationItem.title}
+                        <span className="truncate">
+                          {organizationItem.title}
+                        </span>
                       </CommandItem>
                     ))}
                   </CommandGroup>

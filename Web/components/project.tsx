@@ -74,17 +74,19 @@ export function Project() {
                 variant="ghost"
                 role="combobox"
                 aria-expanded={open}
-                className="text-muted-foreground"
+                className="text-muted-foreground max-w-48"
               >
-                {projects.find((x) => x.$id == project)?.title ??
-                  "Select Project..."}
-                <ChevronsUpDown className="ml-2 size-4" />
+                <span className="truncate">
+                  {projects.find((x) => x.$id == project)?.title ??
+                    "Select Project..."}
+                </span>
+                <ChevronsUpDown className="ml-2 size-4 flex-none" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0" align="start">
               <Command>
                 <CommandInput
-                  className="h-8 text-xs"
+                  className="h-8 text-sm"
                   placeholder="Search project..."
                 />
                 <CommandList>
@@ -100,17 +102,17 @@ export function Project() {
                             `/organization/${organization}/project/${currentValue}`,
                           );
                         }}
-                        className="cursor-pointer text-xs"
+                        className="cursor-pointer text-sm"
                       >
                         <Check
                           className={cn(
-                            "mr-2 h-4 w-4",
+                            "mr-2 h-4 w-4 flex-none",
                             project == projectItem?.$id
                               ? "opacity-100"
                               : "opacity-0",
                           )}
                         />
-                        {projectItem.title}
+                        <span className="truncate">{projectItem.title}</span>
                       </CommandItem>
                     ))}
                   </CommandGroup>

@@ -47,8 +47,8 @@ export default function ProjectCard({
   return (
     <Card className="break-inside-avoid-column rounded-md">
       <CardHeader>
-        <CardDescription className="text-xs">{slug}</CardDescription>
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardDescription className="truncate text-sm">{slug}</CardDescription>
+        <CardTitle className="truncate text-xl">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         <Images images={image_ids} />

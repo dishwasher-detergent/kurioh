@@ -38,7 +38,7 @@ export default async function OrganizationPage({
       </Header>
       <section className="min-h-full columns-xs items-start gap-4 space-y-4">
         {projectData && projectData.length > 0 && (
-          <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
+          <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring-3 hover:ring-primary/10">
             <CardHeader>
               <CardDescription className="text-xs">Ooh Aah!</CardDescription>
               <CardTitle className="text-xl">Made something new?</CardTitle>
@@ -53,7 +53,7 @@ export default async function OrganizationPage({
         {projectData &&
           projectData.map((x) => <ProjectCard key={x.$id} {...x} />)}
         {projectData && projectData.length == 0 && (
-          <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
+          <Card className="break-inside-avoid-column overflow-hidden transition-all hover:border-primary hover:ring-3 hover:ring-primary/10">
             <CardHeader>
               <CardDescription className="text-xs">Uh oh!</CardDescription>
               <CardTitle className="text-xl">No Projects Found</CardTitle>

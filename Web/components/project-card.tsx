@@ -45,7 +45,7 @@ export default function ProjectCard({
   }
 
   return (
-    <Card className="overflow-hidden transition-all hover:border-primary hover:ring hover:ring-primary/10">
+    <Card className="overflow-hidden transition-all hover:border-primary hover:ring-3 hover:ring-primary/10">
       <CardHeader>
         <CardDescription className="text-xs">{slug}</CardDescription>
         <CardTitle className="text-xl">{title}</CardTitle>

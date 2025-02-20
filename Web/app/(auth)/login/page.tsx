@@ -13,9 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signInWithEmail } from "./action";
 
-import { LucideLoader2 } from "lucide-react";
+import { LucideLoader2, LucideLogIn } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const initialState = {
   message: "",
@@ -23,15 +25,27 @@ const initialState = {
 };
 
 export default function LoginPage() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     signInWithEmail,
     initialState,
   );
 
+  useEffect(() => {
+    if (state.success) {
+      toast.success("Login successful!");
+      router.push("/");
+    }
+
+    if (!state.success && state.message != "") {
+      toast.error(state.message);
+    }
+  }, [state]);
+
   return (
-    <Card className="w-full max-w-sm bg-muted/25">
+    <Card className="bg-linear-to-bl w-full max-w-sm border-primary/50 from-primary/10 to-background ring-4 ring-primary/20">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle className="text-2xl">Log In</CardTitle>
         <CardDescription>
           Enter your email below to login to your account.
         </CardDescription>
@@ -39,7 +53,7 @@ export default function LoginPage() {
       <form action={formAction}>
         <CardContent className="grid gap-4">
           {state.message != "" ? (
-            <p className="w-full overflow-hidden rounded-xl border border-dashed border-destructive p-4 text-xs font-bold text-destructive">
+            <p className="w-full overflow-hidden rounded-md border border-dashed border-destructive p-4 text-sm font-bold text-destructive">
               {state.message}
             </p>
           ) : null}
@@ -67,22 +81,25 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter>
           <Button className="w-full" type="submit" disabled={isPending}>
+            Log In
             {isPending ? (
-              <LucideLoader2 className="size-3.5 animate-spin" />
+              <LucideLoader2 className="ml-2 size-3.5 animate-spin" />
             ) : (
-              "Login"
+              <LucideLogIn className="ml-2 size-3.5" />
             )}
           </Button>
         </CardFooter>
         <CardFooter>
-          <p className="w-full overflow-hidden rounded-xl border border-dashed bg-background p-2 text-center text-sm text-xs font-bold text-muted-foreground">
+          <p className="w-full overflow-hidden rounded-md border border-dashed border-primary/50 bg-background p-2 text-center text-sm font-bold text-muted-foreground">
             Don&apos;t have an account?
             <Button
               variant="link"
               asChild
-              className="p-1 text-xs font-bold text-muted-foreground"
+              className="p-1 text-sm font-bold text-muted-foreground"
             >
-              <Link href="/signup">Create one here</Link>
+              <Link href="/signup" className="underline">
+                Sign Up Here
+              </Link>
             </Button>
           </p>
         </CardFooter>

@@ -22,8 +22,6 @@ export async function signInWithEmail(prevState: any, formData: FormData) {
       secure: true,
     });
 
-    redirect("/");
-
     return {
       success: true,
       message: "Successfully logged in.",

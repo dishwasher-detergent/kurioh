@@ -33,7 +33,7 @@ export default function SignUpPage() {
 
   useEffect(() => {
     if (state.success) {
-      toast.success("Sign up successful!");
+      toast.success(state.message);
       router.push("/");
     }
 
@@ -52,7 +52,7 @@ export default function SignUpPage() {
       </CardHeader>
       <form action={formAction}>
         <CardContent className="grid gap-4">
-          {state.message != "" ? (
+          {!state.success && state.message != "" ? (
             <p className="border-destructive text-destructive w-full overflow-hidden rounded-md border border-dashed p-4 text-sm font-bold">
               {state.message}
             </p>

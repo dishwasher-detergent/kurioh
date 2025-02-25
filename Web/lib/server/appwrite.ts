@@ -1,5 +1,5 @@
-// src/lib/server/appwrite.js
 "use server";
+
 import { API_KEY, COOKIE_KEY, ENDPOINT, PROJECT_ID } from "@/lib/constants";
 import { cookies } from "next/headers";
 import {

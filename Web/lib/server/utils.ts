@@ -16,6 +16,7 @@ import {
 import { createSessionClient, getLoggedInUser } from "@/lib/server/appwrite";
 import { createSlug } from "@/lib/utils";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { ID, Permission, Query, Role } from "node-appwrite";
 
@@ -827,9 +828,11 @@ export async function setLastVisitedOrganization(organizationId: string) {
   }
 }
 
-export async function signOut() {
+export async function logOut() {
   const { account } = await createSessionClient();
 
   account.deleteSession("current");
   (await cookies()).delete(COOKIE_KEY);
+
+  redirect("/login");
 }

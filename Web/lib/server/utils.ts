@@ -20,8 +20,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { ID, Models, Permission, Query, Role } from "node-appwrite";
+import { cache } from "react";
 
-export async function getOrganization(organizationId: string): Promise<Result<any>> {
+export const getOrganization = cache(async (organizationId: string): Promise<Result<any>> => {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -69,9 +70,9 @@ export async function getOrganization(organizationId: string): Promise<Result<an
       message: "An unexpected error occurred. Could not get organization.",
     };
   }
-}
+})
 
-export async function getOrganizations(): Promise<Result<Organization[]>> {
+export const getOrganizations = cache(async (): Promise<Result<Organization[]>> => {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -100,9 +101,9 @@ export async function getOrganizations(): Promise<Result<Organization[]>> {
       message: "An unexpected error occurred. Could not get organizations.",
     };
   }
-}
+})
 
-export async function getProject(projectId: string): Promise<Result<Project>> {
+export const getProject = cache(async(projectId: string): Promise<Result<Project>> => {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -132,9 +133,9 @@ export async function getProject(projectId: string): Promise<Result<Project>> {
       message: "An unexpected error occurred. Could not get project.",
     };
   }
-}
+})
 
-export async function getProjects(organizationId?: string): Promise<Result<Project[]>> {
+export const getProjects = cache(async (organizationId?: string): Promise<Result<Project[]>> => {
   const user = await getLoggedInUser();
 
   if (!user) {
@@ -171,7 +172,7 @@ export async function getProjects(organizationId?: string): Promise<Result<Proje
       message: "An unexpected error occurred. Could not get projects.",
     };
   }
-}
+})
 
 export async function addExperience(values: any, organizationId: string): Promise<Result<Experience>> {
   const user = await getLoggedInUser();

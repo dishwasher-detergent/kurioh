@@ -34,8 +34,8 @@ export function OrganizationSettings() {
     const promise = async () => {
       const data = await deleteOrganization(organization);
 
-      if (data?.errors) {
-        toast.error(data.errors.message);
+      if (!data.success) {
+        toast.error(data.message);
         return;
       }
 

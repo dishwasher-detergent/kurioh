@@ -78,15 +78,15 @@ function CreateForm({ className, setOpen }: FormProps) {
 
     const data = await createProject(values.title, organization);
 
-    if (data.errors) {
-      toast.error(data.errors.message);
+    if (!data.success) {
+      toast.error(data.message);
     }
 
     if (data.data) {
       const projects = await getProjects(organization);
 
-      if (projects?.errors) {
-        toast.error(projects.errors.message);
+      if (!projects.success) {
+        toast.error(projects.message);
         router.push(`/organization/${organization}`);
       }
 

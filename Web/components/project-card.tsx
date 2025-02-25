@@ -37,8 +37,8 @@ export default function ProjectCard({
 
     const data = await deleteProject(id);
 
-    if (data.errors) {
-      toast.error(data.errors.message);
+    if (!data.success) {
+      toast.error(data.message);
     }
 
     setIsDeleting(false);

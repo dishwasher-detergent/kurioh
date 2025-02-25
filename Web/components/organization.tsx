@@ -44,8 +44,8 @@ export function Organization() {
 
     const data = await getOrganizations();
 
-    if (data?.errors) {
-      toast.error(data?.errors.message);
+    if (!data.success) {
+      toast.error(data.message);
     }
 
     if (data?.data) {

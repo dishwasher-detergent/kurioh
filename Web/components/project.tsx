@@ -41,8 +41,8 @@ export function Project() {
 
     const data = await getProjects(organization);
 
-    if (data?.errors) {
-      toast.error(data?.errors.message);
+    if (!data.success) {
+      toast.error(data.message);
     }
 
     if (data?.data) {

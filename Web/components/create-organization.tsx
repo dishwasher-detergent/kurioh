@@ -74,15 +74,15 @@ function CreateForm({ className, setOpen }: FormProps) {
 
     const data = await createOrganization(values.title);
 
-    if (data.errors) {
-      toast.error(data.errors.message);
+    if (!data.success) {
+      toast.error(data.message);
     }
 
     if (data.data) {
       const organizations = await getOrganizations();
 
-      if (organizations.errors) {
-        toast.error(organizations.errors.message);
+      if (!organizations.success) {
+        toast.error(organizations.message);
       }
 
       if (organizations.data) {

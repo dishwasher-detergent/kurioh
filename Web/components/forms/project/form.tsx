@@ -75,8 +75,8 @@ export default function ProjectForm({
 
     const updatedProject = await updateProject($id, formData);
 
-    if (updatedProject?.errors) {
-      toast.error(updatedProject.errors.message);
+    if (!updatedProject?.success) {
+      toast.error(updatedProject.message);
       setLoading(false);
 
       return;
@@ -113,13 +113,13 @@ export default function ProjectForm({
         if (image instanceof File) {
           const data = await uploadFile(image, orgId);
 
-          if (data?.errors) {
-            toast.error(data?.errors.message);
+          if (!data?.success) {
+            toast.error(data.message);
             return;
           }
 
           toast.success("Image uploaded successfully.");
-          return data ? data.data.$id : null;
+          return data ? data.data?.$id : null;
         }
         return image;
       }),
@@ -129,8 +129,6 @@ export default function ProjectForm({
     const removedImages = initialImages.filter(
       (image_id) => !images.includes(image_id),
     );
-
-    console.log(removedImages);
 
     await Promise.all(
       removedImages.map(
@@ -162,7 +160,7 @@ export default function ProjectForm({
                     maxLength={titleMaxLength}
                   />
                   <Badge
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                    className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
                     {field?.value?.length}/{titleMaxLength}

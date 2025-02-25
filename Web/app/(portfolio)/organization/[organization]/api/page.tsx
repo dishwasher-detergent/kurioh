@@ -18,7 +18,7 @@ const data = await res.json();`;
 
   const org = await getOrganization(organizationId);
 
-  if (org.errors) {
+  if (!org.success) {
     notFound();
   }
 

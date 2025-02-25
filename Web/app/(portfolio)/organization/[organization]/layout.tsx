@@ -14,7 +14,7 @@ export default async function Layout({
 
   const org = await getOrganization(organizationId);
 
-  if (!org.errors) {
+  if (org.success) {
     await setLastVisitedOrganization(organizationId);
   }
 

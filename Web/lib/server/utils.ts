@@ -4,6 +4,7 @@ import { Experience } from "@/interfaces/experience.interface";
 import { Information } from "@/interfaces/information.interface";
 import { Organization } from "@/interfaces/organization.interface";
 import { Project } from "@/interfaces/project.interface";
+import { Result } from "@/interfaces/result.interface";
 import {
   COOKIE_KEY,
   DATABASE_ID,
@@ -18,17 +19,15 @@ import { createSlug } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { ID, Permission, Query, Role } from "node-appwrite";
+import { ID, Models, Permission, Query, Role } from "node-appwrite";
 
-export async function getOrganization(organizationId: string) {
+export async function getOrganization(organizationId: string): Promise<Result<any>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -56,7 +55,8 @@ export async function getOrganization(organizationId: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Organization retrieved successfully.",
       data: {
         organization: org,
         information: information,
@@ -64,25 +64,20 @@ export async function getOrganization(organizationId: string) {
       },
     };
   } catch (error) {
-    console.error(error);
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not get organization.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not get organization.",
     };
   }
 }
 
-export async function getOrganizations() {
+export async function getOrganizations(): Promise<Result<Organization[]>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -95,29 +90,25 @@ export async function getOrganizations() {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Organizations retrieved successfully.",
       data: org.documents,
     };
   } catch (error) {
-    console.error(error);
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not get organizations.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not get organizations.",
     };
   }
 }
 
-export async function getProject(projectId: string) {
+export async function getProject(projectId: string): Promise<Result<Project>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -131,38 +122,32 @@ export async function getProject(projectId: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Project retrieved successfully.",
       data: project,
     };
   } catch (error) {
-    console.error(error);
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not get project.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not get project.",
     };
   }
 }
 
-export async function getProjects(organizationId?: string) {
+export async function getProjects(organizationId?: string): Promise<Result<Project[]>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
   if (!organizationId) {
     return {
-      errors: {
-        message: "No organization was given.",
-      },
-      data: null,
+      success: false,
+      message: "No organization id was given.",
     };
   }
 
@@ -176,28 +161,25 @@ export async function getProjects(organizationId?: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Projects retrieved successfully.",
       data: project.documents,
     };
   } catch {
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not get projects.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not get projects.",
     };
   }
 }
 
-export async function addExperience(values: any, organizationId: string) {
+export async function addExperience(values: any, organizationId: string): Promise<Result<Experience>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -222,30 +204,26 @@ export async function addExperience(values: any, organizationId: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Experience added successfully.",
       data: data,
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not add experience.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not add experience.",
     };
   }
 }
 
-export async function updateExperience(id: string, values: any) {
+export async function updateExperience(id: string, values: any): Promise<Result<Experience>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -268,67 +246,58 @@ export async function updateExperience(id: string, values: any) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Experience updated successfully.",
       data: data,
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not update experience.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not update experience.",
     };
   }
 }
 
-export async function removeExperience(id: string) {
+export async function removeExperience(id: string): Promise<Result<null>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
   const { database } = await createSessionClient();
 
   try {
-    const data = await database.deleteDocument(
+    await database.deleteDocument(
       DATABASE_ID,
       EXPERIENCE_COLLECTION_ID,
       id,
     );
 
     return {
-      errors: null,
-      data: data,
+      success: true,
+      message: "Experience removed successfully.",
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not remove experience.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not remove experience.",
     };
   }
 }
 
-export async function updateInformation(value: any) {
+export async function updateInformation(value: any): Promise<Result<Information>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -348,30 +317,26 @@ export async function updateInformation(value: any) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Information updated successfully.",
       data: data,
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not update information.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not update information.",
     };
   }
 }
 
-export async function uploadFile(file: File, organizationId: string) {
+export async function uploadFile(file: File, organizationId: string): Promise<Result<Models.File>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -392,63 +357,54 @@ export async function uploadFile(file: File, organizationId: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "File uploaded successfully.",
       data: response,
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not upload file.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not upload file.",
     };
   }
 }
 
-export async function deleteFile(id: string) {
+export async function deleteFile(id: string): Promise<Result<null>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
   const { storage } = await createSessionClient();
 
   try {
-    const response = await storage.deleteFile(PROJECTS_BUCKET_ID, id);
+    await storage.deleteFile(PROJECTS_BUCKET_ID, id);
 
     return {
-      errors: null,
-      data: response,
+      success: true,
+      message: "File deleted successfully.",
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not delete file.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not delete file.",
     };
   }
 }
 
-export async function createProject(name: string, organizationId?: string) {
+export async function createProject(name: string, organizationId?: string): Promise<Result<Project>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -456,11 +412,8 @@ export async function createProject(name: string, organizationId?: string) {
 
   if (!organizationId) {
     return {
-      errors: {
-        message:
-          "Failed to create project, no organization was given for this project.",
-      },
-      data: null,
+      success: false,
+      message: "Failed to create project, no organization was given for this project.",
     };
   }
 
@@ -486,28 +439,25 @@ export async function createProject(name: string, organizationId?: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Project created successfully.",
       data: data,
     };
   } catch (err) {
     return {
-      errors: {
-        message: "Failed to create project!",
-      },
-      data: null,
+      success: false,
+      message: "Failed to create project!",
     };
   }
 }
 
-export async function updateProject(id: string, values: any) {
+export async function updateProject(id: string, values: any): Promise<Result<Project>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -530,30 +480,26 @@ export async function updateProject(id: string, values: any) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Project updated successfully.",
       data: data,
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message: "An unexpected error occurred. Could not update project.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not update project.",
     };
   }
 }
 
-export async function deleteProject(id: string) {
+export async function deleteProject(id: string): Promise<Result<null>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -575,28 +521,24 @@ export async function deleteProject(id: string) {
     await database.deleteDocument(DATABASE_ID, PROJECTS_COLLECTION_ID, id);
 
     return {
-      errors: null,
-      data: null,
+      success: true,
+      message: "Project deleted successfully.",
     };
   } catch (err) {
     return {
-      errors: {
-        message: "Failed to delete project!",
-      },
-      data: null,
+      success: false,
+      message: "Failed to delete project!",
     };
   }
 }
 
-export async function createOrganization(name: string) {
+export async function createOrganization(name: string): Promise<Result<Organization>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -606,10 +548,8 @@ export async function createOrganization(name: string) {
 
   if (joinedTeams.total >= 2) {
     return {
-      errors: {
-        message: "You've reached the maximum orgnaization limit.",
-      },
-      data: null,
+      success: false,
+      message: "You've reached the maximum orgnaization limit.",
     };
   }
 
@@ -654,28 +594,25 @@ export async function createOrganization(name: string) {
     );
 
     return {
-      errors: null,
+      success: true,
+      message: "Organization created successfully.",
       data: data,
     };
   } catch {
     return {
-      errors: {
-        message: `Failed to create ${organizationId}!`,
-      },
-      data: null,
+      success: false,
+      message: `Failed to create ${organizationId}!`,
     };
   }
 }
 
-export async function deleteOrganization(organizationId?: string) {
+export async function deleteOrganization(organizationId?: string): Promise<Result<Organization[]>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -683,10 +620,8 @@ export async function deleteOrganization(organizationId?: string) {
 
   if (!organizationId) {
     return {
-      errors: {
-        message: "Failed to delete organization, no organization was given.",
-      },
-      data: null,
+      success: false,
+      message: "Failed to delete organization, no organization was given.",
     };
   }
 
@@ -696,52 +631,58 @@ export async function deleteOrganization(organizationId?: string) {
     Query.equal("organization_id", organizationId),
   ];
 
-  do {
-    response = await database.listDocuments(
+  try {
+    do {
+      response = await database.listDocuments(
+        DATABASE_ID,
+        PROJECTS_COLLECTION_ID,
+        queries,
+      );
+  
+      await Promise.all(
+        response.documents.map((document) => deleteProject(document.$id)),
+      );
+    } while (response.documents.length > 0);
+  
+    await team.delete(organizationId);
+    await database.deleteDocument(
       DATABASE_ID,
-      PROJECTS_COLLECTION_ID,
-      queries,
+      ORGANIZATION_COLLECTION_ID,
+      organizationId,
     );
-
-    await Promise.all(
-      response.documents.map((document) => deleteProject(document.$id)),
+  
+    await database.deleteDocument(
+      DATABASE_ID,
+      INFORMATION_COLLECTION_ID,
+      organizationId,
     );
-  } while (response.documents.length > 0);
-
-  await team.delete(organizationId);
-  await database.deleteDocument(
-    DATABASE_ID,
-    ORGANIZATION_COLLECTION_ID,
-    organizationId,
-  );
-
-  await database.deleteDocument(
-    DATABASE_ID,
-    INFORMATION_COLLECTION_ID,
-    organizationId,
-  );
-
-  const data = await database.listDocuments<Organization>(
-    DATABASE_ID,
-    ORGANIZATION_COLLECTION_ID,
-    [Query.orderDesc("$createdAt"), Query.limit(1)],
-  );
-
-  return {
-    errors: null,
-    data: data.documents,
-  };
+  
+    const data = await database.listDocuments<Organization>(
+      DATABASE_ID,
+      ORGANIZATION_COLLECTION_ID,
+      [Query.orderDesc("$createdAt"), Query.limit(1)],
+    );
+  
+    return {
+      success: true,
+      message: "Organization deleted successfully.",
+      data: data.documents,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "An unexpected error occurred. Could not delete organization.",
+    };
+  }
 }
 
-export async function leaveOrganization(organizationId: string) {
+export async function leaveOrganization(organizationId: string): Promise<Result<string>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -755,52 +696,47 @@ export async function leaveOrganization(organizationId: string) {
 
   if (!membership) {
     return {
-      errors: {
-        message: `An error occured while leaving ${organizationId}, please try again.`,
-      },
-      data: null,
+      success: false,
+      message: `An error occured while leaving ${organizationId}, please try again.`,
     };
   }
 
   if (membership.roles.includes("owner")) {
     return {
-      errors: {
-        message:
-          "The owner cannot leave their own organization, delete it instead.",
-      },
-      data: null,
-    };
+      success: false,
+      message: "The owner cannot leave their own organization, delete it instead.",
+    }
   }
 
   await team.deleteMembership(organizationId, membership.$id);
 
-  const data = await database.listDocuments(
+  const data = await database.listDocuments<Organization>(
     DATABASE_ID,
     ORGANIZATION_COLLECTION_ID,
     [Query.orderDesc("$createdAt"), Query.limit(1)],
   );
 
   if (data.documents.length > 0) {
-    return data.documents[0].$id;
+    return {
+      success: true,
+      message: "Organization left successfully.",
+      data: data.documents[0].$id
+    };
   }
 
   return {
-    errors: {
-      message: "No documents found.",
-    },
-    data: null,
+    success: false,
+    message: "No documents found.",
   };
 }
 
-export async function setLastVisitedOrganization(organizationId: string) {
+export async function setLastVisitedOrganization(organizationId: string): Promise<Result<null>> {
   const user = await getLoggedInUser();
 
   if (!user) {
     return {
-      errors: {
-        message: "You must be logged in to perform this action.",
-      },
-      data: null,
+      success: false,
+      message: "You must be logged in to perform this action.",
     };
   }
 
@@ -812,18 +748,14 @@ export async function setLastVisitedOrganization(organizationId: string) {
     });
 
     return {
-      errors: null,
-      data: null,
+      success: true,
+      message: "Last visited organization set successfully.",
     };
   } catch (error) {
-    console.error(error);
 
     return {
-      errors: {
-        message:
-          "An unexpected error occurred. Could not set last visited organization.",
-      },
-      data: null,
+      success: false,
+      message: "An unexpected error occurred. Could not set last visited organization.",
     };
   }
 }

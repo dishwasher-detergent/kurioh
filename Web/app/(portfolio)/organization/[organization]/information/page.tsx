@@ -20,7 +20,7 @@ export default async function OrganizationInformation({
   const { organization: organizationId } = await params;
   const org = await getOrganization(organizationId);
 
-  if (org.errors) {
+  if (!org.success) {
     notFound();
   }
 

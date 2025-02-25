@@ -119,8 +119,8 @@ export default function ExperienceForm({
     for (const item of removedExperienceIds) {
       const deleted = await removeExperience(item.$id);
 
-      if (deleted.errors) {
-        toast.error(deleted.errors.message);
+      if (!deleted.success) {
+        toast.error(deleted.message);
         continue;
       }
 
@@ -133,8 +133,8 @@ export default function ExperienceForm({
       if (exp.id) {
         const updated = await updateExperience(exp.id, exp);
 
-        if (updated.errors) {
-          toast.error(updated.errors.message);
+        if (!updated.success) {
+          toast.error(updated.message);
           continue;
         }
 
@@ -142,8 +142,8 @@ export default function ExperienceForm({
       } else {
         const added = await addExperience(exp, orgId);
 
-        if (added.errors) {
-          toast.error(added.errors.message);
+        if (!added.success) {
+          toast.error(added.message);
           continue;
         }
 
@@ -174,7 +174,7 @@ export default function ExperienceForm({
                         maxLength={companyMaxLength}
                       />
                       <Badge
-                        className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                        className="absolute top-1/2 right-1.5 -translate-y-1/2"
                         variant="secondary"
                       >
                         {field?.value?.length}/{companyMaxLength}
@@ -201,7 +201,7 @@ export default function ExperienceForm({
                         maxLength={titleMaxLength}
                       />
                       <Badge
-                        className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                        className="absolute top-1/2 right-1.5 -translate-y-1/2"
                         variant="secondary"
                       >
                         {field?.value?.length}/{titleMaxLength}
@@ -329,7 +329,7 @@ export default function ExperienceForm({
                   )}
                 />
               </div>
-              <p className="text-[0.8rem] text-muted-foreground">
+              <p className="text-muted-foreground text-[0.8rem]">
                 Leave the end date empty if you are still working here.
               </p>
             </div>

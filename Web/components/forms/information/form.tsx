@@ -59,8 +59,8 @@ export default function InformationForm({
 
     const uploadedImage = await handleFile(values.image_id);
 
-    if (uploadedImage?.errors) {
-      toast.error(uploadedImage?.errors.message);
+    if (uploadedImage && !uploadedImage.success) {
+      toast.error(uploadedImage.message);
 
       setLoading(false);
       return;
@@ -69,25 +69,25 @@ export default function InformationForm({
     const data = {
       ...values,
       socials: values?.socials?.map((x) => x.value) ?? [],
-      image_id: uploadedImage?.data.$id ?? "",
+      image_id: uploadedImage?.data?.$id ?? "",
     };
 
     const uploadedData = await updateInformation(data);
 
-    if (uploadedData?.errors) {
-      toast.error(uploadedData.errors.message);
+    if (!uploadedData.success) {
+      toast.error(uploadedData.message);
       setLoading(false);
       return;
     }
 
     form.reset({
-      title: uploadedData.data.title,
-      description: uploadedData.data.description,
-      socials: uploadedData.data.socials.map((link) => ({
+      title: uploadedData.data?.title,
+      description: uploadedData.data?.description,
+      socials: uploadedData.data?.socials.map((link) => ({
         label: link,
         value: link,
       })),
-      image_id: uploadedData.data.image_id,
+      image_id: uploadedData.data?.image_id,
     });
 
     toast.success("Information updated successfully.");
@@ -130,7 +130,7 @@ export default function InformationForm({
                     maxLength={titleMaxLength}
                   />
                   <Badge
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                    className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
                     {field?.value?.length}/{titleMaxLength}

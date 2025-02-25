@@ -44,11 +44,17 @@ export function Request({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="code bg-background mb-2 rounded-xl border border-dashed pt-2">
+          <div className="code bg-background mb-2 overflow-hidden rounded-xl border border-dashed">
             <SyntaxHighlighter
               language="javascript"
               style={coy}
               showLineNumbers={true}
+              customStyle={{
+                padding: "1rem",
+                paddingInline: 0,
+                margin: 0,
+                marginBottom: 0,
+              }}
             >
               {code}
             </SyntaxHighlighter>
@@ -76,11 +82,16 @@ export function Request({
             <h4 className="text-foreground mb-2 ml-2 text-sm font-semibold">
               Body
             </h4>
-            <div className="code bg-background rounded-xl border border-dashed pt-2">
+            <div className="code bg-background overflow-hidden rounded-xl border border-dashed">
               <SyntaxHighlighter
                 language="js"
                 style={coy}
                 showLineNumbers={true}
+                customStyle={{
+                  padding: "1rem",
+                  paddingInline: 0,
+                  margin: 0,
+                }}
               >
                 {JSON.stringify(data, null, 2)}
               </SyntaxHighlighter>

@@ -487,7 +487,7 @@ const MultipleSelector = React.forwardRef<
                   {option.label}
                   <button
                     className={cn(
-                      "ring-offset-background focus:ring-ring ml-1 rounded-full outline-hidden focus:ring-2 focus:ring-offset-2",
+                      "ring-offset-background focus:ring-ring ml-2 rounded-full outline-hidden focus:ring-2 focus:ring-offset-2",
                       (disabled || option.fixed) && "hidden",
                     )}
                     onKeyDown={(e) => {
@@ -501,7 +501,7 @@ const MultipleSelector = React.forwardRef<
                     }}
                     onClick={() => handleUnselect(option)}
                   >
-                    <LucideX className="text-primary-foreground size-3" />
+                    <LucideX className="text-foreground size-3" />
                   </button>
                 </Badge>
               );

@@ -17,7 +17,7 @@ const data = await res.json();`;
 
   const project = await getProject(projectId);
 
-  if (project.errors) {
+  if (!project.success) {
     notFound();
   }
 

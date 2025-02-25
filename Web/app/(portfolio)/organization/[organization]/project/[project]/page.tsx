@@ -14,7 +14,7 @@ export default async function ProjectPage({
   const org = await getOrganization(organizationId);
   const project = await getProject(projectId);
 
-  if (org.errors || project.errors) {
+  if (!org.success || !project.success || !project.data) {
     redirect("/");
   }
 

@@ -22,7 +22,7 @@ export default async function OrganizationPage({
   const org = await getOrganization(organizationId);
   const { data: projectData } = await getProjects(organizationId);
 
-  if (org?.errors) {
+  if (!org.success) {
     redirect("/");
   }
 

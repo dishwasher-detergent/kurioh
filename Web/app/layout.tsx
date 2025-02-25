@@ -16,7 +16,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${font.className} dark min-h-dvh overflow-x-hidden antialiased`}
+        className={`${font.className} dark flex min-h-dvh flex-col overflow-x-hidden antialiased`}
       >
         <Nav />
         {children}

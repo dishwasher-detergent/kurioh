@@ -20,7 +20,7 @@ import { Organization as OrganizationInterface } from "@/interfaces/organization
 import { getOrganizations } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -38,6 +38,7 @@ export function Organization() {
   const [organizations, setOrganizations] = useState<OrganizationInterface[]>(
     [],
   );
+  const [org, setOrg] = useState<string | null>(null);
 
   async function fetchOrganizations() {
     setLoading(true);
@@ -65,8 +66,7 @@ export function Organization() {
           <CreateOrg />
         </div>
       ) : null}
-      {loading && <Skeleton className="h-8 min-w-32" />}
-      {organizations.length > 0 && !loading && (
+      {organizations.length > 0 && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -86,9 +86,14 @@ export function Organization() {
                     }
                   </Link>
                 ) : (
-                  <p className="px-2 text-sm font-semibold">
-                    Select An Organization
-                  </p>
+                  <>
+                    <p className="px-2 text-sm font-semibold">
+                      Select An Organization
+                    </p>
+                  </>
+                )}
+                {loading && (
+                  <LucideLoader2 className="ml-2 size-4 animate-spin" />
                 )}
                 <Button
                   onClick={() => setOpen(!open)}

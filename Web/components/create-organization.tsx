@@ -36,7 +36,7 @@ export function CreateOrg() {
       button={
         <Button className="w-full" variant="outline" size="sm">
           Create Org
-          <LucidePlus className="ml-2 size-3.5" />
+          <LucidePlus className="ml-2 size-3.5 flex-none" />
         </Button>
       }
     >
@@ -79,15 +79,7 @@ function CreateForm({ className, setOpen }: FormProps) {
     }
 
     if (data.data) {
-      const organizations = await getOrganizations();
-
-      if (!organizations.success) {
-        toast.error(organizations.message);
-      }
-
-      if (organizations.data) {
-        router.push(`/organization/${data.data.$id}`);
-      }
+      router.push(`/organization/${data.data.$id}`);
     }
 
     setLoadingCreateOrganization(false);

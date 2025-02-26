@@ -36,7 +36,7 @@ export function CreateProject() {
       button={
         <Button className="w-full" variant="outline" size="sm">
           Create Project
-          <LucidePlus className="ml-2 size-3.5" />
+          <LucidePlus className="ml-2 size-3.5 flex-none" />
         </Button>
       }
     >

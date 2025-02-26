@@ -20,7 +20,7 @@ import { Project as ProjectInterface } from "@/interfaces/project.interface";
 import { getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -63,8 +63,7 @@ export function Project() {
           <CreateProject />
         </div>
       ) : null}
-      {loading && <Skeleton className="h-8 min-w-32" />}
-      {projects.length > 0 && !loading && (
+      {projects.length > 0 && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -75,11 +74,15 @@ export function Project() {
                 role="combobox"
                 aria-expanded={open}
                 className="text-muted-foreground max-w-48"
+                disabled={loading}
               >
                 <span className="truncate">
                   {projects.find((x) => x.$id == project)?.title ??
                     "Select Project..."}
                 </span>
+                {loading && (
+                  <LucideLoader2 className="ml-2 size-4 animate-spin" />
+                )}
                 <ChevronsUpDown className="ml-2 size-4 flex-none" />
               </Button>
             </PopoverTrigger>

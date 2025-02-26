@@ -19,6 +19,7 @@ import { Images } from "@/components/ui/images";
 import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
 import { deleteProject } from "@/lib/server/utils";
+import { useRouter } from "next/navigation";
 
 export default function ProjectCard({
   $id,
@@ -30,12 +31,18 @@ export default function ProjectCard({
   slug,
   organization_id,
 }: Project) {
+  const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDeleteProject(id: string) {
     setIsDeleting(true);
 
     const data = await deleteProject(id);
+
+    if (data.success) {
+      toast.success("Project deleted successfully");
+      router.refresh();
+    }
 
     if (!data.success) {
       toast.error(data.message);

@@ -122,21 +122,22 @@ export function Organization() {
                         value={organizationItem.$id}
                         onSelect={(currentValue) => {
                           setOpen(false);
-                          router.push(`/organization/${currentValue}`);
                         }}
                         className="cursor-pointer text-sm"
                       >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4 flex-none",
-                            organization === organizationItem.$id
-                              ? "opacity-100"
-                              : "opacity-0",
-                          )}
-                        />
-                        <span className="truncate">
-                          {organizationItem.title}
-                        </span>
+                        <Link href={`/organization/${organizationItem.$id`}>
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4 flex-none",
+                              organization === organizationItem.$id
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                          <span className="truncate">
+                            {organizationItem.title}
+                          </span>
+                        </Link>
                       </CommandItem>
                     ))}
                   </CommandGroup>

@@ -125,7 +125,7 @@ export function Organization() {
                         }}
                         className="cursor-pointer text-sm"
                       >
-                        <Link href={`/organization/${organizationItem.$id}`} className="w-full h-full flex flex-row justify-between">
+                        <Link href={`/organization/${organizationItem.$id}`} className="w-full h-full flex flex-row gap-1">
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4 flex-none",

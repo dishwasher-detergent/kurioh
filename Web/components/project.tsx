@@ -21,6 +21,7 @@ import { getProjects } from "@/lib/server/utils";
 import { cn } from "@/lib/utils";
 
 import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -101,21 +102,20 @@ export function Project() {
                         value={projectItem.$id}
                         onSelect={(currentValue) => {
                           setOpen(false);
-                          router.push(
-                            `/organization/${organization}/project/${currentValue}`,
-                          );
                         }}
                         className="cursor-pointer text-sm"
                       >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4 flex-none",
-                            project == projectItem?.$id
-                              ? "opacity-100"
-                              : "opacity-0",
-                          )}
-                        />
-                        <span className="truncate">{projectItem.title}</span>
+                        <Link href={`/organization/${organization}/project/${projectItem.$id}`} className="w-full h-full flex flex-row justify-between">
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4 flex-none",
+                              project == projectItem?.$id
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                          <span className="truncate">{projectItem.title}</span>
+                        </Link>
                       </CommandItem>
                     ))}
                   </CommandGroup>

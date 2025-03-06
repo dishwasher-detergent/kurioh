@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +42,7 @@ export default function InformationForm({
   socials,
   image_id,
 }: InformationFormProps) {
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof informationSchema>>({
@@ -91,6 +93,7 @@ export default function InformationForm({
     });
 
     toast.success("Information updated successfully.");
+    router.refresh();
     setLoading(false);
   }
 

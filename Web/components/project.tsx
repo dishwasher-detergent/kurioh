@@ -104,8 +104,11 @@ export function Project() {
                           setOpen(false);
                         }}
                         className="cursor-pointer text-sm"
+                        asChild
                       >
-                        <Link href={`/organization/${organization}/project/${projectItem.$id}`} className="w-full h-full flex flex-row gap-1">
+                        <Link
+                          href={`/organization/${organization}/project/${projectItem.$id}`}
+                        >
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4 flex-none",

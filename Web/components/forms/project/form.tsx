@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 import { AutosizeTextarea } from "@/components/ui/auto-size-textarea";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +46,7 @@ export default function ProjectForm({
   links,
   image_ids,
 }: ProjectFormProps) {
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [initialImages, setInitialImages] = useState<string[]>(image_ids);
 
@@ -100,6 +102,7 @@ export default function ProjectForm({
     });
 
     toast.success("Project updated successfully.");
+    router.refresh();
     setLoading(false);
   }
 
@@ -295,7 +298,7 @@ export default function ProjectForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={loading}>
+        <Button size="sm" type="submit" disabled={loading}>
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (

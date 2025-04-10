@@ -30,7 +30,7 @@ import {
   NAME_MAX_LENGTH,
 } from "@/constants/project.constants";
 import { Project } from "@/interfaces/project.interface";
-import { SAMPLE_BUCKET_ID } from "@/lib/constants";
+import { PROJECT_BUCKET_ID } from "@/lib/constants";
 import { updateProject } from "@/lib/db";
 import { EditProjectFormData, editProjectSchema } from "@/lib/db/schemas";
 import { cn } from "@/lib/utils";
@@ -170,7 +170,7 @@ function CreateForm({ className, setOpen, project }: FormProps) {
               <FormItem>
                 <FormLabel>Picture</FormLabel>
                 <FormControl>
-                  <ImageInput bucketId={SAMPLE_BUCKET_ID} {...field} />
+                  <ImageInput bucketId={PROJECT_BUCKET_ID} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

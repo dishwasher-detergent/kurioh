@@ -8,14 +8,14 @@ import { ID, Models, Permission, Role } from "node-appwrite";
 import { PROJECT_BUCKET_ID } from "../constants";
 
 /**
- * Uploads a project image.
- * @param {Object} params The parameters for creating a project image
- * @param {string} [params.id] The ID of the project
- * @param {File} params.data The image data
- * @param {string[]} [params.permissions] The permissions for the image (optional)
+ * Uploads a file.
+ * @param {Object} params The parameters for creating a file
+ * @param {string} [params.id] The ID of the file
+ * @param {File} params.data The file data
+ * @param {string[]} [params.permissions] The permissions for the file (optional)
  * @returns {Promise<Result<Models.File>>} The file
  */
-export async function uploadProjectImage({
+export async function uploadFile({
   id = ID.unique(),
   data,
   permissions = [],
@@ -44,7 +44,7 @@ export async function uploadProjectImage({
 
       return {
         success: true,
-        message: "Project image uploaded successfully.",
+        message: "File uploaded successfully.",
         data: response,
       };
     } catch (err) {
@@ -59,13 +59,11 @@ export async function uploadProjectImage({
 }
 
 /**
- * Deletes a project image.
+ * Deletes a file.
  * @param {string} id
  * @returns {Promise<Result<undefined>>} A promise that resolves to a result object.
  */
-export async function deleteProjectImage(
-  id: string
-): Promise<Result<undefined>> {
+export async function deleteFile(id: string): Promise<Result<undefined>> {
   return withAuth(async () => {
     const { storage } = await createSessionClient();
 
@@ -74,7 +72,7 @@ export async function deleteProjectImage(
 
       return {
         success: true,
-        message: "Project image successfully deleted.",
+        message: "File successfully deleted.",
       };
     } catch (err) {
       const error = err as Error;

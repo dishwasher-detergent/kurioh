@@ -1,8 +1,7 @@
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { AVATAR_BUCKET_ID, ENDPOINT, PROJECT_ID } from "@/lib/constants";
 import { cn, getInitials } from "@/lib/utils";
 
 interface ProfileLinkProps {
@@ -26,14 +25,6 @@ export function ProfileLink({
     >
       <Link href={href}>
         <Avatar className="h-6 w-6">
-          <AvatarImage
-            src={
-              avatar
-                ? `${ENDPOINT}/storage/buckets/${AVATAR_BUCKET_ID}/files/${avatar}/view?project=${PROJECT_ID}`
-                : undefined
-            }
-            alt={name || "Unknown"}
-          />
           <AvatarFallback className="text-primary">
             {getInitials(name)}
           </AvatarFallback>

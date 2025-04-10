@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Project } from "@/interfaces/project.interface";
-import { ENDPOINT, PROJECT_ID, SAMPLE_BUCKET_ID } from "@/lib/constants";
+import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 
 export function ProjectCard(project: Project) {
   return (
@@ -24,7 +24,7 @@ export function ProjectCard(project: Project) {
         <AspectRatio ratio={1} className="w-full">
           {project.image ? (
             <Image
-              src={`${ENDPOINT}/storage/buckets/${SAMPLE_BUCKET_ID}/files/${project.image}/view?project=${PROJECT_ID}`}
+              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${project.image}/view?project=${PROJECT_ID}`}
               alt={project.name}
               className="object-cover object-left-top bg-primary"
               fill

@@ -8,6 +8,7 @@ import {
   MEMBER_ROLE,
   OWNER_ROLE,
 } from "@/constants/team.constants";
+import { Information } from "@/interfaces/information.interface";
 import { Project } from "@/interfaces/project.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
@@ -16,6 +17,7 @@ import { createUserData, withAuth } from "@/lib/auth";
 import {
   DATABASE_ID,
   HOSTNAME,
+  INFORMATION_COLLECTION_ID,
   MAX_TEAM_LIMIT,
   PROJECT_COLLECTION_ID,
   TEAM_COLLECTION_ID,
@@ -40,6 +42,12 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
           const data = await database.getDocument<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
+            id
+          );
+
+          const information = await database.getDocument<Information>(
+            DATABASE_ID,
+            INFORMATION_COLLECTION_ID,
             id
           );
 
@@ -75,6 +83,7 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
             message: "Team successfully retrieved.",
             data: {
               ...data,
+              information,
               members: usersMembershipData,
             },
           };
@@ -204,7 +213,23 @@ export async function createTeam({
         permissions
       );
 
+      await database.createDocument<Information>(
+        DATABASE_ID,
+        INFORMATION_COLLECTION_ID,
+        teamResponse.$id,
+        {
+          title: "Welcome to your team!",
+          description: "This is your team's information page.",
+          image: null,
+          socials: [],
+          teamId: teamResponse.$id,
+          userId: user.$id,
+        },
+        permissions
+      );
+
       revalidateTag("teams");
+      revalidateTag("information");
 
       return {
         success: true,

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "@/hooks/userSession";
 import { Project } from "@/interfaces/project.interface";
 import { getUserById } from "@/lib/auth";
-import { DATABASE_ID, SAMPLE_COLLECTION_ID } from "@/lib/constants";
+import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { getTeamById } from "@/lib/team";
 
 interface Props {
@@ -29,7 +29,7 @@ export const useProject = ({ initialProject }: Props) => {
 
     if (client) {
       unsubscribe = client.subscribe<Project>(
-        `databases.${DATABASE_ID}.collections.${SAMPLE_COLLECTION_ID}.documents.${project?.$id}`,
+        `databases.${DATABASE_ID}.collections.${PROJECT_COLLECTION_ID}.documents.${project?.$id}`,
         async (response) => {
           if (
             response.events.includes(

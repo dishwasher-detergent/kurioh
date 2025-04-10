@@ -34,7 +34,7 @@ import {
   NAME_MAX_LENGTH,
 } from "@/constants/project.constants";
 import { TeamData } from "@/interfaces/team.interface";
-import { SAMPLE_BUCKET_ID } from "@/lib/constants";
+import { PROJECT_BUCKET_ID } from "@/lib/constants";
 import { createProject } from "@/lib/db";
 import { AddProjectFormData, addProjectSchema } from "@/lib/db/schemas";
 import { cn, getInitials } from "@/lib/utils";
@@ -204,7 +204,7 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
               <FormItem>
                 <FormLabel>Picture</FormLabel>
                 <FormControl>
-                  <ImageInput bucketId={SAMPLE_BUCKET_ID} {...field} />
+                  <ImageInput bucketId={PROJECT_BUCKET_ID} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

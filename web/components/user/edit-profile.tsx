@@ -22,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ImageInput } from "@/components/ui/image-input";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -32,7 +31,6 @@ import {
 import { UserData } from "@/interfaces/user.interface";
 import { updateProfile } from "@/lib/auth";
 import { UpdateProfileFormData, updateProfileSchema } from "@/lib/auth/schemas";
-import { AVATAR_BUCKET_ID } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function EditProfile({ user }: { user: UserData }) {
@@ -77,7 +75,6 @@ function EditForm({ className, setOpen, user }: FormProps) {
     defaultValues: {
       name: user.name,
       about: user.about ?? "",
-      image: user.avatar,
     },
   });
 
@@ -121,7 +118,7 @@ function EditForm({ className, setOpen, user }: FormProps) {
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Name your product."
+                      placeholder="Name your project."
                       className="truncate pr-20"
                       maxLength={PROFILE_NAME_MAX_LENGTH}
                     />
@@ -158,19 +155,6 @@ function EditForm({ className, setOpen, user }: FormProps) {
                       {field?.value?.length ?? 0}/{PROFILE_ABOUT_MAX_LENGTH}
                     </Badge>
                   </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Avatar</FormLabel>
-                <FormControl>
-                  <ImageInput bucketId={AVATAR_BUCKET_ID} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

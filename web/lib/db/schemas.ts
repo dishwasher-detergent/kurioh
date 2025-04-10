@@ -1,29 +1,29 @@
 import {
   DESCRIPTION_MAX_LENGTH,
   NAME_MAX_LENGTH,
-} from "@/constants/product.constants";
+} from "@/constants/project.constants";
 
 import { z } from "zod";
 
-export const addProductSchema = z.object({
+export const addProjectSchema = z.object({
   name: z.string().min(1).max(NAME_MAX_LENGTH),
   description: z.string().max(DESCRIPTION_MAX_LENGTH),
   image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
   teamId: z.string().min(1),
 });
 
-export type AddProductFormData = z.infer<typeof addProductSchema>;
+export type AddProjectFormData = z.infer<typeof addProjectSchema>;
 
-export const deleteProductSchema = z.object({
+export const deleteProjectSchema = z.object({
   name: z.string().min(1).max(NAME_MAX_LENGTH),
 });
 
-export type DeleteProductFormData = z.infer<typeof deleteProductSchema>;
+export type DeleteProjectFormData = z.infer<typeof deleteProjectSchema>;
 
-export const editProductSchema = z.object({
+export const editProjectSchema = z.object({
   name: z.string().min(1).max(NAME_MAX_LENGTH),
   description: z.string().max(DESCRIPTION_MAX_LENGTH),
   image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
 });
 
-export type EditProductFormData = z.infer<typeof editProductSchema>;
+export type EditProjectFormData = z.infer<typeof editProjectSchema>;

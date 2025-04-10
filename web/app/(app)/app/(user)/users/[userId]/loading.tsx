@@ -8,7 +8,7 @@ export default function Loading() {
       <HeaderSkeleton />
       <main className="px-4 space-y-6">
         <DescriptionSkeleton />
-        <ContentSkeleton title="Products" />
+        <ContentSkeleton title="Projects" />
       </main>
     </article>
   );

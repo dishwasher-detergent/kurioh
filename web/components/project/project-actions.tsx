@@ -1,20 +1,20 @@
 import { LucideEllipsisVertical } from "lucide-react";
 
-import { DeleteProduct } from "@/components/product/delete-product";
-import { EditProduct } from "@/components/product/edit-product";
+import { DeleteProject } from "@/components/project/delete-project";
+import { EditProject } from "@/components/project/edit-project";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Product } from "@/interfaces/product.interface";
+import { Project } from "@/interfaces/project.interface";
 
-interface ProductActionsProps {
-  product: Product;
+interface ProjectActionsProps {
+  project: Project;
 }
 
-export function ProductActions({ product }: ProductActionsProps) {
+export function ProjectActions({ project }: ProjectActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,8 +23,8 @@ export function ProductActions({ product }: ProductActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <EditProduct product={product} />
-        <DeleteProduct product={product} />
+        <EditProject project={project} />
+        <DeleteProject project={project} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

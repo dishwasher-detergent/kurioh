@@ -22,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ImageInput } from "@/components/ui/image-input";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -30,7 +29,6 @@ import {
   TEAM_NAME_MAX_LENGTH,
 } from "@/constants/team.constants";
 import { TeamData } from "@/interfaces/team.interface";
-import { AVATAR_BUCKET_ID } from "@/lib/constants";
 import { updateTeam } from "@/lib/team";
 import { EditTeamFormData, editTeamSchema } from "@/lib/team/schemas";
 import { cn } from "@/lib/utils";
@@ -77,7 +75,6 @@ function EditForm({ className, setOpen, team }: FormProps) {
     defaultValues: {
       name: team.name,
       about: team.about ?? "",
-      image: team.avatar,
     },
   });
 
@@ -121,7 +118,7 @@ function EditForm({ className, setOpen, team }: FormProps) {
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Name your product."
+                      placeholder="Name your project."
                       className="truncate pr-20"
                       maxLength={TEAM_NAME_MAX_LENGTH}
                     />
@@ -158,19 +155,6 @@ function EditForm({ className, setOpen, team }: FormProps) {
                       {field?.value?.length ?? 0}/{TEAM_ABOUT_MAX_LENGTH}
                     </Badge>
                   </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Avatar</FormLabel>
-                <FormControl>
-                  <ImageInput bucketId={AVATAR_BUCKET_ID} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -12,8 +12,8 @@ const karla = Karla({
 });
 
 export const metadata: Metadata = {
-  title: "NextJS with Appwrite",
-  description: "A NextJS starter with Appwrite, TypeScript, and TailwindCSS",
+  title: "Portfolio CMS",
+  description: "A Portfolio CMS",
 };
 
 export default function RootLayout({

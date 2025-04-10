@@ -14,18 +14,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Product } from "@/interfaces/product.interface";
+import { Project } from "@/interfaces/project.interface";
 import { ENDPOINT, PROJECT_ID, SAMPLE_BUCKET_ID } from "@/lib/constants";
 
-export function ProductCard(product: Product) {
+export function ProjectCard(project: Project) {
   return (
     <Card className="break-inside-avoid-column rounded-lg overflow-hidden py-0 gap-0 ">
       <CardContent className="p-0 relative">
         <AspectRatio ratio={1} className="w-full">
-          {product.image ? (
+          {project.image ? (
             <Image
-              src={`${ENDPOINT}/storage/buckets/${SAMPLE_BUCKET_ID}/files/${product.image}/view?project=${PROJECT_ID}`}
-              alt={product.name}
+              src={`${ENDPOINT}/storage/buckets/${SAMPLE_BUCKET_ID}/files/${project.image}/view?project=${PROJECT_ID}`}
+              alt={project.name}
               className="object-cover object-left-top bg-primary"
               fill
             />
@@ -43,26 +43,24 @@ export function ProductCard(product: Product) {
               asChild
             >
               <Link
-                href={`/app/teams/${product.teamId}/products/${product.$id}`}
+                href={`/app/teams/${project.teamId}/projects/${project.$id}`}
               >
-                {product.name}
+                {project.name}
               </Link>
             </Button>
           </CardTitle>
           <CardDescription className="text-primary-foreground line-clamp-3">
-            {product?.description ?? "No description provided."}
+            {project?.description ?? "No description provided."}
           </CardDescription>
           <div className="flex flex-row gap-2 items-center mt-2">
             <ProfileLink
-              avatar={product?.team?.avatar}
-              name={product?.team?.name}
-              href={`/app/teams/${product.teamId}`}
+              name={project?.team?.name}
+              href={`/app/teams/${project.teamId}`}
             />
             <LucideSlash className="text-primary-foreground size-3" />
             <ProfileLink
-              avatar={product?.user?.avatar}
-              name={product?.user?.name}
-              href={`/app/users/${product.userId}`}
+              name={project?.user?.name}
+              href={`/app/users/${project.userId}`}
             />
           </div>
         </CardHeader>

@@ -8,7 +8,7 @@ import {
   MEMBER_ROLE,
   OWNER_ROLE,
 } from "@/constants/team.constants";
-import { Product } from "@/interfaces/product.interface";
+import { Project } from "@/interfaces/project.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData, UserMemberData } from "@/interfaces/user.interface";
@@ -17,13 +17,12 @@ import {
   DATABASE_ID,
   HOSTNAME,
   MAX_TEAM_LIMIT,
-  SAMPLE_COLLECTION_ID,
+  PROJECT_COLLECTION_ID,
   TEAM_COLLECTION_ID,
   USER_COLLECTION_ID,
 } from "@/lib/constants";
-import { deleteProduct } from "@/lib/db";
+import { deleteProject } from "@/lib/db";
 import { createAdminClient, createSessionClient } from "@/lib/server/appwrite";
-import { deleteAvatarImage, uploadAvatarImage } from "@/lib/storage";
 import { AddTeamFormData, EditTeamFormData } from "./schemas";
 
 /**
@@ -54,10 +53,7 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
           const users = await database.listDocuments<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            [
-              Query.equal("$id", uniqueUserIds),
-              Query.select(["$id", "name", "avatar"]),
-            ]
+            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])]
           );
 
           const usersMembershipData: UserMemberData[] = users.documents.map(
@@ -258,30 +254,6 @@ export async function updateTeam({
         id
       );
 
-      if (data.image instanceof File) {
-        if (existingTeamData.avatar) {
-          await deleteAvatarImage(existingTeamData.avatar);
-        }
-
-        const image = await uploadAvatarImage({
-          data: data.image,
-        });
-
-        if (!image.success) {
-          throw new Error(image.message);
-        }
-
-        data.image = image.data?.$id;
-      } else if (data.image === null && existingTeamData.avatar) {
-        const image = await deleteAvatarImage(existingTeamData.avatar);
-
-        if (!image.success) {
-          throw new Error(image.message);
-        }
-
-        data.image = null;
-      }
-
       await team.updateName(id, data.name);
 
       const teamData = await database.updateDocument<TeamData>(
@@ -291,7 +263,6 @@ export async function updateTeam({
         {
           name: data.name,
           about: data.about,
-          avatar: data.image,
         },
         permissions
       );
@@ -327,20 +298,6 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
     try {
       await checkUserRole(id, user.$id, [OWNER_ROLE]);
 
-      const existingTeamData = await database.getDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        id
-      );
-
-      if (existingTeamData.avatar) {
-        const image = await deleteAvatarImage(existingTeamData.avatar);
-
-        if (!image.success) {
-          throw new Error(image.message);
-        }
-      }
-
       await team.delete(id);
       await database.deleteDocument(DATABASE_ID, TEAM_COLLECTION_ID, id);
 
@@ -348,14 +305,14 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
       const queries = [Query.limit(50), Query.equal("teamId", id)];
 
       do {
-        response = await database.listDocuments<Product>(
+        response = await database.listDocuments<Project>(
           DATABASE_ID,
-          SAMPLE_COLLECTION_ID,
+          PROJECT_COLLECTION_ID,
           queries
         );
 
         await Promise.all(
-          response.documents.map((document) => deleteProduct(document.$id))
+          response.documents.map((document) => deleteProject(document.$id))
         );
       } while (response.documents.length > 0);
 

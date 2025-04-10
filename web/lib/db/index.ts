@@ -3,7 +3,7 @@
 import { revalidateTag, unstable_cache } from "next/cache";
 import { ID, Models, Permission, Query, Role } from "node-appwrite";
 
-import { Product } from "@/interfaces/product.interface";
+import { Project } from "@/interfaces/project.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData } from "@/interfaces/user.interface";
@@ -15,17 +15,17 @@ import {
   USER_COLLECTION_ID,
 } from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
-import { deleteProductImage, uploadProductImage } from "@/lib/storage";
-import { AddProductFormData, EditProductFormData } from "./schemas";
+import { deleteProjectImage, uploadProjectImage } from "@/lib/storage";
+import { AddProjectFormData, EditProjectFormData } from "./schemas";
 
 /**
- * Get a list of products
- * @param {string[]} queries The queries to filter the products
- * @returns {Promise<Result<Models.DocumentList<Product>>>} The list of products
+ * Get a list of projects
+ * @param {string[]} queries The queries to filter the projects
+ * @returns {Promise<Result<Models.DocumentList<Project>>>} The list of projects
  */
-export async function listProducts(
+export async function listProjects(
   queries: string[] = []
-): Promise<Result<Models.DocumentList<Product>>> {
+): Promise<Result<Models.DocumentList<Project>>> {
   return withAuth(async (user) => {
     const { database } = await createSessionClient();
 
@@ -33,34 +33,28 @@ export async function listProducts(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       async (queries, userId) => {
         try {
-          const products = await database.listDocuments<Product>(
+          const projects = await database.listDocuments<Project>(
             DATABASE_ID,
             SAMPLE_COLLECTION_ID,
             queries
           );
 
-          const userIds = products.documents.map((product) => product.userId);
+          const userIds = projects.documents.map((project) => project.userId);
           const uniqueUserIds = Array.from(new Set(userIds));
 
-          const teamIds = products.documents.map((product) => product.teamId);
+          const teamIds = projects.documents.map((project) => project.teamId);
           const uniqueTeamIds = Array.from(new Set(teamIds));
 
           const users = await database.listDocuments<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            [
-              Query.equal("$id", uniqueUserIds),
-              Query.select(["$id", "name", "avatar"]),
-            ]
+            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])]
           );
 
           const teams = await database.listDocuments<UserData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
-            [
-              Query.equal("$id", uniqueTeamIds),
-              Query.select(["$id", "name", "avatar"]),
-            ]
+            [Query.equal("$id", uniqueTeamIds), Query.select(["$id", "name"])]
           );
 
           const userMap = users.documents.reduce<Record<string, UserData>>(
@@ -83,18 +77,18 @@ export async function listProducts(
             {}
           );
 
-          const newProducts = products.documents.map((product) => ({
-            ...product,
-            user: userMap[product.userId],
-            team: teamMap[product.teamId],
+          const newProjects = projects.documents.map((project) => ({
+            ...project,
+            user: userMap[project.userId],
+            team: teamMap[project.teamId],
           }));
 
-          products.documents = newProducts;
+          projects.documents = newProjects;
 
           return {
             success: true,
-            message: "Products successfully retrieved.",
-            data: products,
+            message: "Projects successfully retrieved.",
+            data: projects,
           };
         } catch (err) {
           const error = err as Error;
@@ -105,12 +99,12 @@ export async function listProducts(
           };
         }
       },
-      ["products"],
+      ["projects"],
       {
         tags: [
-          "products",
-          `products:${queries.join("-")}`,
-          `products:user-${user.$id}`,
+          "projects",
+          `projects:${queries.join("-")}`,
+          `projects:user-${user.$id}`,
         ],
         revalidate: 600,
       }
@@ -119,47 +113,47 @@ export async function listProducts(
 }
 
 /**
- * Get a product by ID
- * @param {string} productId The ID of the product
- * @param {string[]} queries The queries to filter the product
- * @returns {Promise<Result<Product>>} The product
+ * Get a project by ID
+ * @param {string} projectId The ID of the project
+ * @param {string[]} queries The queries to filter the project
+ * @returns {Promise<Result<Project>>} The project
  */
-export async function getProductById(
-  productId: string,
+export async function getProjectById(
+  projectId: string,
   queries: string[] = []
-): Promise<Result<Product>> {
+): Promise<Result<Project>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
 
     return unstable_cache(
       async () => {
         try {
-          const product = await database.getDocument<Product>(
+          const project = await database.getDocument<Project>(
             DATABASE_ID,
             SAMPLE_COLLECTION_ID,
-            productId,
+            projectId,
             queries
           );
 
           const userRes = await database.getDocument<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            product.userId,
-            [Query.select(["$id", "name", "avatar"])]
+            project.userId,
+            [Query.select(["$id", "name"])]
           );
 
           const teamRes = await database.getDocument<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
-            product.teamId,
-            [Query.select(["$id", "name", "avatar"])]
+            project.teamId,
+            [Query.select(["$id", "name"])]
           );
 
           return {
             success: true,
-            message: "Product successfully retrieved.",
+            message: "Project successfully retrieved.",
             data: {
-              ...product,
+              ...project,
               user: userRes,
               team: teamRes,
             },
@@ -173,9 +167,9 @@ export async function getProductById(
           };
         }
       },
-      ["product", productId],
+      ["project", projectId],
       {
-        tags: ["products", `product:${productId}`],
+        tags: ["projects", `project:${projectId}`],
         revalidate: 600,
       }
     )();
@@ -183,22 +177,22 @@ export async function getProductById(
 }
 
 /**
- * Create a product
- * @param {Object} params The parameters for creating a product
- * @param {string} [params.id] The ID of the product (optional)
- * @param {AddProductFormData} params.data The product data
- * @param {string[]} [params.permissions] The permissions for the product (optional)
- * @returns {Promise<Result<Product>>} The created product
+ * Create a project
+ * @param {Object} params The parameters for creating a project
+ * @param {string} [params.id] The ID of the project (optional)
+ * @param {AddProjectFormData} params.data The project data
+ * @param {string[]} [params.permissions] The permissions for the project (optional)
+ * @returns {Promise<Result<Project>>} The created project
  */
-export async function createProduct({
+export async function createProject({
   id = ID.unique(),
   data,
   permissions = [],
 }: {
   id?: string;
-  data: AddProductFormData;
+  data: AddProjectFormData;
   permissions?: string[];
-}): Promise<Result<Product>> {
+}): Promise<Result<Project>> {
   return withAuth(async (user) => {
     const { database } = await createSessionClient();
 
@@ -211,7 +205,7 @@ export async function createProduct({
 
     try {
       if (data.image instanceof File) {
-        const image = await uploadProductImage({
+        const image = await uploadProjectImage({
           data: data.image,
           permissions: [Permission.read(Role.team(data.teamId))],
         });
@@ -223,7 +217,7 @@ export async function createProduct({
         data.image = image.data?.$id;
       }
 
-      const product = await database.createDocument<Product>(
+      const project = await database.createDocument<Project>(
         DATABASE_ID,
         SAMPLE_COLLECTION_ID,
         id,
@@ -237,24 +231,24 @@ export async function createProduct({
       const userRes = await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
-        product.userId,
-        [Query.select(["$id", "name", "avatar"])]
+        project.userId,
+        [Query.select(["$id", "name"])]
       );
 
       const teamRes = await database.getDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
-        product.teamId,
-        [Query.select(["$id", "name", "avatar"])]
+        project.teamId,
+        [Query.select(["$id", "name"])]
       );
 
-      revalidateTag("products");
+      revalidateTag("projects");
 
       return {
         success: true,
-        message: "Product successfully created.",
+        message: "Project successfully created.",
         data: {
-          ...product,
+          ...project,
           user: userRes,
           team: teamRes,
         },
@@ -271,38 +265,38 @@ export async function createProduct({
 }
 
 /**
- * Update a product
- * @param {Object} params The parameters for creating a product
- * @param {string} [params.id] The ID of the product
- * @param {EditProductFormData} params.data The product data
- * @param {string[]} [params.permissions] The permissions for the product (optional)
- * @returns {Promise<Result<Product>>} The updated product
+ * Update a project
+ * @param {Object} params The parameters for creating a project
+ * @param {string} [params.id] The ID of the project
+ * @param {EditProjectFormData} params.data The project data
+ * @param {string[]} [params.permissions] The permissions for the project (optional)
+ * @returns {Promise<Result<Project>>} The updated project
  */
-export async function updateProduct({
+export async function updateProject({
   id,
   data,
   permissions = undefined,
 }: {
   id: string;
-  data: EditProductFormData;
+  data: EditProjectFormData;
   permissions?: string[];
-}): Promise<Result<Product>> {
+}): Promise<Result<Project>> {
   return withAuth(async (user) => {
     const { database } = await createSessionClient();
 
     try {
-      const existingProduct = await database.getDocument<Product>(
+      const existingProject = await database.getDocument<Project>(
         DATABASE_ID,
         SAMPLE_COLLECTION_ID,
         id
       );
 
       if (data.image instanceof File) {
-        if (existingProduct.image) {
-          await deleteProductImage(existingProduct.image);
+        if (existingProject.image) {
+          await deleteProjectImage(existingProject.image);
         }
 
-        const image = await uploadProductImage({
+        const image = await uploadProjectImage({
           data: data.image,
         });
 
@@ -311,8 +305,8 @@ export async function updateProduct({
         }
 
         data.image = image.data?.$id;
-      } else if (data.image === null && existingProduct.image) {
-        const image = await deleteProductImage(existingProduct.image);
+      } else if (data.image === null && existingProject.image) {
+        const image = await deleteProjectImage(existingProject.image);
 
         if (!image.success) {
           throw new Error(image.message);
@@ -321,7 +315,7 @@ export async function updateProduct({
         data.image = null;
       }
 
-      const product = await database.updateDocument<Product>(
+      const project = await database.updateDocument<Project>(
         DATABASE_ID,
         SAMPLE_COLLECTION_ID,
         id,
@@ -335,25 +329,25 @@ export async function updateProduct({
       const userRes = await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
-        product.userId,
-        [Query.select(["$id", "name", "avatar"])]
+        project.userId,
+        [Query.select(["$id", "name"])]
       );
 
       const teamRes = await database.getDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
-        product.teamId,
-        [Query.select(["$id", "name", "avatar"])]
+        project.teamId,
+        [Query.select(["$id", "name"])]
       );
 
-      revalidateTag("products");
-      revalidateTag(`product:${id}`);
+      revalidateTag("projects");
+      revalidateTag(`project:${id}`);
 
       return {
         success: true,
-        message: "Product successfully updated.",
+        message: "Project successfully updated.",
         data: {
-          ...product,
+          ...project,
           user: userRes,
           team: teamRes,
         },
@@ -370,23 +364,23 @@ export async function updateProduct({
 }
 
 /**
- * Delete a product
- * @param {string} id The ID of the product
- * @returns {Promise<Result<Product>>} The deleted product
+ * Delete a project
+ * @param {string} id The ID of the project
+ * @returns {Promise<Result<Project>>} The deleted project
  */
-export async function deleteProduct(id: string): Promise<Result<Product>> {
+export async function deleteProject(id: string): Promise<Result<Project>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
 
     try {
-      const product = await database.getDocument<Product>(
+      const project = await database.getDocument<Project>(
         DATABASE_ID,
         SAMPLE_COLLECTION_ID,
         id
       );
 
-      if (product.image) {
-        const image = await deleteProductImage(product.image);
+      if (project.image) {
+        const image = await deleteProjectImage(project.image);
 
         if (!image.success) {
           throw new Error(image.message);
@@ -395,11 +389,11 @@ export async function deleteProduct(id: string): Promise<Result<Product>> {
 
       await database.deleteDocument(DATABASE_ID, SAMPLE_COLLECTION_ID, id);
 
-      revalidateTag("products");
+      revalidateTag("projects");
 
       return {
         success: true,
-        message: "Product successfully deleted.",
+        message: "Project successfully deleted.",
       };
     } catch (err) {
       const error = err as Error;

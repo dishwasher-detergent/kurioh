@@ -2,7 +2,7 @@ import { CreatorSkeleton } from "@/components/loading/creator-skeleton";
 import { DescriptionSkeleton } from "@/components/loading/description-skeleton";
 import { HeaderSkeleton } from "@/components/loading/header-skeleton";
 
-export default function ProductLoading() {
+export default function ProjectLoading() {
   return (
     <article className="space-y-6">
       <HeaderSkeleton />

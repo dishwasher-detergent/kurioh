@@ -3,19 +3,19 @@
 import { useEffect, useState } from "react";
 
 import { useSession } from "@/hooks/userSession";
-import { Product } from "@/interfaces/product.interface";
+import { Project } from "@/interfaces/project.interface";
 import { getUserById } from "@/lib/auth";
 import { DATABASE_ID, SAMPLE_COLLECTION_ID } from "@/lib/constants";
 import { getTeamById } from "@/lib/team";
 
 interface Props {
-  initialProducts?: Product[];
+  initialProjects?: Project[];
   teamId?: string;
   userId?: string;
 }
 
-export const useProducts = ({ initialProducts, teamId, userId }: Props) => {
-  const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
+export const useProjects = ({ initialProjects, teamId, userId }: Props) => {
+  const [projects, setProjects] = useState<Project[]>(initialProjects ?? []);
   const [loading, setLoading] = useState<boolean>(true);
 
   const { client, loading: sessionLoading } = useSession();
@@ -28,7 +28,7 @@ export const useProducts = ({ initialProducts, teamId, userId }: Props) => {
     let unsubscribe: (() => void) | undefined;
 
     if (client) {
-      unsubscribe = client.subscribe<Product>(
+      unsubscribe = client.subscribe<Project>(
         `databases.${DATABASE_ID}.collections.${SAMPLE_COLLECTION_ID}.documents`,
         async (response) => {
           if (teamId && response.payload.teamId !== teamId) return;
@@ -44,7 +44,7 @@ export const useProducts = ({ initialProducts, teamId, userId }: Props) => {
               response.payload.teamId
             );
 
-            setProducts((prev) => [
+            setProjects((prev) => [
               {
                 ...response.payload,
                 user: data,
@@ -64,7 +64,7 @@ export const useProducts = ({ initialProducts, teamId, userId }: Props) => {
               response.payload.teamId
             );
 
-            setProducts((prev) =>
+            setProjects((prev) =>
               prev.map((x) =>
                 x.$id === response.payload.$id
                   ? { user: data, ...response.payload, team: teamData }
@@ -78,7 +78,7 @@ export const useProducts = ({ initialProducts, teamId, userId }: Props) => {
               "databases.*.collections.*.documents.*.delete"
             )
           ) {
-            setProducts((prev) =>
+            setProjects((prev) =>
               prev.filter((x) => x.$id !== response.payload.$id)
             );
           }
@@ -91,5 +91,5 @@ export const useProducts = ({ initialProducts, teamId, userId }: Props) => {
     };
   }, [client]);
 
-  return { products, loading };
+  return { projects, loading };
 };

@@ -4,18 +4,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useSession } from "@/hooks/userSession";
-import { Product } from "@/interfaces/product.interface";
+import { Project } from "@/interfaces/project.interface";
 import { getUserById } from "@/lib/auth";
 import { DATABASE_ID, SAMPLE_COLLECTION_ID } from "@/lib/constants";
 import { getTeamById } from "@/lib/team";
 
 interface Props {
-  initialProduct: Product;
+  initialProject: Project;
 }
 
-export const useProduct = ({ initialProduct }: Props) => {
+export const useProject = ({ initialProject }: Props) => {
   const router = useRouter();
-  const [product, setProduct] = useState<Product>(initialProduct);
+  const [project, setProject] = useState<Project>(initialProject);
   const [loading, setLoading] = useState<boolean>(true);
 
   const { client, loading: sessionLoading } = useSession();
@@ -28,8 +28,8 @@ export const useProduct = ({ initialProduct }: Props) => {
     let unsubscribe: (() => void) | undefined;
 
     if (client) {
-      unsubscribe = client.subscribe<Product>(
-        `databases.${DATABASE_ID}.collections.${SAMPLE_COLLECTION_ID}.documents.${product?.$id}`,
+      unsubscribe = client.subscribe<Project>(
+        `databases.${DATABASE_ID}.collections.${SAMPLE_COLLECTION_ID}.documents.${project?.$id}`,
         async (response) => {
           if (
             response.events.includes(
@@ -41,7 +41,7 @@ export const useProduct = ({ initialProduct }: Props) => {
               response.payload.teamId
             );
 
-            setProduct({
+            setProject({
               user: data,
               team: teamData,
               ...response.payload,
@@ -64,5 +64,5 @@ export const useProduct = ({ initialProduct }: Props) => {
     };
   }, [client]);
 
-  return { product, loading };
+  return { project, loading };
 };

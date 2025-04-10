@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
@@ -6,7 +6,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { UserData } from "@/interfaces/user.interface";
-import { AVATAR_BUCKET_ID, ENDPOINT, PROJECT_ID } from "@/lib/constants";
 import { getInitials } from "@/lib/utils";
 
 interface AvatarGroupProps<T extends UserData> {
@@ -24,14 +23,6 @@ export function AvatarGroup<T extends UserData>({
             <Tooltip>
               <TooltipTrigger>
                 <Avatar className="size-10 border-2 border-background">
-                  <AvatarImage
-                    src={
-                      user.avatar
-                        ? `${ENDPOINT}/storage/buckets/${AVATAR_BUCKET_ID}/files/${user.avatar}/view?project=${PROJECT_ID}`
-                        : undefined
-                    }
-                    alt={user.name || "User"}
-                  />
                   <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                 </Avatar>
               </TooltipTrigger>

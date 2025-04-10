@@ -5,7 +5,7 @@ import { UserContent } from "@/components/user/user-content";
 import { UserDescription } from "@/components/user/user-description";
 import { UserHeader } from "@/components/user/user-header";
 import { getLoggedInUser, getUserById } from "@/lib/auth";
-import { listProducts } from "@/lib/db";
+import { listProjects } from "@/lib/db";
 
 export default async function ProfilePage({
   params,
@@ -20,7 +20,7 @@ export default async function ProfilePage({
     redirect("/app");
   }
 
-  const { data: productData } = await listProducts([
+  const { data: projectData } = await listProjects([
     Query.orderDesc("$createdAt"),
     Query.equal("userId", userId),
   ]);
@@ -32,7 +32,7 @@ export default async function ProfilePage({
       <UserHeader user={data} canEdit={isOwnProfile} />
       <main className="px-4 space-y-6">
         <UserDescription user={data} />
-        <UserContent products={productData?.documents ?? []} userId={userId} />
+        <UserContent projects={projectData?.documents ?? []} userId={userId} />
       </main>
     </article>
   );

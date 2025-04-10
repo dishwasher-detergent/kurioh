@@ -12,7 +12,7 @@ export default function TeamLoading() {
         <DescriptionSkeleton />
         <MultiUserSkeleton title="Admins" />
         <TeamMembersSkeleton />
-        <ContentSkeleton title="Products" />
+        <ContentSkeleton title="Projects" />
       </main>
     </article>
   );

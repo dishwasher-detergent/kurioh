@@ -1,23 +1,23 @@
 import { redirect } from "next/navigation";
 
-import { Product } from "@/components/realtime/product";
+import { Project } from "@/components/realtime/project";
 import { getLoggedInUser } from "@/lib/auth";
-import { getProductById } from "@/lib/db";
+import { getProjectById } from "@/lib/db";
 
-export default async function ProductPage({
+export default async function ProjectPage({
   params,
 }: {
-  params: Promise<{ productId: string }>;
+  params: Promise<{ projectId: string }>;
 }) {
-  const { productId } = await params;
-  const { data, success } = await getProductById(productId);
+  const { projectId } = await params;
+  const { data, success } = await getProjectById(projectId);
 
   if (!success || !data) {
     redirect("/app");
   }
 
   const user = await getLoggedInUser();
-  const isOwnProduct = user?.$id === data?.userId;
+  const isOwnProject = user?.$id === data?.userId;
 
-  return <Product initialProduct={data} canEdit={isOwnProduct} />;
+  return <Project initialProject={data} canEdit={isOwnProject} />;
 }

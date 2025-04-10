@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <>
       <header className="flex flex-row justify-between items-center pb-4 w-full">
-        <h2 className="font-bold">Products</h2>
+        <h2 className="font-bold">Projects</h2>
         <Skeleton className="w-[120px] h-8" />
       </header>
       <MultiCardSkeleton />

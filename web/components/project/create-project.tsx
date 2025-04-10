@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DyanmicDrawer } from "@/components/ui/dynamic-drawer";
@@ -32,34 +32,29 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   DESCRIPTION_MAX_LENGTH,
   NAME_MAX_LENGTH,
-} from "@/constants/product.constants";
+} from "@/constants/project.constants";
 import { TeamData } from "@/interfaces/team.interface";
-import {
-  AVATAR_BUCKET_ID,
-  ENDPOINT,
-  PROJECT_ID,
-  SAMPLE_BUCKET_ID,
-} from "@/lib/constants";
-import { createProduct } from "@/lib/db";
-import { AddProductFormData, addProductSchema } from "@/lib/db/schemas";
+import { SAMPLE_BUCKET_ID } from "@/lib/constants";
+import { createProject } from "@/lib/db";
+import { AddProjectFormData, addProjectSchema } from "@/lib/db/schemas";
 import { cn, getInitials } from "@/lib/utils";
 
-interface AddProductProps {
+interface AddProjectProps {
   teams: TeamData[];
 }
 
-export function AddProduct({ teams }: AddProductProps) {
+export function AddProject({ teams }: AddProjectProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <DyanmicDrawer
-      title="Product"
-      description="Create a new Product"
+      title="Project"
+      description="Create a new Project"
       open={open}
       setOpen={setOpen}
       button={
         <Button size="sm">
-          Add Product
+          Add Project
           <LucidePlus className="ml-2 size-3.5" />
         </Button>
       }
@@ -78,8 +73,8 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<AddProductFormData>({
-    resolver: zodResolver(addProductSchema),
+  const form = useForm<AddProjectFormData>({
+    resolver: zodResolver(addProjectSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -88,10 +83,10 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
     },
   });
 
-  async function onSubmit(values: AddProductFormData) {
+  async function onSubmit(values: AddProjectFormData) {
     setLoading(true);
 
-    const data = await createProduct({
+    const data = await createProject({
       data: values,
     });
 
@@ -137,11 +132,6 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
                     {teams.map((team) => (
                       <SelectItem key={team.$id} value={team.$id}>
                         <Avatar className="mr-2 h-6 w-6">
-                          <AvatarImage
-                            src={`${ENDPOINT}/storage/buckets/${AVATAR_BUCKET_ID}/files/${team.avatar}/view?project=${PROJECT_ID}`}
-                            alt={team.name}
-                            className="object-cover"
-                          />
                           <AvatarFallback>
                             {getInitials(team.name)}
                           </AvatarFallback>
@@ -160,12 +150,12 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Product</FormLabel>
+                <FormLabel>Project</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Name your product."
+                      placeholder="Name your project."
                       className="truncate pr-20"
                       maxLength={NAME_MAX_LENGTH}
                     />
@@ -191,7 +181,7 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
                   <div className="relative">
                     <Textarea
                       {...field}
-                      placeholder="Describe your product."
+                      placeholder="Describe your project."
                       className="pb-8"
                       maxLength={DESCRIPTION_MAX_LENGTH}
                     />

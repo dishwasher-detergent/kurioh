@@ -28,20 +28,20 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   DESCRIPTION_MAX_LENGTH,
   NAME_MAX_LENGTH,
-} from "@/constants/product.constants";
-import { Product } from "@/interfaces/product.interface";
+} from "@/constants/project.constants";
+import { Project } from "@/interfaces/project.interface";
 import { SAMPLE_BUCKET_ID } from "@/lib/constants";
-import { updateProduct } from "@/lib/db";
-import { EditProductFormData, editProductSchema } from "@/lib/db/schemas";
+import { updateProject } from "@/lib/db";
+import { EditProjectFormData, editProjectSchema } from "@/lib/db/schemas";
 import { cn } from "@/lib/utils";
 
-export function EditProduct({ product }: { product: Product }) {
+export function EditProject({ project }: { project: Project }) {
   const [open, setOpen] = useState(false);
 
   return (
     <DyanmicDrawer
-      title={`Edit ${product.name}`}
-      description="Make any changes to this product."
+      title={`Edit ${project.name}`}
+      description="Make any changes to this project."
       open={open}
       setOpen={setOpen}
       button={
@@ -58,34 +58,34 @@ export function EditProduct({ product }: { product: Product }) {
         </DropdownMenuItem>
       }
     >
-      <CreateForm setOpen={setOpen} product={product} />
+      <CreateForm setOpen={setOpen} project={project} />
     </DyanmicDrawer>
   );
 }
 
 interface FormProps extends React.ComponentProps<"form"> {
   setOpen: (e: boolean) => void;
-  product: Product;
+  project: Project;
 }
 
-function CreateForm({ className, setOpen, product }: FormProps) {
+function CreateForm({ className, setOpen, project }: FormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const form = useForm<EditProductFormData>({
-    resolver: zodResolver(editProductSchema),
+  const form = useForm<EditProjectFormData>({
+    resolver: zodResolver(editProjectSchema),
     defaultValues: {
-      name: product.name,
-      description: product.description,
-      image: product.image,
+      name: project.name,
+      description: project.description,
+      image: project.image,
     },
   });
 
-  async function onSubmit(values: EditProductFormData) {
+  async function onSubmit(values: EditProjectFormData) {
     setLoading(true);
 
-    const data = await updateProduct({
-      id: product.$id,
+    const data = await updateProject({
+      id: project.$id,
       data: values,
     });
 
@@ -116,12 +116,12 @@ function CreateForm({ className, setOpen, product }: FormProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Product</FormLabel>
+                <FormLabel>Project</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Name your product."
+                      placeholder="Name your project."
                       className="truncate pr-20"
                       maxLength={NAME_MAX_LENGTH}
                     />
@@ -147,7 +147,7 @@ function CreateForm({ className, setOpen, product }: FormProps) {
                   <div className="relative">
                     <Textarea
                       {...field}
-                      placeholder="Describe your product."
+                      placeholder="Describe your project."
                       className="pb-8"
                       maxLength={DESCRIPTION_MAX_LENGTH}
                     />

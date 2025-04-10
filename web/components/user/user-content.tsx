@@ -1,16 +1,16 @@
-import { Products } from "@/components/realtime/products";
-import { Product } from "@/interfaces/product.interface";
+import { Projects } from "@/components/realtime/projects";
+import { Project } from "@/interfaces/project.interface";
 
 interface UserContentProps {
-  products: Product[];
+  projects: Project[];
   userId: string;
 }
 
-export function UserContent({ products, userId }: UserContentProps) {
+export function UserContent({ projects, userId }: UserContentProps) {
   return (
     <div>
-      <h3 className="font-semibold text-lg mb-2">Products</h3>
-      <Products initialProducts={products} userId={userId} />
+      <h3 className="font-semibold text-lg mb-2">Projects</h3>
+      <Projects initialProjects={projects} userId={userId} />
     </div>
   );
 }

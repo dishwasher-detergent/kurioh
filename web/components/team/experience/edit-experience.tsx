@@ -10,7 +10,7 @@ import {
   LucideTrash,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -21,7 +21,6 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -64,15 +63,15 @@ export default function ExperienceForm({
     defaultValues: {
       experience:
         experience?.map((exp) => ({
-          id: exp.$id,
-          title: exp.title ?? "",
-          description: exp.description ?? undefined,
-          start_date: exp.start_date ?? undefined,
-          end_date: exp.end_date ?? undefined,
-          company: exp.company ?? "",
+          id: exp?.$id,
+          title: exp?.title,
+          description: exp?.description,
+          start_date: exp?.start_date,
+          end_date: exp?.end_date,
+          company: exp?.company,
           skills:
             exp.skills?.map((skill) => ({ label: skill, value: skill })) ?? [],
-          website: exp.website?.toString() ?? undefined,
+          website: exp.website?.toString(),
         })) ?? [],
     },
   });
@@ -81,22 +80,6 @@ export default function ExperienceForm({
     control: form.control,
     name: "experience",
   });
-
-  useEffect(() => {
-    form.reset({
-      experience: experience?.map((exp) => ({
-        id: exp.$id,
-        title: exp.title ?? "",
-        description: exp.description ?? undefined,
-        start_date: exp.start_date ? new Date(exp.start_date) : undefined,
-        end_date: exp.end_date ? new Date(exp.end_date) : undefined,
-        company: exp.company ?? "",
-        skills:
-          exp.skills?.map((skill) => ({ label: skill, value: skill })) ?? [],
-        website: exp.website?.toString() ?? undefined,
-      })),
-    });
-  }, [experience, form]);
 
   async function onSubmit(values: EditExperienceArrayFormData) {
     setLoading(true);
@@ -148,7 +131,6 @@ export default function ExperienceForm({
                       </Badge>
                     </div>
                   </FormControl>
-                  <FormDescription>The company you work for.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -158,7 +140,7 @@ export default function ExperienceForm({
               name={`experience.${index}.title`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Job Title</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -175,9 +157,6 @@ export default function ExperienceForm({
                       </Badge>
                     </div>
                   </FormControl>
-                  <FormDescription>
-                    The title you held while working here.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -205,9 +184,6 @@ export default function ExperienceForm({
                       </Badge>
                     </div>
                   </FormControl>
-                  <FormDescription>
-                    Describe what you did in this organization.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -318,9 +294,6 @@ export default function ExperienceForm({
                       }
                     />
                   </FormControl>
-                  <FormDescription>
-                    Skills that you have learned or used in this organization.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -330,7 +303,7 @@ export default function ExperienceForm({
               name={`experience.${index}.website`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Website</FormLabel>
+                  <FormLabel>Company Website</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -338,7 +311,6 @@ export default function ExperienceForm({
                       className="truncate pr-20"
                     />
                   </FormControl>
-                  <FormDescription>Your companies website.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

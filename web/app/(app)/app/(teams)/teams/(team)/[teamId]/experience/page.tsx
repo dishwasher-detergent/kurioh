@@ -1,5 +1,5 @@
 import ExperienceForm from "@/components/team/experience/edit-experience";
-import { getTeamById } from "@/lib/team";
+import { listExperiences } from "@/lib/db";
 
 import { notFound } from "next/navigation";
 
@@ -9,13 +9,13 @@ export default async function TeamExperience({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId } = await params;
-  const org = await getTeamById(teamId);
+  const experience = await listExperiences(teamId);
 
-  if (!org.success || !org.data) {
+  if (!experience.success || !experience.data) {
     notFound();
   }
 
-  const { data } = org;
+  const { data } = experience;
 
   return (
     <>
@@ -25,7 +25,7 @@ export default async function TeamExperience({
           Add Your Job, Volunteer, or Project Experience.
         </p>
       </header>
-      <ExperienceForm experience={data.experience} teamId={teamId} />
+      <ExperienceForm experience={data.documents} teamId={teamId} />
     </>
   );
 }

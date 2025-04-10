@@ -21,7 +21,7 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
   if (loading) return <MultiCardSkeleton />;
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <section className="min-h-full columns-xs items-start gap-4 space-y-4">
       {projects?.map((project) => (
         <ProjectCard key={project.$id} {...project} />
       ))}

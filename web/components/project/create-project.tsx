@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DyanmicDrawer } from "@/components/ui/dynamic-drawer";
@@ -21,29 +20,21 @@ import {
 } from "@/components/ui/form";
 import { ImageInput } from "@/components/ui/image-input";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DESCRIPTION_MAX_LENGTH,
   NAME_MAX_LENGTH,
 } from "@/constants/project.constants";
-import { TeamData } from "@/interfaces/team.interface";
 import { PROJECT_BUCKET_ID } from "@/lib/constants";
 import { createProject } from "@/lib/db";
 import { AddProjectFormData, addProjectSchema } from "@/lib/db/schemas";
-import { cn, getInitials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface AddProjectProps {
-  teams: TeamData[];
+  teamId: string;
 }
 
-export function AddProject({ teams }: AddProjectProps) {
+export function AddProject({ teamId }: AddProjectProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -59,17 +50,17 @@ export function AddProject({ teams }: AddProjectProps) {
         </Button>
       }
     >
-      <CreateForm setOpen={setOpen} teams={teams} />
+      <CreateForm setOpen={setOpen} teamId={teamId} />
     </DyanmicDrawer>
   );
 }
 
 interface FormProps extends React.ComponentProps<"form"> {
   setOpen: (e: boolean) => void;
-  teams: TeamData[];
+  teamId: string;
 }
 
-function CreateForm({ className, setOpen, teams }: FormProps) {
+function CreateForm({ className, setOpen, teamId }: FormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -79,7 +70,7 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
       name: "",
       description: "",
       image: null,
-      teamId: teams.length == 1 ? teams[0].$id : "",
+      teamId: teamId,
     },
   });
 
@@ -112,39 +103,6 @@ function CreateForm({ className, setOpen, teams }: FormProps) {
         )}
       >
         <div className="flex-1 space-y-4 overflow-auto p-1">
-          <FormField
-            control={form.control}
-            name="teamId"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Team</FormLabel>
-                <Select
-                  disabled={teams.length == 1}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a team" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {teams.map((team) => (
-                      <SelectItem key={team.$id} value={team.$id}>
-                        <Avatar className="mr-2 h-6 w-6">
-                          <AvatarFallback>
-                            {getInitials(team.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        {team.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="name"

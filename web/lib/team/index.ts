@@ -8,6 +8,7 @@ import {
   MEMBER_ROLE,
   OWNER_ROLE,
 } from "@/constants/team.constants";
+import { Experience } from "@/interfaces/experience.interface";
 import { Information } from "@/interfaces/information.interface";
 import { Project } from "@/interfaces/project.interface";
 import { Result } from "@/interfaces/result.interface";
@@ -16,6 +17,7 @@ import { UserData, UserMemberData } from "@/interfaces/user.interface";
 import { createUserData, withAuth } from "@/lib/auth";
 import {
   DATABASE_ID,
+  EXPERIENCE_COLLECTION_ID,
   HOSTNAME,
   INFORMATION_COLLECTION_ID,
   MAX_TEAM_LIMIT,
@@ -51,6 +53,12 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
             id
           );
 
+          const experience = await database.listDocuments<Experience>(
+            DATABASE_ID,
+            EXPERIENCE_COLLECTION_ID,
+            [Query.equal("teamId", id), Query.orderDesc("start_date")]
+          );
+
           const memberships = await team.listMemberships(data.$id);
 
           const userIds = memberships.memberships.map(
@@ -84,6 +92,7 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
             data: {
               ...data,
               information,
+              experience: experience.documents,
               members: usersMembershipData,
             },
           };

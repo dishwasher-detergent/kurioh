@@ -58,10 +58,7 @@ export function ProjectCard(project: Project) {
               href={`/app/teams/${project.teamId}`}
             />
             <LucideSlash className="text-primary-foreground size-3" />
-            <ProfileLink
-              name={project?.user?.name}
-              href={`/app/users/${project.userId}`}
-            />
+            <ProfileLink name={project?.user?.name} />
           </div>
         </CardHeader>
       </CardContent>

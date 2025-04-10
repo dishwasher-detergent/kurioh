@@ -1,7 +1,6 @@
 "use client";
 
-import { LucideLogOut, LucideUser, LucideUsers } from "lucide-react";
-import Link from "next/link";
+import { LucideLogOut } from "lucide-react";
 import { useMemo } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -16,6 +15,7 @@ import {
 import { User } from "@/interfaces/user.interface";
 import { logOut } from "@/lib/auth";
 import { getInitials } from "@/lib/utils";
+import { EditProfile } from "./edit-profile";
 
 export function UserInformation({ user }: { user: User }) {
   const initals = useMemo(() => {
@@ -39,20 +39,7 @@ export function UserInformation({ user }: { user: User }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href="/app/teams">
-            Teams
-            <DropdownMenuShortcut>
-              <LucideUsers className="size-3" />
-            </DropdownMenuShortcut>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href={`/app/users/${user.$id}`}>
-            Profile
-            <DropdownMenuShortcut>
-              <LucideUser className="size-3" />
-            </DropdownMenuShortcut>
-          </Link>
+          <EditProfile user={user} />
         </DropdownMenuItem>
         <DropdownMenuItem onClick={logOut}>
           Logout

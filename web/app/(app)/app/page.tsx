@@ -1,29 +1,40 @@
-import { AddProject } from "@/components/project/create-project";
-import { Projects } from "@/components/realtime/projects";
+import { redirect } from "next/navigation";
+
 import { CreateTeam } from "@/components/team/create-team";
-import { listProjects } from "@/lib/db";
+import { getLoggedInUser } from "@/lib/auth";
 import { listTeams } from "@/lib/team";
-import { Query } from "node-appwrite";
 
-export default async function AppPage() {
-  const { data } = await listProjects([Query.orderDesc("$createdAt")]);
-  const { data: teams } = await listTeams();
+export default async function Home() {
+  const user = await getLoggedInUser();
 
-  return teams && teams?.length > 0 ? (
-    <>
-      <header className="flex flex-row justify-between items-center pb-4 w-full">
-        <h2 className="font-bold">Projects</h2>
-        <AddProject teams={teams} />
-      </header>
-      <Projects initialProjects={data?.documents} />
-    </>
-  ) : (
-    <section className="grid place-items-center gap-4">
-      <p className="text-lg font-semibold text-center">
-        Looks like you&apos;re apart of no teams yet, <br />
-        join one or create one to get started!
-      </p>
-      <CreateTeam />
-    </section>
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.prefs.lastVisitedOrg) {
+    redirect(`/app/teams/${user.prefs.lastVisitedOrg}`);
+  } else {
+    const orgs = await listTeams();
+
+    if (orgs.data && orgs.data.length > 0) {
+      redirect(`/app/teams/${orgs.data[0].$id}`);
+    }
+  }
+
+  return (
+    <main className="mx-auto grid h-full min-h-dvh max-w-6xl place-items-center space-y-4 p-4 px-4 md:px-8">
+      <div className="flex h-full flex-col items-center justify-center space-y-4">
+        <h1 className="text-xl font-bold">
+          Looks like you don&apos;t have any orgnaizations created yet.
+        </h1>
+        <p>Lets get started!</p>
+        <div>
+          <CreateTeam />
+        </div>
+      </div>
+    </main>
   );
 }
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;

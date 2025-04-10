@@ -66,13 +66,13 @@ export default function ExperienceForm({
         experience?.map((exp) => ({
           id: exp.$id,
           title: exp.title ?? "",
-          description: exp.description ?? "",
-          start_date: exp.start_date ?? "",
-          end_date: exp.end_date ?? "",
+          description: exp.description ?? undefined,
+          start_date: exp.start_date ?? undefined,
+          end_date: exp.end_date ?? undefined,
           company: exp.company ?? "",
           skills:
             exp.skills?.map((skill) => ({ label: skill, value: skill })) ?? [],
-          website: exp.website?.toString() ?? "",
+          website: exp.website?.toString() ?? undefined,
         })) ?? [],
     },
   });
@@ -87,13 +87,13 @@ export default function ExperienceForm({
       experience: experience?.map((exp) => ({
         id: exp.$id,
         title: exp.title ?? "",
-        description: exp.description ?? "",
+        description: exp.description ?? undefined,
         start_date: exp.start_date ? new Date(exp.start_date) : undefined,
         end_date: exp.end_date ? new Date(exp.end_date) : undefined,
         company: exp.company ?? "",
         skills:
           exp.skills?.map((skill) => ({ label: skill, value: skill })) ?? [],
-        website: exp.website?.toString() ?? "",
+        website: exp.website?.toString() ?? undefined,
       })),
     });
   }, [experience, form]);

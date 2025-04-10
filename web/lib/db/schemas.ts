@@ -60,7 +60,7 @@ export const editExperienceSchema = z.object({
   end_date: z.date().optional(),
   company: z.string().min(1).max(EXPERIENCE_COMPANY_MAX_LENGTH),
   skills: z.array(selectSchema).optional(),
-  website: z.union([z.string().url(), z.string().optional()]),
+  website: z.union([z.string().url(), z.string().optional()]).optional(),
 });
 
 export type EditExperienceFormData = z.infer<typeof editExperienceSchema>;

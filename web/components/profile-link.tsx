@@ -5,19 +5,13 @@ import { Button } from "@/components/ui/button";
 import { cn, getInitials } from "@/lib/utils";
 
 interface ProfileLinkProps {
-  avatar?: string;
   name?: string;
-  href: string;
+  href?: string;
   className?: string;
 }
 
-export function ProfileLink({
-  avatar,
-  name,
-  href,
-  className,
-}: ProfileLinkProps) {
-  return (
+export function ProfileLink({ name, href, className }: ProfileLinkProps) {
+  return href ? (
     <Button
       variant="link"
       asChild
@@ -32,5 +26,19 @@ export function ProfileLink({
         {name || "Unknown"}
       </Link>
     </Button>
+  ) : (
+    <p
+      className={cn(
+        "flex flex-row items-center gap-2 text-sm text-primary-foreground font-semibold",
+        className
+      )}
+    >
+      <Avatar className="h-6 w-6">
+        <AvatarFallback className="text-primary">
+          {getInitials(name)}
+        </AvatarFallback>
+      </Avatar>
+      {name || "Unknown"}
+    </p>
   );
 }

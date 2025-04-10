@@ -6,11 +6,5 @@ interface ProjectCreatorProps {
 }
 
 export function ProjectCreator({ project }: ProjectCreatorProps) {
-  return (
-    <ProfileLink
-      className="text-foreground"
-      name={project?.user?.name}
-      href={`/app/users/${project?.user?.$id}`}
-    />
-  );
+  return <ProfileLink className="text-foreground" name={project?.user?.name} />;
 }

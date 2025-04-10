@@ -1,9 +1,9 @@
+import { ProjectSelect } from "@/components/project/project-select";
+import { TeamSelect } from "@/components/team/team-select";
 import { ModeToggle } from "@/components/theme-toggle";
+import { SubNav } from "@/components/ui/sub-nav";
 import { UserInformation } from "@/components/user/user-information";
 import { getUserData } from "@/lib/auth";
-import { ProjectSelect } from "../project/project-select";
-import { TeamSelect } from "../team/team-select";
-import { SubNav } from "./sub-nav";
 
 export async function Nav() {
   const { data } = await getUserData();

@@ -618,11 +618,7 @@ export async function listExperiences(
       },
       ["experiences", teamId],
       {
-        tags: [
-          "experiences",
-          `experiences:team-${teamId}`,
-          `experiences:user-${user.$id}`,
-        ],
+        tags: ["experiences", `experiences:team-${teamId}`],
         revalidate: 600,
       }
     )(teamId, queries, user.$id);
@@ -712,14 +708,19 @@ export async function createExperience({
         id,
         {
           ...data,
+          website:
+            data.website && data.website != ""
+              ? new URL(data.website)
+              : undefined,
           userId: user.$id,
           teamId,
-          skills: data.skills || [],
         },
         permissions
       );
 
       revalidateTag(`experiences:team-${teamId}`);
+      revalidateTag(`experience:${experience.$id}`);
+      revalidateTag(`team:${teamId}`);
 
       return {
         success: true,
@@ -728,6 +729,8 @@ export async function createExperience({
       };
     } catch (err) {
       const error = err as Error;
+
+      console.error(error.message);
 
       return {
         success: false,
@@ -777,7 +780,8 @@ export async function updateExperience({
       );
 
       revalidateTag(`experiences:team-${experience.teamId}`);
-      revalidateTag(`experience:${id}`);
+      revalidateTag(`experience:${experience.$id}`);
+      revalidateTag(`team:${experience.teamId}`);
 
       return {
         success: true,
@@ -816,6 +820,8 @@ export async function deleteExperience(
       await database.deleteDocument(DATABASE_ID, EXPERIENCE_COLLECTION_ID, id);
 
       revalidateTag(`experiences:team-${experience.teamId}`);
+      revalidateTag(`experience:${experience.$id}`);
+      revalidateTag(`team:${experience.teamId}`);
 
       return {
         success: true,
@@ -850,8 +856,6 @@ export async function updateTeamExperiences({
   return withAuth(async () => {
     try {
       const existingExperiencesResult = await listExperiences(teamId);
-
-      console.log(existingExperiencesResult);
 
       if (!existingExperiencesResult.success) {
         return {
@@ -897,6 +901,7 @@ export async function updateTeamExperiences({
       }
 
       revalidateTag(`experiences:team-${teamId}`);
+      revalidateTag(`team:${teamId}`);
 
       return {
         success: true,

@@ -215,19 +215,6 @@ export async function createProject({
     ];
 
     try {
-      if (data.image instanceof File) {
-        const image = await uploadFile({
-          data: data.image,
-          permissions: [Permission.read(Role.team(data.teamId))],
-        });
-
-        if (!image.success) {
-          throw new Error(image.message);
-        }
-
-        data.image = image.data?.$id;
-      }
-
       const project = await database.createDocument<Project>(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
@@ -285,10 +272,12 @@ export async function createProject({
  */
 export async function updateProject({
   id,
+  teamId,
   data,
   permissions = undefined,
 }: {
   id: string;
+  teamId: string;
   data: EditProjectFormData;
   permissions?: string[];
 }): Promise<Result<Project>> {
@@ -302,28 +291,46 @@ export async function updateProject({
         id
       );
 
-      if (data.image instanceof File) {
-        if (existingProject.image) {
-          await deleteFile(existingProject.image);
+      if (data.images) {
+        const existingImageIds = Array.isArray(existingProject.images)
+          ? existingProject.images
+          : [];
+        const newImageIds: string[] = [];
+
+        const imageIdsToKeep = data.images.filter(
+          (img) => typeof img === "string"
+        ) as string[];
+
+        for (const oldImageId of existingImageIds) {
+          if (!imageIdsToKeep.includes(oldImageId)) {
+            await deleteFile(oldImageId);
+          }
         }
 
-        const image = await uploadFile({
-          data: data.image,
-        });
+        for (const img of data.images) {
+          if (img instanceof File) {
+            const uploadResult = await uploadFile({
+              data: img,
+              permissions: [
+                Permission.read(Role.team(teamId)),
+                Permission.write(Role.team(teamId)),
+              ],
+            });
 
-        if (!image.success) {
-          throw new Error(image.message);
+            if (!uploadResult.success) {
+              throw new Error(uploadResult.message);
+            }
+
+            if (uploadResult.data?.$id) {
+              newImageIds.push(uploadResult.data.$id);
+            }
+          } else if (typeof img === "string") {
+            newImageIds.push(img);
+          }
         }
 
-        data.image = image.data?.$id;
-      } else if (data.image === null && existingProject.image) {
-        const image = await deleteFile(existingProject.image);
-
-        if (!image.success) {
-          throw new Error(image.message);
-        }
-
-        data.image = null;
+        // Update the images array with the final set of image IDs
+        data.images = newImageIds;
       }
 
       const project = await database.updateDocument<Project>(
@@ -491,10 +498,12 @@ export async function getInformationById(
  */
 export async function updateInformation({
   id,
+  teamId,
   data,
   permissions = undefined,
 }: {
   id: string;
+  teamId: string;
   data: EditInformationFormData;
   permissions?: string[];
 }): Promise<Result<Information>> {
@@ -515,6 +524,10 @@ export async function updateInformation({
 
         const image = await uploadFile({
           data: data.image,
+          permissions: [
+            Permission.read(Role.team(teamId)),
+            Permission.write(Role.team(teamId)),
+          ],
         });
 
         if (!image.success) {
@@ -699,6 +712,7 @@ export async function createExperience({
       Permission.read(Role.user(user.$id)),
       Permission.write(Role.user(user.$id)),
       Permission.read(Role.team(teamId)),
+      Permission.write(Role.team(teamId)),
     ];
 
     try {

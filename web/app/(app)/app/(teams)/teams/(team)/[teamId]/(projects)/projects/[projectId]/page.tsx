@@ -1,23 +1,19 @@
 import { redirect } from "next/navigation";
 
-import { Project } from "@/components/realtime/project";
-import { getLoggedInUser } from "@/lib/auth";
+import EditProject from "@/components/project/edit-project";
 import { getProjectById } from "@/lib/db";
 
 export default async function ProjectPage({
   params,
 }: {
-  params: Promise<{ projectId: string }>;
+  params: Promise<{ teamId: string; projectId: string }>;
 }) {
-  const { projectId } = await params;
+  const { projectId, teamId } = await params;
   const { data, success } = await getProjectById(projectId);
 
   if (!success || !data) {
     redirect("/app");
   }
 
-  const user = await getLoggedInUser();
-  const isOwnProject = user?.$id === data?.userId;
-
-  return <Project initialProject={data} canEdit={isOwnProject} />;
+  return <EditProject project={data} teamId={teamId} />;
 }

@@ -48,11 +48,9 @@ export function SubNav() {
           </Button>
         </>
       );
-
-      return null;
     }
 
-    return "";
+    return null;
   }, [segments]);
 
   if (segments[0] != "(teams)") return null;

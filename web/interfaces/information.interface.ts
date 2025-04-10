@@ -6,7 +6,7 @@ import { UserData } from "@/interfaces/user.interface";
 export interface Information extends Models.Document {
   title: string;
   description: string;
-  image_id: string;
+  image: string;
   socials: string[];
 
   userId: string;

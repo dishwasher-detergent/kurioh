@@ -18,14 +18,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ImageInput } from "@/components/ui/image-input";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DESCRIPTION_MAX_LENGTH,
   NAME_MAX_LENGTH,
 } from "@/constants/project.constants";
-import { PROJECT_BUCKET_ID } from "@/lib/constants";
 import { createProject } from "@/lib/db";
 import { AddProjectFormData, addProjectSchema } from "@/lib/db/schemas";
 import { cn } from "@/lib/utils";
@@ -67,9 +65,8 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
   const form = useForm<AddProjectFormData>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      image: null,
+      name: undefined,
+      description: undefined,
       teamId: teamId,
     },
   });
@@ -150,19 +147,6 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
                       {field?.value?.length ?? 0}/{DESCRIPTION_MAX_LENGTH}
                     </Badge>
                   </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Picture</FormLabel>
-                <FormControl>
-                  <ImageInput bucketId={PROJECT_BUCKET_ID} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

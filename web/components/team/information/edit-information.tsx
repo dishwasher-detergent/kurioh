@@ -34,16 +34,14 @@ import {
   editInformationSchema,
 } from "@/lib/db/schemas";
 
-interface InformationFormProps extends Information {
-  orgId: string;
+interface InformationFormProps {
+  information: Information;
+  teamId: string;
 }
 
 export default function InformationForm({
-  $id,
-  title,
-  description,
-  socials,
-  image,
+  information,
+  teamId,
 }: InformationFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,10 +49,14 @@ export default function InformationForm({
   const form = useForm<z.infer<typeof editInformationSchema>>({
     resolver: zodResolver(editInformationSchema),
     defaultValues: {
-      title: title ?? "",
-      description: description ?? "",
-      socials: socials.map((link) => ({ label: link, value: link })),
-      image: image,
+      title: information.title ?? undefined,
+      description: information.description ?? undefined,
+      socials:
+        information.socials.map((link) => ({
+          label: link,
+          value: link,
+        })) ?? [],
+      image: information.image ?? undefined,
     },
   });
 
@@ -62,8 +64,9 @@ export default function InformationForm({
     setLoading(true);
 
     const data = await updateInformation({
-      id: $id,
+      id: information.$id,
       data: values,
+      teamId,
     });
 
     if (data.success) {

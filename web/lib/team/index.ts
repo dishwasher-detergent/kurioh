@@ -282,11 +282,7 @@ export async function updateTeam({
     try {
       await checkUserRole(id, user.$id, [ADMIN_ROLE, OWNER_ROLE]);
 
-      const existingTeamData = await database.getDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        id
-      );
+      await database.getDocument<TeamData>(DATABASE_ID, TEAM_COLLECTION_ID, id);
 
       await team.updateName(id, data.name);
 

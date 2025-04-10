@@ -45,8 +45,7 @@ export function extractWebsiteName(url: string): string {
     const urlObj = new URL(url);
     const parts = urlObj.hostname.split(".");
     return parts[parts.length - 2];
-  } catch (e) {
-    console.error(e);
+  } catch {
     return "";
   }
 }
@@ -55,7 +54,7 @@ export function isValidUrl(url: string): boolean {
   try {
     new URL(url);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

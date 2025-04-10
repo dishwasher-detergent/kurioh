@@ -1,0 +1,40 @@
+import { redirect } from "next/navigation";
+
+import { TeamAdmins } from "@/components/team/team-admins";
+import { TeamMembers } from "@/components/team/team-members";
+import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
+import { getCurrentUserRoles, getTeamById } from "@/lib/team";
+
+export default async function TeamMembersPage({
+  params,
+}: {
+  params: Promise<{ teamId: string }>;
+}) {
+  const { teamId } = await params;
+  const { data, success } = await getTeamById(teamId);
+
+  if (!success || !data) {
+    redirect("/app");
+  }
+
+  const { data: roles } = await getCurrentUserRoles(teamId);
+
+  const isOwner = roles!.includes(OWNER_ROLE);
+  const isAdmin = roles!.includes(ADMIN_ROLE);
+
+  return (
+    <>
+      <header className="mb-6">
+        <h2 className="font-bold text-xl mb-1">Members</h2>
+        <p className="text-sm font-semibold">All members of this team.</p>
+      </header>
+      <TeamAdmins members={data.members ?? []} />
+      <TeamMembers
+        members={data.members ?? []}
+        teamId={data.$id}
+        isOwner={isOwner}
+        isAdmin={isAdmin}
+      />
+    </>
+  );
+}

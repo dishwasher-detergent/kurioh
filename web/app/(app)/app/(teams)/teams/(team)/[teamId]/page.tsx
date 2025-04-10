@@ -1,18 +1,9 @@
 import { redirect } from "next/navigation";
 import { Query } from "node-appwrite";
 
-import { TeamAdmins } from "@/components/team/team-admins";
-import { TeamContent } from "@/components/team/team-content";
-import { TeamDescription } from "@/components/team/team-description";
-import { TeamHeader } from "@/components/team/team-header";
-import { TeamMembers } from "@/components/team/team-members";
-import {
-  ADMIN_ROLE,
-  MEMBER_ROLE,
-  OWNER_ROLE,
-} from "@/constants/team.constants";
+import { Projects } from "@/components/realtime/projects";
 import { listProjects } from "@/lib/db";
-import { getCurrentUserRoles, getTeamById } from "@/lib/team";
+import { getTeamById } from "@/lib/team";
 
 export default async function TeamPage({
   params,
@@ -26,35 +17,23 @@ export default async function TeamPage({
     redirect("/app");
   }
 
-  const { data: roles } = await getCurrentUserRoles(teamId);
   const { data: projectData } = await listProjects([
     Query.orderDesc("$createdAt"),
     Query.equal("teamId", teamId),
   ]);
 
-  const isOwner = roles!.includes(OWNER_ROLE);
-  const isAdmin = roles!.includes(ADMIN_ROLE);
-  const isMember = roles!.includes(MEMBER_ROLE);
-
   return (
-    <article className="space-y-6">
-      <TeamHeader
-        team={data}
-        isOwner={isOwner}
-        isAdmin={isAdmin}
-        isMember={isMember}
+    <>
+      <header className="mb-6">
+        <h2 className="font-bold text-xl mb-1">Projects</h2>
+        <p className="text-sm font-semibold">
+          All projects created in this team.
+        </p>
+      </header>
+      <Projects
+        initialProjects={projectData?.documents ?? []}
+        teamId={teamId}
       />
-      <main className="px-4 space-y-6">
-        <TeamDescription team={data} />
-        <TeamAdmins members={data.members ?? []} />
-        <TeamMembers
-          members={data.members ?? []}
-          teamId={data.$id}
-          isOwner={isOwner}
-          isAdmin={isAdmin}
-        />
-        <TeamContent projects={projectData?.documents ?? []} teamId={teamId} />
-      </main>
-    </article>
+    </>
   );
 }

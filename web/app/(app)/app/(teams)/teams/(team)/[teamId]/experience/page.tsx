@@ -1,11 +1,4 @@
 import ExperienceForm from "@/components/team/experience/edit-experience";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { getTeamById } from "@/lib/team";
 
 import { notFound } from "next/navigation";
@@ -26,17 +19,13 @@ export default async function TeamExperience({
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Experience</CardTitle>
-          <CardDescription>
-            Job, Volunteer, or Project Experience.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-2">
-          <ExperienceForm experience={data.experience} teamId={teamId} />
-        </CardContent>
-      </Card>
+      <header className="mb-6">
+        <h2 className="font-bold text-xl mb-1">Experience</h2>
+        <p className="text-sm font-semibold">
+          Add Your Job, Volunteer, or Project Experience.
+        </p>
+      </header>
+      <ExperienceForm experience={data.experience} teamId={teamId} />
     </>
   );
 }

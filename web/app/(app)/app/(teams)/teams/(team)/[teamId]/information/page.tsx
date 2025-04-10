@@ -1,11 +1,4 @@
 import InformationForm from "@/components/team/information/edit-information";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { getTeamById } from "@/lib/team";
 
 import { notFound } from "next/navigation";
@@ -26,15 +19,11 @@ export default async function TeamInformation({
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Information</CardTitle>
-          <CardDescription>Basic portfolio information.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <InformationForm {...data.information} />
-        </CardContent>
-      </Card>
+      <header className="mb-6">
+        <h2 className="font-bold text-xl mb-1">Information</h2>
+        <p className="text-sm font-semibold">Basic portfolio information.</p>
+      </header>
+      <InformationForm {...data.information} />
     </>
   );
 }

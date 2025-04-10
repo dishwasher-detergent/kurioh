@@ -26,6 +26,9 @@ export function SubNav() {
       return (
         <>
           <Button asChild variant="ghost" size="sm">
+            <Link href={`/app/teams/${segments[3]}`}>Projects</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
             <Link href={`/app/teams/${segments[3]}/information`}>
               Information
             </Link>
@@ -37,6 +40,9 @@ export function SubNav() {
           </Button>
           <Button asChild variant="ghost" size="sm">
             <Link href={`/app/teams/${segments[3]}/api`}>API</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link href={`/app/teams/${segments[3]}/members`}>Members</Link>
           </Button>
         </>
       );

@@ -17,7 +17,6 @@ interface Preview {
 
 export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
   const [preview, setPreview] = useState<Preview | null>(null);
-  const [images, setImages] = useState<File | string>(value ?? "");
   const [createLoading, setCreateLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
 
@@ -40,9 +39,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
 
     const newImage = new File([file], imageObject.id, { type: file.type });
 
-    setImages(newImage);
     onChange?.(newImage);
-
     setCreateLoading(false);
   }
 
@@ -56,7 +53,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
   useEffect(() => {
     if (!value) return;
 
-    let file = value;
+    const file = value;
     let id = value as string;
 
     if (file instanceof File) {

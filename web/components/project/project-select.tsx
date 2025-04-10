@@ -32,8 +32,6 @@ export function ProjectSelect() {
     projectId: string;
   }>();
 
-  if (!teamId) return null;
-
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [projects, setProjects] = useState<ProjectInterface[]>([]);
@@ -55,8 +53,12 @@ export function ProjectSelect() {
   }
 
   useEffect(() => {
-    fetchProjects();
+    if (teamId) {
+      fetchProjects();
+    }
   }, [teamId, projectId]);
+
+  if (!teamId) return null;
 
   return (
     <>

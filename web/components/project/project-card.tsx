@@ -1,6 +1,9 @@
 "use client";
 
+import Link from "next/link";
+
 import { Badges } from "@/components/ui/badges";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,8 +14,6 @@ import {
 import { Images } from "@/components/ui/images";
 import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
-import Link from "next/link";
-import { Button } from "../ui/button";
 
 export function ProjectCard(project: Project) {
   return (

@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { TeamAdmins } from "@/components/team/team-admins";
 import { TeamMembers } from "@/components/team/team-members";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
 import { getCurrentUserRoles, getTeamById } from "@/lib/team";
@@ -28,7 +27,6 @@ export default async function TeamMembersPage({
         <h2 className="font-bold text-xl mb-1">Members</h2>
         <p className="text-sm font-semibold">All members of this team.</p>
       </header>
-      <TeamAdmins members={data.members ?? []} />
       <TeamMembers
         members={data.members ?? []}
         teamId={data.$id}

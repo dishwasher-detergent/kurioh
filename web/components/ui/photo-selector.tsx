@@ -53,7 +53,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
   useEffect(() => {
     if (!value) return;
 
-    let file = value;
+    const file = value;
     let id = value as string;
 
     if (file instanceof File) {

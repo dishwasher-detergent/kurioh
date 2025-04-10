@@ -11,7 +11,7 @@ export interface Project extends Models.Document {
   title: string;
   short_description: string;
   description: string;
-  image_ids: string[];
+  images: string[];
   tags: string[];
   links: string[];
   slug: string;
@@ -21,7 +21,7 @@ export interface Project extends Models.Document {
 export interface Information extends Models.Document {
   title: string;
   description: string;
-  image_id: string;
+  image: string;
   socials: string[];
   organization_id: string;
   createdBy: string;

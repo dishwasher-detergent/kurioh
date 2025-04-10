@@ -32,7 +32,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         slug: project.slug,
         short_description: project.short_description,
         description: project.description,
-        image_ids: project.image_ids,
+        image_ids: project.images,
         tags: project.tags,
         links: project.links,
       };
@@ -64,7 +64,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
           project_id
         );
 
-        const image = project.image_ids.filter((x) => x === image_id)[0];
+        const image = project.images.filter((x) => x === image_id)[0];
 
         if (!image) {
           return c.json({ error: 'Image not found' }, 404);

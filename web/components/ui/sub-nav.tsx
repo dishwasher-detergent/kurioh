@@ -10,11 +10,13 @@ export function SubNav() {
   const segments = useSelectedLayoutSegments();
 
   const subNav = useMemo<React.ReactNode>(() => {
-    if (segments[3] === "project") {
+    if (segments[5] === "projects") {
       return (
         <>
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/app/teams/${segments[2]}/project/${segments[4]}/api`}>
+            <Link
+              href={`/app/teams/${segments[3]}/projects/${segments[6]}/api`}
+            >
               API
             </Link>
           </Button>

@@ -1,67 +1,45 @@
 "use client";
 
-import { LucideSlash } from "lucide-react";
-import Image from "next/image";
+import { LucideEdit } from "lucide-react";
 import Link from "next/link";
 
-import { ProfileLink } from "@/components/profile-link";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badges } from "@/components/ui/badges";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Images } from "@/components/ui/images";
+import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 
 export function ProjectCard(project: Project) {
   return (
-    <Card className="break-inside-avoid-column rounded-lg overflow-hidden py-0 gap-0 ">
-      <CardContent className="p-0 relative">
-        <AspectRatio ratio={1} className="w-full">
-          {project.image ? (
-            <Image
-              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${project.image}/view?project=${PROJECT_ID}`}
-              alt={project.name}
-              className="object-cover object-left-top bg-primary"
-              fill
-            />
-          ) : (
-            <div className="w-full aspect-square bg-muted grid place-items-center">
-              <p className="text-muted-foreground font-semibold">No image</p>
-            </div>
-          )}
-        </AspectRatio>
-        <CardHeader className="flex flex-col justify-end bottom-0 absolute w-full p-4 h-full bg-linear-to-t from-primary to-primary/20">
-          <CardTitle className="text-primary-foreground">
-            <Button
-              className="truncate p-0! text-primary-foreground text-xl"
-              variant="link"
-              asChild
-            >
-              <Link
-                href={`/app/teams/${project.teamId}/projects/${project.$id}`}
-              >
-                {project.name}
-              </Link>
-            </Button>
-          </CardTitle>
-          <CardDescription className="text-primary-foreground line-clamp-3">
-            {project?.description ?? "No description provided."}
-          </CardDescription>
-          <div className="flex flex-row gap-2 items-center mt-2">
-            <ProfileLink
-              name={project?.team?.name}
-              href={`/app/teams/${project.teamId}`}
-            />
-            <LucideSlash className="text-primary-foreground size-3" />
-            <ProfileLink name={project?.user?.name} />
-          </div>
-        </CardHeader>
+    <Card className="break-inside-avoid-column rounded-md">
+      <CardHeader>
+        <CardDescription className="truncate text-sm">
+          {project.slug}
+        </CardDescription>
+        <CardTitle className="truncate text-xl">{project.title}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {project.images && <Images images={project.images} />}
+        {project.links && <Links links={project.links} />}
+        {project.tags && <Badges badges={project.tags} />}
+        <p className="rounded-lg p-1 text-sm">{project.short_description}</p>
       </CardContent>
+      <CardFooter className="flex flex-row gap-1">
+        <Button asChild className="flex-1" size="sm" variant="outline">
+          <Link href={`/app/teams/${project.teamId}/projects/${project.$id}`}>
+            <LucideEdit className="mr-2 h-4 w-4" />
+            Edit
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

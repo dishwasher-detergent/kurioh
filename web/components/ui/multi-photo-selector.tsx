@@ -77,7 +77,7 @@ export function MultiplePhotoSelector({
     if (!value) return;
 
     for (let i = 0; i < value.length; i++) {
-      let file = value[i];
+      const file = value[i];
       let id = value[i] as string;
 
       if (file instanceof File) {

@@ -12,7 +12,7 @@ export function TeamMembersSkeleton() {
   return (
     <section>
       <h2 className="font-semibold text-lg mb-2">Members</h2>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

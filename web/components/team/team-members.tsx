@@ -40,7 +40,7 @@ export function TeamMembers({
 }: TeamMembersProps) {
   return (
     <section>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

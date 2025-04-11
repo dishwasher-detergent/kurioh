@@ -458,9 +458,8 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            "border-input bg-background ring-offset-background focus-within:ring-ring min-h-10 rounded-md border text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
+            "border-input bg-background ring-offset-background focus-within:ring-ring h-10 rounded-md border text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
             {
-              "p-2": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
             },
             className
@@ -470,7 +469,7 @@ const MultipleSelector = React.forwardRef<
             inputRef?.current?.focus();
           }}
         >
-          <div className="relative flex flex-wrap gap-1">
+          <div className="relative flex flex-wrap gap-1 h-full items-center px-2">
             {selected.map((option) => {
               return (
                 <Badge
@@ -535,7 +534,7 @@ const MultipleSelector = React.forwardRef<
                   : placeholder
               }
               className={cn(
-                "placeholder:text-muted-foreground flex-1 bg-transparent outline-hidden",
+                "placeholder:text-muted-foreground flex-1 bg-transparent outline-hidden text-sm",
                 {
                   "w-full": hidePlaceholderWhenSelected,
                   "p-2": selected.length === 0,
@@ -552,7 +551,7 @@ const MultipleSelector = React.forwardRef<
                 onChange?.(selected.filter((s) => s.fixed));
               }}
               className={cn(
-                "absolute -top-1 -right-2 grid h-8 w-8 place-items-center p-0",
+                "absolute top-0.5 right-0.5 grid h-8 w-8 place-items-center p-0",
                 (hideClearAllButton ||
                   disabled ||
                   selected.length < 1 ||

@@ -38,7 +38,7 @@ export function ProjectCard(project: Project) {
         {project.images && <Images images={project.images} />}
         {project.links && <Links links={project.links} />}
         {project.tags && <Badges badges={project.tags} />}
-        <p className="rounded-lg p-1 text-sm line-clamp-3">
+        <p className="rounded-xl p-1 text-sm line-clamp-3">
           {project.description}
         </p>
       </CardContent>

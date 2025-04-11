@@ -339,6 +339,14 @@ export async function updateProject({
         id,
         {
           ...data,
+          tags:
+            data.tags?.map((tag) =>
+              typeof tag === "string" ? tag : tag.value
+            ) || [],
+          links:
+            data.links?.map((link) =>
+              typeof link === "string" ? link : link.value
+            ) || [],
           userId: user.$id,
         },
         permissions
@@ -551,6 +559,10 @@ export async function updateInformation({
         id,
         {
           ...data,
+          socials:
+            data.socials?.map((social) =>
+              typeof social === "string" ? social : social.value
+            ) || [],
           userId: user.$id,
         },
         permissions
@@ -726,6 +738,10 @@ export async function createExperience({
             data.website && data.website != ""
               ? new URL(data.website)
               : undefined,
+          skills:
+            data.skills?.map((skill) =>
+              typeof skill === "string" ? skill : skill.value
+            ) || [],
           userId: user.$id,
           teamId,
         },

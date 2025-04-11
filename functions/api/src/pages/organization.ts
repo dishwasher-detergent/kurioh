@@ -33,12 +33,12 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
-        [Query.equal('organization_id', organization_id)]
+        [Query.equal('teamId', organization_id)]
       );
 
       const experience = await database_service.list<Experience>(
         EXPERIENCE_COLLECTION_ID,
-        [Query.equal('organization_id', organization_id)]
+        [Query.equal('teamId', organization_id)]
       );
 
       const formattedInformation = {

@@ -104,3 +104,7 @@
     cursor: pointer;
   }
 }
+
+.code code {
+  padding: 1rem !important;
+}

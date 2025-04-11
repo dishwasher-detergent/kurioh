@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -49,14 +48,14 @@ export default function InformationForm({
   const form = useForm<z.infer<typeof editInformationSchema>>({
     resolver: zodResolver(editInformationSchema),
     defaultValues: {
-      title: information.title ?? undefined,
-      description: information.description ?? undefined,
+      title: information?.title,
+      description: information?.description,
       socials:
-        information.socials.map((link) => ({
+        information?.socials.map((link) => ({
           label: link,
           value: link,
         })) ?? [],
-      image: information.image ?? undefined,
+      image: information?.image,
     },
   });
 
@@ -104,7 +103,6 @@ export default function InformationForm({
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>Title your portfolio.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -131,7 +129,6 @@ export default function InformationForm({
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>Describe your portfolio here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -145,9 +142,6 @@ export default function InformationForm({
               <FormControl>
                 <PhotoSelector {...field} />
               </FormControl>
-              <FormDescription>
-                Make your portfolio stand out with a striking image.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -169,9 +163,6 @@ export default function InformationForm({
                   }
                 />
               </FormControl>
-              <FormDescription>
-                Add social media links to your portfolio.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

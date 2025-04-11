@@ -118,6 +118,73 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
 }
 
 /**
+ * List all members of a team
+ * @param teamId The team ID
+ * @returns {Promise<Result<UserMemberData[]>>} The team members
+ */
+export async function listTeamMembers(
+  teamId: string
+): Promise<Result<UserMemberData[]>> {
+  return withAuth(async () => {
+    const { database, team } = await createSessionClient();
+
+    return unstable_cache(
+      async (teamId) => {
+        try {
+          const memberships = await team.listMemberships(teamId);
+
+          const userIds = memberships.memberships.map(
+            (member) => member.userId
+          );
+          const uniqueUserIds = Array.from(new Set(userIds));
+
+          const users = await database.listDocuments<UserData>(
+            DATABASE_ID,
+            USER_COLLECTION_ID,
+            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])]
+          );
+
+          const usersMembershipData: UserMemberData[] = users.documents.map(
+            (user) => {
+              const member = memberships.memberships.filter(
+                (member) => member.userId === user.$id
+              )[0];
+              return {
+                ...user,
+                roles: member.roles,
+                confirmed: member.confirm,
+                joinedAt: member.joined,
+              };
+            }
+          );
+
+          return {
+            success: true,
+            message: "Team members successfully retrieved.",
+            data: usersMembershipData,
+          };
+        } catch (err) {
+          const error = err as Error;
+
+          // This is where you would look to something like Splunk.
+          console.error(error);
+
+          return {
+            success: false,
+            message: error.message,
+          };
+        }
+      },
+      [`team-members`, teamId],
+      {
+        tags: ["team-members", `team:${teamId}`],
+        revalidate: 600,
+      }
+    )(teamId);
+  });
+}
+
+/**
  * List all teams
  * @returns {Promise<Result<TeamData[]>} The teams
  */

@@ -40,8 +40,7 @@ export function TeamMembers({
 }: TeamMembersProps) {
   return (
     <section>
-      <h3 className="font-semibold text-lg mb-2">Members</h3>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -49,7 +48,7 @@ export function TeamMembers({
               <TableHead className="w-full">User</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Joined</TableHead>
-              <TableHead>Actions</TableHead>
+              {isAdmin && <TableHead>Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>

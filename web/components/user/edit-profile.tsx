@@ -126,7 +126,7 @@ function EditForm({ className, setOpen, user }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length}/{PROFILE_NAME_MAX_LENGTH}
+                      {field?.value?.length ?? 0}/{PROFILE_NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>

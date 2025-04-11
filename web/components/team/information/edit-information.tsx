@@ -99,7 +99,7 @@ export default function InformationForm({
                     className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{INFORMATION_TITLE_MAX_LENGTH}
+                    {field?.value?.length ?? 0}/{INFORMATION_TITLE_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
@@ -125,7 +125,8 @@ export default function InformationForm({
                     className="absolute bottom-2 left-2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{INFORMATION_DESCRIPTION_MAX_LENGTH}
+                    {field?.value?.length ?? 0}/
+                    {INFORMATION_DESCRIPTION_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>

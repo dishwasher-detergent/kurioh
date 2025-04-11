@@ -118,7 +118,7 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length}/{NAME_MAX_LENGTH}
+                      {field?.value?.length ?? 0}/{NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>

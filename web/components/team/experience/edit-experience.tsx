@@ -212,7 +212,7 @@ export default function ExperienceForm({
                                 className="absolute top-1/2 right-1.5 -translate-y-1/2"
                                 variant="secondary"
                               >
-                                {field?.value?.length || 0}/
+                                {field?.value?.length ?? 0}/
                                 {EXPERIENCE_COMPANY_MAX_LENGTH}
                               </Badge>
                             </div>
@@ -241,7 +241,7 @@ export default function ExperienceForm({
                                 className="absolute top-1/2 right-1.5 -translate-y-1/2"
                                 variant="secondary"
                               >
-                                {field?.value?.length || 0}/
+                                {field?.value?.length ?? 0}/
                                 {EXPERIENCE_TITLE_MAX_LENGTH}
                               </Badge>
                             </div>
@@ -269,7 +269,7 @@ export default function ExperienceForm({
                               className="absolute bottom-2 left-2"
                               variant="secondary"
                             >
-                              {field?.value?.length || 0}/
+                              {field?.value?.length ?? 0}/
                               {EXPERIENCE_DESCRIPTION_MAX_LENGTH}
                             </Badge>
                           </div>

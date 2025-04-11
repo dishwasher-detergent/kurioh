@@ -197,8 +197,9 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   {...field}
                   defaultOptions={TAGS}
                   creatable
+                  placeholder="Add tags to your project"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                       No results found.
                     </p>
                   }
@@ -222,8 +223,9 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                 <MultipleSelector
                   {...field}
                   creatable
+                  placeholder="Add project links"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                       No results found.
                     </p>
                   }

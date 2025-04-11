@@ -157,8 +157,9 @@ export default function InformationForm({
                 <MultipleSelector
                   {...field}
                   creatable
+                  placeholder="Add social links"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                       No results found.
                     </p>
                   }

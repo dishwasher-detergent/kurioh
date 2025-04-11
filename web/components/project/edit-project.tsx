@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -99,11 +98,10 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{NAME_MAX_LENGTH}
+                    {field?.value?.length || 0}/{NAME_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>Name your project.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -126,11 +124,10 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     className="absolute bottom-2 left-2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{DESCRIPTION_MAX_LENGTH}
+                    {field?.value?.length || 0}/{DESCRIPTION_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>Describe your project here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -153,13 +150,10 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     className="absolute bottom-2 left-2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{SHORT_DESCRIPTION_MAX_LENGTH}
+                    {field?.value?.length || 0}/{SHORT_DESCRIPTION_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>
-                Give your projects elevator pitch here.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -178,10 +172,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   )}
                 />
               </FormControl>
-              <FormDescription>
-                Let people, at a glance, know how you&apos;ve built your
-                project.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -197,17 +187,14 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   {...field}
                   defaultOptions={TAGS}
                   creatable
+                  placeholder="Add tags to your project"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                       No results found.
                     </p>
                   }
                 />
               </FormControl>
-              <FormDescription>
-                Let people, at a glance, know how you&apos;ve built your
-                project.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -222,27 +209,31 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                 <MultipleSelector
                   {...field}
                   creatable
+                  placeholder="Add project links"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                       No results found.
                     </p>
                   }
                 />
               </FormControl>
-              <FormDescription>
-                Add links to your projects site, repo, or anything else.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button size="sm" type="submit" disabled={loading}>
+        <Button
+          size="sm"
+          type="submit"
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
+        >
+          Save Project
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideSave className="mr-2 size-3.5" />
+            <LucideSave className="size-3.5" />
           )}
-          Save
         </Button>
       </form>
     </Form>

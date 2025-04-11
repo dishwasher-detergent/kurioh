@@ -99,7 +99,7 @@ export default function InformationForm({
                     className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{INFORMATION_TITLE_MAX_LENGTH}
+                    {field?.value?.length || 0}/{INFORMATION_TITLE_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
@@ -125,7 +125,8 @@ export default function InformationForm({
                     className="absolute bottom-2 left-2"
                     variant="secondary"
                   >
-                    {field?.value?.length}/{INFORMATION_DESCRIPTION_MAX_LENGTH}
+                    {field?.value?.length || 0}/
+                    {INFORMATION_DESCRIPTION_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
@@ -156,8 +157,9 @@ export default function InformationForm({
                 <MultipleSelector
                   {...field}
                   creatable
+                  placeholder="Add social links"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                       No results found.
                     </p>
                   }
@@ -167,13 +169,19 @@ export default function InformationForm({
             </FormItem>
           )}
         />
-        <Button type="submit" size="sm" disabled={loading}>
+        <Button
+          type="submit"
+          size="sm"
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
+        >
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideSave className="mr-2 size-3.5" />
+            <LucideSave className="size-3.5" />
           )}
-          Save
+          Save Information
         </Button>
       </form>
     </Form>

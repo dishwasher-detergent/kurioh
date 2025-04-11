@@ -1,5 +1,12 @@
 "use client";
 
+import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Query } from "node-appwrite";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { AddProject } from "@/components/project/create-project";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +25,6 @@ import {
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
 import { listProjects } from "@/lib/db";
 import { cn } from "@/lib/utils";
-
-import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Query } from "node-appwrite";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export function ProjectSelect() {
   const { teamId, projectId } = useParams<{
@@ -64,10 +64,13 @@ export function ProjectSelect() {
     <>
       {projects.length == 0 && !loading ? (
         <div className="flex w-32">
-          <AddProject teamId={teamId} />
+          <AddProject
+            teamId={teamId}
+            className="bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+          />
         </div>
       ) : null}
-      {projects.length > 0 && (
+      {projects.length > 0 && !loading && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -102,7 +105,7 @@ export function ProjectSelect() {
                     {projects.map((projectItem) => (
                       <CommandItem
                         key={projectItem.$id}
-                        value={projectItem.$id}
+                        value={projectItem.name}
                         onSelect={() => {
                           setOpen(false);
                         }}
@@ -128,7 +131,7 @@ export function ProjectSelect() {
                 </CommandList>
               </Command>
               <div className="flex border-t p-1 md:justify-start">
-                <AddProject teamId={teamId} />
+                <AddProject teamId={teamId} className="w-full" />
               </div>
             </PopoverContent>
           </Popover>

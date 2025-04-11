@@ -1,7 +1,7 @@
+import { notFound } from "next/navigation";
+
 import ExperienceForm from "@/components/team/experience/edit-experience";
 import { listExperiences } from "@/lib/db";
-
-import { notFound } from "next/navigation";
 
 export default async function TeamExperience({
   params,

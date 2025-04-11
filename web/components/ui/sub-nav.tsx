@@ -57,7 +57,7 @@ export function SubNav() {
 
   return (
     <div className="border-t bg-muted/50">
-      <ul className="mx-auto flex max-w-6xl flex-row items-center gap-2 px-4 py-1 md:px-8">
+      <ul className="mx-auto flex max-w-6xl flex-row items-center gap-2 px-4 py-1 md:px-8 overflow-x-auto">
         {subNav}
       </ul>
     </div>

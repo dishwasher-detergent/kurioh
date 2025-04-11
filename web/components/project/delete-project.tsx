@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucideTrash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -129,7 +129,7 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length}/{NAME_MAX_LENGTH}
+                      {field?.value?.length || 0}/{NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -144,13 +144,15 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={loading || !form.formState.isValid}
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
         >
-          Delete
+          Delete Project
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideTrash2 className="mr-2 size-3.5" />
+            <LucideTrash2 className="size-3.5" />
           )}
         </Button>
       </form>

@@ -50,6 +50,9 @@ export async function uploadFile({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -76,6 +79,9 @@ export async function deleteFile(id: string): Promise<Result<undefined>> {
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,

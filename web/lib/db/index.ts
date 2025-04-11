@@ -20,6 +20,7 @@ import {
 } from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
 import { deleteFile, uploadFile } from "@/lib/storage";
+import { createSlug } from "@/lib/utils";
 import {
   AddProjectFormData,
   EditExperienceFormData,
@@ -47,6 +48,14 @@ export async function listProjects(
             PROJECT_COLLECTION_ID,
             queries
           );
+
+          if (!projects.documents.length) {
+            return {
+              success: true,
+              message: "No projects found.",
+              data: projects,
+            };
+          }
 
           const userIds = projects.documents.map((project) => project.userId);
           const uniqueUserIds = Array.from(new Set(userIds));
@@ -221,6 +230,7 @@ export async function createProject({
         id,
         {
           ...data,
+          slug: createSlug(data.name),
           userId: user.$id,
         },
         permissions
@@ -253,6 +263,9 @@ export async function createProject({
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -381,6 +394,9 @@ export async function updateProject({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -423,6 +439,9 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -489,7 +508,7 @@ export async function getInformationById(
       },
       ["information", informationId],
       {
-        tags: [`information:${informationId}`],
+        tags: ["information", `information:${informationId}`],
         revalidate: 600,
       }
     )();
@@ -583,6 +602,7 @@ export async function updateInformation({
       );
 
       revalidateTag(`information:${id}`);
+      revalidateTag(`team:${teamId}`);
 
       return {
         success: true,
@@ -595,6 +615,9 @@ export async function updateInformation({
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -760,7 +783,8 @@ export async function createExperience({
     } catch (err) {
       const error = err as Error;
 
-      console.error(error.message);
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -821,6 +845,9 @@ export async function updateExperience({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -860,6 +887,9 @@ export async function deleteExperience(
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -944,6 +974,9 @@ export async function updateTeamExperiences({
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
       return {
         success: false,
         message: error.message,

@@ -27,9 +27,9 @@ export function UserInformation({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex flex-row items-center gap-2 rounded-lg pr-1 pl-3"
+          className="flex flex-row-reverse md:flex-row items-center gap-2 rounded-lg md:pr-1 md:pl-3 pr-3 pl-1"
         >
-          <p className="text-sm">Hello, {user.name}</p>
+          <p className="text-sm hiddenmd:block">Hello, {user.name}</p>
           <Avatar className="size-7 rounded-lg">
             <AvatarFallback className="bg-primary text-sm text-primary-foreground">
               {initals}

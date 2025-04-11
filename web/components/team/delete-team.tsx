@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { TEAM_NAME_MAX_LENGTH } from "@/constants/team.constants";
 import { TeamData } from "@/interfaces/team.interface";
-import { deleteTeam } from "@/lib/team";
+import { deleteTeam, setLastVisitedTeam } from "@/lib/team";
 import { DeleteTeamFormData, deleteTeamSchema } from "@/lib/team/schemas";
 import { cn } from "@/lib/utils";
 
@@ -91,7 +91,8 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
 
     if (data.success) {
       toast.success(data.message);
-      router.push("/app/teams");
+      await setLastVisitedTeam("");
+      router.push("/app");
       setOpen(false);
     } else {
       toast.error(data.message);
@@ -129,7 +130,7 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length}/{TEAM_NAME_MAX_LENGTH}
+                      {field?.value?.length || 0}/{TEAM_NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -148,9 +149,9 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
         >
           Delete
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideTrash2 className="mr-2 size-3.5" />
+            <LucideTrash2 className="size-3.5" />
           )}
         </Button>
       </form>

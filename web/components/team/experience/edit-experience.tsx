@@ -411,7 +411,7 @@ export default function ExperienceForm({
                             creatable
                             placeholder="Add relevant skills (e.g., React, Project Management, Leadership)"
                             emptyIndicator={
-                              <p className="text-center leading-4 text-gray-600 dark:text-gray-400">
+                              <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
                                 No results found.
                               </p>
                             }
@@ -483,9 +483,7 @@ export default function ExperienceForm({
             <Button
               type="submit"
               disabled={
-                loading ||
-                !form.formState.isDirty ||
-                form.formState.errors.experience?.length === 0
+                loading || !form.formState.isValid || !form.formState.isDirty
               }
             >
               {loading ? (

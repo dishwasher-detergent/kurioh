@@ -1,5 +1,11 @@
 "use client";
 
+import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { CreateTeam } from "@/components/team/create-team";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -18,12 +24,6 @@ import {
 import { TeamData } from "@/interfaces/team.interface";
 import { listTeams } from "@/lib/team";
 import { cn } from "@/lib/utils";
-
-import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export function TeamSelect() {
   const { teamId } = useParams<{
@@ -60,7 +60,7 @@ export function TeamSelect() {
           <CreateTeam />
         </div>
       ) : null}
-      {teams.length > 0 && (
+      {teams.length > 0 && !loading && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -107,7 +107,7 @@ export function TeamSelect() {
                     {teams.map((teamItem) => (
                       <CommandItem
                         key={teamItem.$id}
-                        value={teamItem.$id}
+                        value={teamItem.name}
                         onSelect={() => {
                           setOpen(false);
                         }}
@@ -131,7 +131,7 @@ export function TeamSelect() {
                 </CommandList>
               </Command>
               <div className="flex flex-row justify-end gap-1 border-t p-1 md:justify-start">
-                <CreateTeam />
+                <CreateTeam className="w-full" />
               </div>
             </PopoverContent>
           </Popover>

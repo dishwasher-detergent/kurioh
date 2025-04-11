@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LucideLoader2, LucidePencil } from "lucide-react";
+import { LucideLoader2, LucidePencil, LucideSave } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -126,7 +126,7 @@ function EditForm({ className, setOpen, user }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length}/{PROFILE_NAME_MAX_LENGTH}
+                      {field?.value?.length || 0}/{PROFILE_NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -152,7 +152,7 @@ function EditForm({ className, setOpen, user }: FormProps) {
                       className="absolute bottom-2 left-2"
                       variant="secondary"
                     >
-                      {field?.value?.length ?? 0}/{PROFILE_ABOUT_MAX_LENGTH}
+                      {field?.value?.length || 0}/{PROFILE_ABOUT_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -164,9 +164,9 @@ function EditForm({ className, setOpen, user }: FormProps) {
         <Button type="submit" disabled={loading || !form.formState.isValid}>
           Save
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucidePencil className="mr-2 size-3.5" />
+            <LucideSave className="size-3.5" />
           )}
         </Button>
       </form>

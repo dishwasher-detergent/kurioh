@@ -30,9 +30,10 @@ import { cn } from "@/lib/utils";
 
 interface AddProjectProps {
   teamId: string;
+  className?: string;
 }
 
-export function AddProject({ teamId }: AddProjectProps) {
+export function AddProject({ teamId, className }: AddProjectProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -42,7 +43,7 @@ export function AddProject({ teamId }: AddProjectProps) {
       open={open}
       setOpen={setOpen}
       button={
-        <Button size="sm">
+        <Button size="sm" className={className}>
           Add Project
           <LucidePlus className="ml-2 size-3.5" />
         </Button>
@@ -65,8 +66,8 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
   const form = useForm<AddProjectFormData>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
-      name: undefined,
-      description: undefined,
+      name: "",
+      description: "",
       teamId: teamId,
     },
   });
@@ -118,7 +119,7 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length}/{NAME_MAX_LENGTH}
+                      {field?.value?.length || 0}/{NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -144,7 +145,7 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
                       className="absolute bottom-2 left-2"
                       variant="secondary"
                     >
-                      {field?.value?.length ?? 0}/{DESCRIPTION_MAX_LENGTH}
+                      {field?.value?.length || 0}/{DESCRIPTION_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -156,13 +157,15 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
         <Button
           className="sticky bottom-0"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
         >
-          Create
+          Create Project
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucidePlus className="mr-2 size-3.5" />
+            <LucidePlus className="size-3.5" />
           )}
         </Button>
       </form>

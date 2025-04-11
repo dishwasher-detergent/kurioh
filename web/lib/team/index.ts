@@ -284,7 +284,6 @@ export async function createTeam({
         teamResponse.$id,
         {
           name: data.name,
-          about: data.about,
         },
         permissions
       );
@@ -359,7 +358,6 @@ export async function updateTeam({
         id,
         {
           name: data.name,
-          about: data.about,
         },
         permissions
       );
@@ -414,6 +412,9 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
       } while (response.documents.length > 0);
 
       revalidateTag("teams");
+      revalidateTag(`experience`);
+      revalidateTag(`experiences`);
+      revalidateTag(`information`);
 
       return {
         success: true,
@@ -774,4 +775,38 @@ export async function checkUserRole(
   }
 
   return userMembership;
+}
+
+/**
+ * Set the last visited team for the user
+ * @param teamId The team ID to set as last visited
+ * @returns {Promise<Result<void>>} Result of the operation
+ */
+export async function setLastVisitedTeam(
+  teamId: string | null
+): Promise<Result<void>> {
+  return withAuth(async () => {
+    const { account } = await createSessionClient();
+
+    try {
+      await account.updatePrefs({
+        lastVisitedTeam: teamId,
+      });
+
+      return {
+        success: true,
+        message: "Last visited team set successfully.",
+      };
+    } catch (err) {
+      const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  });
 }

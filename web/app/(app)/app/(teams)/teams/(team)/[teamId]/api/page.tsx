@@ -1,7 +1,8 @@
+import { notFound } from "next/navigation";
+
 import { Request } from "@/components/request";
 import { API_ENDPOINT } from "@/lib/constants";
 import { getTeamById } from "@/lib/team";
-import { notFound } from "next/navigation";
 
 export default async function ApiPage({
   params,

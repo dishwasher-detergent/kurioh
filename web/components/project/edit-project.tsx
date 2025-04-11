@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -103,7 +102,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>Name your project.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -130,7 +128,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>Describe your project here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -157,9 +154,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   </Badge>
                 </div>
               </FormControl>
-              <FormDescription>
-                Give your projects elevator pitch here.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -178,10 +172,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   )}
                 />
               </FormControl>
-              <FormDescription>
-                Let people, at a glance, know how you&apos;ve built your
-                project.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -205,10 +195,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   }
                 />
               </FormControl>
-              <FormDescription>
-                Let people, at a glance, know how you&apos;ve built your
-                project.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -231,9 +217,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   }
                 />
               </FormControl>
-              <FormDescription>
-                Add links to your projects site, repo, or anything else.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

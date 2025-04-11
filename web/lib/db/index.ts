@@ -508,7 +508,7 @@ export async function getInformationById(
       },
       ["information", informationId],
       {
-        tags: [`information:${informationId}`],
+        tags: ["information", `information:${informationId}`],
         revalidate: 600,
       }
     )();
@@ -602,6 +602,7 @@ export async function updateInformation({
       );
 
       revalidateTag(`information:${id}`);
+      revalidateTag(`team:${teamId}`);
 
       return {
         success: true,

@@ -56,7 +56,7 @@ function CreateForm({ className, setOpen }: FormProps) {
   const form = useForm<AddTeamFormData>({
     resolver: zodResolver(addTeamSchema),
     defaultValues: {
-      name: undefined,
+      name: "",
     },
   });
 

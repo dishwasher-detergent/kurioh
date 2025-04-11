@@ -60,7 +60,7 @@ export function TeamSelect() {
           <CreateTeam />
         </div>
       ) : null}
-      {teams.length > 0 && (
+      {teams.length > 0 && !loading && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>

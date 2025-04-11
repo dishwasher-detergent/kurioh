@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { TEAM_NAME_MAX_LENGTH } from "@/constants/team.constants";
 import { TeamData } from "@/interfaces/team.interface";
-import { deleteTeam } from "@/lib/team";
+import { deleteTeam, setLastVisitedTeam } from "@/lib/team";
 import { DeleteTeamFormData, deleteTeamSchema } from "@/lib/team/schemas";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +70,7 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
   const form = useForm<DeleteTeamFormData>({
     resolver: zodResolver(deleteTeamSchema),
     defaultValues: {
-      name: undefined,
+      name: "",
     },
   });
 
@@ -91,7 +91,8 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
 
     if (data.success) {
       toast.success(data.message);
-      router.push("/app/teams");
+      await setLastVisitedTeam("");
+      router.push("/app");
       setOpen(false);
     } else {
       toast.error(data.message);

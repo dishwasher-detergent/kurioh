@@ -11,7 +11,7 @@ export default async function Home() {
     redirect("/login");
   }
 
-  if (user.prefs.lastVisitedTeam) {
+  if (user.prefs.lastVisitedTeam && user.prefs.lastVisitedTeam !== "") {
     redirect(`/app/teams/${user.prefs.lastVisitedTeam}`);
   } else {
     const orgs = await listTeams();

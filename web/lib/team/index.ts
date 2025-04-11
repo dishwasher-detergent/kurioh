@@ -412,6 +412,9 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
       } while (response.documents.length > 0);
 
       revalidateTag("teams");
+      revalidateTag(`experience`);
+      revalidateTag(`experiences`);
+      revalidateTag(`information`);
 
       return {
         success: true,
@@ -780,7 +783,7 @@ export async function checkUserRole(
  * @returns {Promise<Result<void>>} Result of the operation
  */
 export async function setLastVisitedTeam(
-  teamId: string
+  teamId: string | null
 ): Promise<Result<void>> {
   return withAuth(async () => {
     const { account } = await createSessionClient();

@@ -18,11 +18,12 @@ export default async function TeamPage({
 }) {
   const { teamId } = await params;
   const { data, success } = await getTeamById(teamId);
-  await setLastVisitedTeam(teamId);
 
   if (!success || !data) {
     redirect("/app");
   }
+
+  await setLastVisitedTeam(teamId);
 
   const { data: projectData } = await listProjects([
     Query.orderDesc("$createdAt"),

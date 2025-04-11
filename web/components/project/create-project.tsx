@@ -66,8 +66,8 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
   const form = useForm<AddProjectFormData>({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
-      name: undefined,
-      description: undefined,
+      name: "",
+      description: "",
       teamId: teamId,
     },
   });

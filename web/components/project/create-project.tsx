@@ -81,7 +81,7 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
 
     if (data.success) {
       toast.success(data.message);
-      router.refresh();
+      router.push(`/app/teams/${teamId}/projects/${data.data?.$id}`);
       setOpen(false);
     } else {
       toast.error(data.message);

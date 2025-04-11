@@ -41,7 +41,7 @@ export function Request({
   model,
   modelLanguage = "typescript",
 }: RequestProps) {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<number | null>(null);

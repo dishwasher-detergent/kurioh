@@ -106,7 +106,7 @@ export function ProjectSelect() {
                       <CommandItem
                         key={projectItem.$id}
                         value={projectItem.name}
-                        onSelect={(c) => {
+                        onSelect={() => {
                           setOpen(false);
                         }}
                         className="cursor-pointer text-sm"

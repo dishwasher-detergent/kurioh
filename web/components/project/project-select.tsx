@@ -64,7 +64,10 @@ export function ProjectSelect() {
     <>
       {projects.length == 0 && !loading ? (
         <div className="flex w-32">
-          <AddProject teamId={teamId} />
+          <AddProject
+            teamId={teamId}
+            className="bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+          />
         </div>
       ) : null}
       {projects.length > 0 && (
@@ -128,7 +131,7 @@ export function ProjectSelect() {
                 </CommandList>
               </Command>
               <div className="flex border-t p-1 md:justify-start">
-                <AddProject teamId={teamId} />
+                <AddProject teamId={teamId} className="w-full" />
               </div>
             </PopoverContent>
           </Popover>

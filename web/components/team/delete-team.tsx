@@ -129,7 +129,7 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
                       className="absolute right-1.5 top-1/2 -translate-y-1/2"
                       variant="secondary"
                     >
-                      {field?.value?.length ?? 0}/{TEAM_NAME_MAX_LENGTH}
+                      {field?.value?.length || 0}/{TEAM_NAME_MAX_LENGTH}
                     </Badge>
                   </div>
                 </FormControl>
@@ -148,9 +148,9 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
         >
           Delete
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideTrash2 className="mr-2 size-3.5" />
+            <LucideTrash2 className="size-3.5" />
           )}
         </Button>
       </form>

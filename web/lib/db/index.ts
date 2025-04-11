@@ -20,6 +20,7 @@ import {
 } from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
 import { deleteFile, uploadFile } from "@/lib/storage";
+import { createSlug } from "@/lib/utils";
 import {
   AddProjectFormData,
   EditExperienceFormData,
@@ -229,6 +230,7 @@ export async function createProject({
         id,
         {
           ...data,
+          slug: createSlug(data.name),
           userId: user.$id,
         },
         permissions

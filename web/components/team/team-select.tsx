@@ -131,7 +131,7 @@ export function TeamSelect() {
                 </CommandList>
               </Command>
               <div className="flex flex-row justify-end gap-1 border-t p-1 md:justify-start">
-                <CreateTeam />
+                <CreateTeam className="w-full" />
               </div>
             </PopoverContent>
           </Popover>

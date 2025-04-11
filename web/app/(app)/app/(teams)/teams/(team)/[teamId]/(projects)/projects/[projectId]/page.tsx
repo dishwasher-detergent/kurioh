@@ -15,5 +15,15 @@ export default async function ProjectPage({
     redirect("/app");
   }
 
-  return <EditProject project={data} teamId={teamId} />;
+  return (
+    <>
+      <header className="mb-6">
+        <h2 className="font-bold text-xl mb-1">{data.name}</h2>
+        <p className="text-sm font-semibold">
+          Describe your project and its goals.
+        </p>
+      </header>
+      <EditProject project={data} teamId={teamId} />
+    </>
+  );
 }

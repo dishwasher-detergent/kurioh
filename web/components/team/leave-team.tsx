@@ -137,9 +137,9 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
         >
           Leave Team
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideDoorOpen className="mr-2 size-3.5" />
+            <LucideDoorOpen className="size-3.5" />
           )}
         </Button>
       </form>

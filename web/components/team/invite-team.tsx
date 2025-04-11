@@ -121,9 +121,9 @@ function InviteForm({ className, setOpen, team }: FormProps) {
         >
           Invite To Team
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideUserRoundPlus className="mr-2 size-3.5" />
+            <LucideUserRoundPlus className="size-3.5" />
           )}
         </Button>
       </form>

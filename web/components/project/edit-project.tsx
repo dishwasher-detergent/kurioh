@@ -99,7 +99,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     className="absolute top-1/2 right-1.5 -translate-y-1/2"
                     variant="secondary"
                   >
-                    {field?.value?.length ?? 0}/{NAME_MAX_LENGTH}
+                    {field?.value?.length || 0}/{NAME_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
@@ -126,7 +126,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     className="absolute bottom-2 left-2"
                     variant="secondary"
                   >
-                    {field?.value?.length ?? 0}/{DESCRIPTION_MAX_LENGTH}
+                    {field?.value?.length || 0}/{DESCRIPTION_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
@@ -153,7 +153,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     className="absolute bottom-2 left-2"
                     variant="secondary"
                   >
-                    {field?.value?.length ?? 0}/{SHORT_DESCRIPTION_MAX_LENGTH}
+                    {field?.value?.length || 0}/{SHORT_DESCRIPTION_MAX_LENGTH}
                   </Badge>
                 </div>
               </FormControl>
@@ -245,9 +245,9 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
         >
           Save Project
           {loading ? (
-            <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
+            <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
-            <LucideSave className="mr-2 size-3.5" />
+            <LucideSave className="size-3.5" />
           )}
         </Button>
       </form>

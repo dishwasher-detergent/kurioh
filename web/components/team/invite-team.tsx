@@ -65,7 +65,7 @@ function InviteForm({ className, setOpen, team }: FormProps) {
   const form = useForm<InviteTeamFormData>({
     resolver: zodResolver(inviteTeamSchema),
     defaultValues: {
-      email: "",
+      email: undefined,
     },
   });
 

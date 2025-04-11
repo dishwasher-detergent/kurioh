@@ -107,7 +107,7 @@ export function TeamSelect() {
                     {teams.map((teamItem) => (
                       <CommandItem
                         key={teamItem.$id}
-                        value={teamItem.$id}
+                        value={teamItem.name}
                         onSelect={() => {
                           setOpen(false);
                         }}

@@ -70,7 +70,7 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
   const form = useForm<DeleteTeamFormData>({
     resolver: zodResolver(deleteTeamSchema),
     defaultValues: {
-      name: "",
+      name: undefined,
     },
   });
 

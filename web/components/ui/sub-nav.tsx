@@ -46,6 +46,9 @@ export function SubNav() {
           <Button asChild variant="ghost" size="sm">
             <Link href={`/app/teams/${segments[3]}/members`}>Members</Link>
           </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link href={`/app/teams/${segments[3]}/settings`}>Settings</Link>
+          </Button>
         </>
       );
     }

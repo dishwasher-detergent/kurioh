@@ -68,7 +68,7 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
   const form = useForm<LeaveTeamFormData>({
     resolver: zodResolver(leaveTeamSchema),
     defaultValues: {
-      name: "",
+      name: undefined,
     },
   });
 

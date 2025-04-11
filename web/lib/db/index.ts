@@ -264,6 +264,9 @@ export async function createProject({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -391,6 +394,9 @@ export async function updateProject({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -433,6 +439,9 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -606,6 +615,9 @@ export async function updateInformation({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -770,7 +782,8 @@ export async function createExperience({
     } catch (err) {
       const error = err as Error;
 
-      console.error(error.message);
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -831,6 +844,9 @@ export async function updateExperience({
     } catch (err) {
       const error = err as Error;
 
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
       return {
         success: false,
         message: error.message,
@@ -870,6 +886,9 @@ export async function deleteExperience(
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
 
       return {
         success: false,
@@ -954,6 +973,9 @@ export async function updateTeamExperiences({
       };
     } catch (err) {
       const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
       return {
         success: false,
         message: error.message,

@@ -71,7 +71,7 @@ export function Request({
       try {
         const responseData = await res.json();
         setData(responseData);
-      } catch (e) {
+      } catch {
         const text = await res.text();
         setData(text || "No response body");
       }

@@ -167,13 +167,19 @@ export default function InformationForm({
             </FormItem>
           )}
         />
-        <Button type="submit" size="sm" disabled={loading}>
+        <Button
+          type="submit"
+          size="sm"
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
+        >
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (
             <LucideSave className="mr-2 size-3.5" />
           )}
-          Save
+          Save Information
         </Button>
       </form>
     </Form>

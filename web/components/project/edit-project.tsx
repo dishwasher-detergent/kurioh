@@ -236,13 +236,19 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
             </FormItem>
           )}
         />
-        <Button size="sm" type="submit" disabled={loading}>
+        <Button
+          size="sm"
+          type="submit"
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
+        >
+          Save Project
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (
             <LucideSave className="mr-2 size-3.5" />
           )}
-          Save
         </Button>
       </form>
     </Form>

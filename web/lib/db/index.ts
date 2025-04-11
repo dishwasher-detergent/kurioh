@@ -48,6 +48,14 @@ export async function listProjects(
             queries
           );
 
+          if (!projects.documents.length) {
+            return {
+              success: true,
+              message: "No projects found.",
+              data: projects,
+            };
+          }
+
           const userIds = projects.documents.map((project) => project.userId);
           const uniqueUserIds = Array.from(new Set(userIds));
 

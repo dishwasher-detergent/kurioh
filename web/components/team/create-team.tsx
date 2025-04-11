@@ -19,11 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  TEAM_ABOUT_MAX_LENGTH,
-  TEAM_NAME_MAX_LENGTH,
-} from "@/constants/team.constants";
+import { TEAM_NAME_MAX_LENGTH } from "@/constants/team.constants";
 import { createTeam } from "@/lib/team";
 import { AddTeamFormData, addTeamSchema } from "@/lib/team/schemas";
 import { cn } from "@/lib/utils";
@@ -33,8 +29,8 @@ export function CreateTeam() {
 
   return (
     <DyanmicDrawer
-      title="Team"
-      description="Create a new Team"
+      title="Team Creation"
+      description="Create a new Team to house your projects!"
       open={open}
       setOpen={setOpen}
       button={
@@ -60,8 +56,7 @@ function CreateForm({ className, setOpen }: FormProps) {
   const form = useForm<AddTeamFormData>({
     resolver: zodResolver(addTeamSchema),
     defaultValues: {
-      name: "",
-      about: "",
+      name: undefined,
     },
   });
 
@@ -99,7 +94,7 @@ function CreateForm({ className, setOpen }: FormProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Team</FormLabel>
+                <FormLabel>Team Name</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
@@ -120,39 +115,15 @@ function CreateForm({ className, setOpen }: FormProps) {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="about"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>About</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Textarea
-                      {...field}
-                      placeholder="Describe your team."
-                      className="pb-8"
-                      maxLength={TEAM_ABOUT_MAX_LENGTH}
-                    />
-                    <Badge
-                      className="absolute bottom-2 left-2"
-                      variant="secondary"
-                    >
-                      {field?.value?.length ?? 0}/{TEAM_ABOUT_MAX_LENGTH}
-                    </Badge>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
         <Button
           className="sticky bottom-0"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
         >
-          Create
+          Create Team
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (

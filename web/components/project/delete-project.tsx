@@ -144,9 +144,11 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={loading || !form.formState.isValid}
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
         >
-          Delete
+          Delete Project
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (

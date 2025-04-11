@@ -156,9 +156,11 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
         <Button
           className="sticky bottom-0"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={
+            loading || !form.formState.isValid || !form.formState.isDirty
+          }
         >
-          Create
+          Create Project
           {loading ? (
             <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
           ) : (

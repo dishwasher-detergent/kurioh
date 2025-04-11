@@ -483,9 +483,7 @@ export default function ExperienceForm({
             <Button
               type="submit"
               disabled={
-                loading ||
-                !form.formState.isDirty ||
-                form.formState.errors.experience?.length === 0
+                loading || !form.formState.isValid || !form.formState.isDirty
               }
             >
               {loading ? (

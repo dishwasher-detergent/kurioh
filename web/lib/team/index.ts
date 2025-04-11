@@ -284,7 +284,6 @@ export async function createTeam({
         teamResponse.$id,
         {
           name: data.name,
-          about: data.about,
         },
         permissions
       );
@@ -359,7 +358,6 @@ export async function updateTeam({
         id,
         {
           name: data.name,
-          about: data.about,
         },
         permissions
       );

@@ -1,5 +1,11 @@
 "use client";
 
+import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { CreateTeam } from "@/components/team/create-team";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -18,12 +24,6 @@ import {
 import { TeamData } from "@/interfaces/team.interface";
 import { listTeams } from "@/lib/team";
 import { cn } from "@/lib/utils";
-
-import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export function TeamSelect() {
   const { teamId } = useParams<{

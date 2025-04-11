@@ -3,6 +3,7 @@ import {
   LucideMailWarning,
   LucideStar,
 } from "lucide-react";
+import Link from "next/link";
 
 import { DemoteMemberAdmin } from "@/components/team/demote-admin";
 import { PromoteMemberAdmin } from "@/components/team/promote-admin";
@@ -23,7 +24,6 @@ import {
 } from "@/components/ui/table";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
 import { UserMemberData } from "@/interfaces/user.interface";
-import Link from "next/link";
 
 interface TeamMembersProps {
   members: UserMemberData[];

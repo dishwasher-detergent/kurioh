@@ -1,5 +1,12 @@
 "use client";
 
+import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Query } from "node-appwrite";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { AddProject } from "@/components/project/create-project";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +25,6 @@ import {
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
 import { listProjects } from "@/lib/db";
 import { cn } from "@/lib/utils";
-
-import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Query } from "node-appwrite";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export function ProjectSelect() {
   const { teamId, projectId } = useParams<{

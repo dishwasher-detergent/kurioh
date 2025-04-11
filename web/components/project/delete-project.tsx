@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucideTrash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -29,7 +29,6 @@ import { Project } from "@/interfaces/project.interface";
 import { deleteProject } from "@/lib/db";
 import { DeleteProjectFormData, deleteProjectSchema } from "@/lib/db/schemas";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 export function DeleteProject({ project }: { project: Project }) {
   const [open, setOpen] = useState(false);

@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucideUserRoundPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +25,6 @@ import { TeamData } from "@/interfaces/team.interface";
 import { inviteMember } from "@/lib/team";
 import { InviteTeamFormData, inviteTeamSchema } from "@/lib/team/schemas";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 export function InviteTeam({ team }: { team: TeamData }) {
   const [open, setOpen] = useState(false);

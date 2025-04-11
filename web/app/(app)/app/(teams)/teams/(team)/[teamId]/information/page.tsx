@@ -1,7 +1,7 @@
+import { notFound } from "next/navigation";
+
 import InformationForm from "@/components/team/information/edit-information";
 import { getInformationById } from "@/lib/db";
-
-import { notFound } from "next/navigation";
 
 export default async function TeamInformation({
   params,

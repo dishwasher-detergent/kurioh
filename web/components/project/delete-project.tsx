@@ -29,6 +29,7 @@ import { Project } from "@/interfaces/project.interface";
 import { deleteProject } from "@/lib/db";
 import { DeleteProjectFormData, deleteProjectSchema } from "@/lib/db/schemas";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 export function DeleteProject({ project }: { project: Project }) {
   const [open, setOpen] = useState(false);

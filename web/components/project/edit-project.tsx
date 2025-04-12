@@ -39,7 +39,7 @@ interface ProjectFormProps {
 export default function EditProject({ project, teamId }: ProjectFormProps) {
   const router = useRouter();
   const [initialImages, setInitialImages] = useState<string[] | undefined>(
-    project.images
+    project.images,
   );
 
   const form = useForm<EditProjectFormData>({
@@ -164,7 +164,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                 <MultiplePhotoSelector
                   {...field}
                   value={field.value?.filter(
-                    (item): item is string | File => item !== null
+                    (item): item is string | File => item !== null,
                   )}
                 />
               </FormControl>
@@ -185,7 +185,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   creatable
                   placeholder="Add tags to your project"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
+                    <p className="text-muted-foreground text-center text-sm leading-4 font-semibold">
                       No results found.
                     </p>
                   }
@@ -207,7 +207,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                   creatable
                   placeholder="Add project links"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
+                    <p className="text-muted-foreground text-center text-sm leading-4 font-semibold">
                       No results found.
                     </p>
                   }

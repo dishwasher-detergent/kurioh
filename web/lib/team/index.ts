@@ -44,38 +44,38 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
           const data = await database.getDocument<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
-            id
+            id,
           );
 
           const information = await database.getDocument<Information>(
             DATABASE_ID,
             INFORMATION_COLLECTION_ID,
-            id
+            id,
           );
 
           const experience = await database.listDocuments<Experience>(
             DATABASE_ID,
             EXPERIENCE_COLLECTION_ID,
-            [Query.equal("teamId", id), Query.orderDesc("start_date")]
+            [Query.equal("teamId", id), Query.orderDesc("start_date")],
           );
 
           const memberships = await team.listMemberships(data.$id);
 
           const userIds = memberships.memberships.map(
-            (member) => member.userId
+            (member) => member.userId,
           );
           const uniqueUserIds = Array.from(new Set(userIds));
 
           const users = await database.listDocuments<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])]
+            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
           );
 
           const usersMembershipData: UserMemberData[] = users.documents.map(
             (user) => {
               const member = memberships.memberships.filter(
-                (member) => member.userId === user.$id
+                (member) => member.userId === user.$id,
               )[0];
               return {
                 ...user,
@@ -83,7 +83,7 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
                 confirmed: member.confirm,
                 joinedAt: member.joined,
               };
-            }
+            },
           );
 
           return {
@@ -112,7 +112,7 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
       {
         tags: ["team", `team:${id}`],
         revalidate: 600,
-      }
+      },
     )(id);
   });
 }
@@ -123,7 +123,7 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
  * @returns {Promise<Result<UserMemberData[]>>} The team members
  */
 export async function listTeamMembers(
-  teamId: string
+  teamId: string,
 ): Promise<Result<UserMemberData[]>> {
   return withAuth(async () => {
     const { database, team } = await createSessionClient();
@@ -134,20 +134,20 @@ export async function listTeamMembers(
           const memberships = await team.listMemberships(teamId);
 
           const userIds = memberships.memberships.map(
-            (member) => member.userId
+            (member) => member.userId,
           );
           const uniqueUserIds = Array.from(new Set(userIds));
 
           const users = await database.listDocuments<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])]
+            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
           );
 
           const usersMembershipData: UserMemberData[] = users.documents.map(
             (user) => {
               const member = memberships.memberships.filter(
-                (member) => member.userId === user.$id
+                (member) => member.userId === user.$id,
               )[0];
               return {
                 ...user,
@@ -155,7 +155,7 @@ export async function listTeamMembers(
                 confirmed: member.confirm,
                 joinedAt: member.joined,
               };
-            }
+            },
           );
 
           return {
@@ -179,7 +179,7 @@ export async function listTeamMembers(
       {
         tags: ["team-members", `team:${teamId}`],
         revalidate: 600,
-      }
+      },
     )(teamId);
   });
 }
@@ -198,7 +198,7 @@ export async function listTeams(): Promise<Result<TeamData[]>> {
         try {
           const data = await database.listDocuments<TeamData>(
             DATABASE_ID,
-            TEAM_COLLECTION_ID
+            TEAM_COLLECTION_ID,
           );
 
           return {
@@ -222,7 +222,7 @@ export async function listTeams(): Promise<Result<TeamData[]>> {
       {
         tags: ["teams"],
         revalidate: 600,
-      }
+      },
     )(user.$id);
   });
 }
@@ -257,12 +257,12 @@ export async function createTeam({
       const existingTeams = await database.listDocuments<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
-        [Query.select(["$id"])]
+        [Query.select(["$id"])],
       );
 
       if (existingTeams.total >= MAX_TEAM_LIMIT) {
         throw new Error(
-          `You have reached the maximum amount of teams allowed. (${MAX_TEAM_LIMIT})`
+          `You have reached the maximum amount of teams allowed. (${MAX_TEAM_LIMIT})`,
         );
       }
 
@@ -285,7 +285,7 @@ export async function createTeam({
         {
           name: data.name,
         },
-        permissions
+        permissions,
       );
 
       await database.createDocument<Information>(
@@ -300,7 +300,7 @@ export async function createTeam({
           teamId: teamResponse.$id,
           userId: user.$id,
         },
-        permissions
+        permissions,
       );
 
       revalidateTag("teams");
@@ -359,7 +359,7 @@ export async function updateTeam({
         {
           name: data.name,
         },
-        permissions
+        permissions,
       );
 
       revalidateTag("teams");
@@ -403,11 +403,11 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
         response = await database.listDocuments<Project>(
           DATABASE_ID,
           PROJECT_COLLECTION_ID,
-          queries
+          queries,
         );
 
         await Promise.all(
-          response.documents.map((document) => deleteProject(document.$id))
+          response.documents.map((document) => deleteProject(document.$id)),
         );
       } while (response.documents.length > 0);
 
@@ -464,7 +464,7 @@ export async function leaveTeam(teamId: string): Promise<Result<string>> {
       const data = await database.listDocuments<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
-        [Query.orderDesc("$createdAt"), Query.limit(1)]
+        [Query.orderDesc("$createdAt"), Query.limit(1)],
       );
 
       revalidateTag("teams");
@@ -504,7 +504,7 @@ export async function leaveTeam(teamId: string): Promise<Result<string>> {
  */
 export async function inviteMember(
   teamId: string,
-  email: string
+  email: string,
 ): Promise<Result<void>> {
   return withAuth(async (user) => {
     const { team, users } = await createAdminClient();
@@ -529,7 +529,7 @@ export async function inviteMember(
         undefined,
         undefined,
         `http://${HOSTNAME}/accept/${teamId}`,
-        email.split("@")[0]
+        email.split("@")[0],
       );
 
       await createUserData(data.userId);
@@ -561,7 +561,7 @@ export async function inviteMember(
  */
 export async function removeMember(
   teamId: string,
-  userId: string
+  userId: string,
 ): Promise<Result<void>> {
   return withAuth(async (user) => {
     const { team } = await createAdminClient();
@@ -597,7 +597,7 @@ export async function removeMember(
 
       if (currentUserRole !== OWNER_ROLE && currentUserRole !== ADMIN_ROLE) {
         throw new Error(
-          "You must be an admin or owner to remove team members."
+          "You must be an admin or owner to remove team members.",
         );
       }
 
@@ -627,7 +627,7 @@ export async function removeMember(
  */
 export async function promoteToAdmin(
   teamId: string,
-  userId: string
+  userId: string,
 ): Promise<Result<void>> {
   return withAuth(async (user) => {
     const { team } = await createSessionClient();
@@ -673,7 +673,7 @@ export async function promoteToAdmin(
  */
 export async function removeAdminRole(
   teamId: string,
-  userId: string
+  userId: string,
 ): Promise<Result<void>> {
   return withAuth(async (user) => {
     const { team } = await createSessionClient();
@@ -716,7 +716,7 @@ export async function removeAdminRole(
  * @returns {Promise<Result<string[]>>} The user's roles in the team
  */
 export async function getCurrentUserRoles(
-  teamId: string
+  teamId: string,
 ): Promise<Result<string[]>> {
   return withAuth(async (user) => {
     const { team } = await createSessionClient();
@@ -756,7 +756,7 @@ export async function getCurrentUserRoles(
 export async function checkUserRole(
   teamId: string,
   userId: string,
-  requiredRoles: string[]
+  requiredRoles: string[],
 ): Promise<Models.MembershipList> {
   const { team } = await createSessionClient();
 
@@ -771,7 +771,7 @@ export async function checkUserRole(
     !currentUserRoles.some((role) => requiredRoles.includes(role))
   ) {
     throw new Error(
-      `You must be ${requiredRoles.join(" or ")} to perform this action.`
+      `You must be ${requiredRoles.join(" or ")} to perform this action.`,
     );
   }
 

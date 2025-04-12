@@ -120,7 +120,7 @@ export function TeamSelect() {
                               "mr-2 h-4 w-4 flex-none",
                               teamId === teamItem.$id
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           <span className="truncate">{teamItem.name}</span>

@@ -110,28 +110,28 @@ export function Request({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="flex flex-col h-full gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="flex h-full flex-col gap-4">
         <article className="sticky top-30">
           <header className="mb-2">
             <h3 className="text-sm font-medium">Request</h3>
           </header>
-          <div className="flex flex-row items-start gap-2 overflow-hidden mb-2">
+          <div className="mb-2 flex flex-row items-start gap-2 overflow-hidden">
             <Badge variant={getBadgeVariant(method)} className="uppercase">
               {method}
             </Badge>
-            <p className="overflow-hidden text-sm break-words font-semibold">
+            <p className="overflow-hidden text-sm font-semibold break-words">
               {endpoint.split("appwrite.global")[1]}
             </p>
           </div>
-          <div className="code bg-background mb-2 overflow-hidden rounded-xl relative border">
+          <div className="code bg-background relative mb-2 overflow-hidden rounded-xl border">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="absolute right-2 top-2 z-10"
+                    className="absolute top-2 right-2 z-10"
                     onClick={() => copyToClipboard(code, setCopied)}
                   >
                     {copied ? (
@@ -161,7 +161,7 @@ export function Request({
               {code}
             </SyntaxHighlighter>
           </div>
-          <footer className="p-0 mt-2">
+          <footer className="mt-2 p-0">
             <Button size="sm" onClick={handleRequest} disabled={loading}>
               {loading && (
                 <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
@@ -171,20 +171,20 @@ export function Request({
           </footer>
         </article>
       </div>
-      <div className="flex flex-col h-full gap-4">
+      <div className="flex h-full flex-col gap-4">
         {model && (
           <article>
             <header className="mb-2">
               <h3 className="text-sm font-medium">Model</h3>
             </header>
-            <div className="code bg-background overflow-hidden rounded-xl relative border">
+            <div className="code bg-background relative overflow-hidden rounded-xl border">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="secondary"
                       size="icon"
-                      className="absolute right-2 top-2 z-10"
+                      className="absolute top-2 right-2 z-10"
                       onClick={() => copyToClipboard(model, setCopiedModel)}
                     >
                       {copiedModel ? (
@@ -226,23 +226,23 @@ export function Request({
             <div>
               <Badge
                 variant={getStatusBadgeVariant(status)}
-                className="uppercase mb-2"
+                className="mb-2 uppercase"
               >
                 {error ? "Error" : `Status ${status}`}
               </Badge>
               {error ? (
-                <div className="flex items-start gap-2 p-3 bg-destructive/10 text-destructive rounded-xl border-destructive">
-                  <LucideAlertCircle className="size-4 mt-0.5 flex-shrink-0" />
+                <div className="bg-destructive/10 text-destructive border-destructive flex items-start gap-2 rounded-xl p-3">
+                  <LucideAlertCircle className="mt-0.5 size-4 flex-shrink-0" />
                   <p className="text-sm">{error}</p>
                 </div>
               ) : (
-                <div className="code bg-background overflow-hidden rounded-xl relative border">
+                <div className="code bg-background relative overflow-hidden rounded-xl border">
                   {data && (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
-                            className="absolute right-2 top-2 z-10"
+                            className="absolute top-2 right-2 z-10"
                             variant="secondary"
                             size="icon"
                             onClick={() =>
@@ -250,7 +250,7 @@ export function Request({
                                 typeof data === "string"
                                   ? data
                                   : JSON.stringify(data, null, 2),
-                                setCopiedResponse
+                                setCopiedResponse,
                               )
                             }
                           >

@@ -15,7 +15,7 @@ export function ProfileLink({ name, href, className }: ProfileLinkProps) {
     <Button
       variant="link"
       asChild
-      className={cn("text-sm text-primary-foreground p-0", className)}
+      className={cn("text-primary-foreground p-0 text-sm", className)}
     >
       <Link href={href}>
         <Avatar className="h-6 w-6">
@@ -29,8 +29,8 @@ export function ProfileLink({ name, href, className }: ProfileLinkProps) {
   ) : (
     <p
       className={cn(
-        "flex flex-row items-center gap-2 text-sm text-primary-foreground font-semibold",
-        className
+        "text-primary-foreground flex flex-row items-center gap-2 text-sm font-semibold",
+        className,
       )}
     >
       <Avatar className="h-6 w-6">

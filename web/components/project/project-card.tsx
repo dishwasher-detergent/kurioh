@@ -18,10 +18,10 @@ export function ProjectCard(project: Project) {
             <Images images={project.images} />
           </div>
         )}
-        <div className="p-2 space-y-2 ">
-          <p className="font-bold text-lg">{project.name}</p>
+        <div className="space-y-2 p-2">
+          <p className="text-lg font-bold">{project.name}</p>
           {project.tags.length > 0 && <Badges badges={project.tags} />}
-          <p className="text-sm line-clamp-3">
+          <p className="line-clamp-3 text-sm">
             {project.description ?? "No Description Added."}
           </p>
           {project.links.length > 0 && <Links links={project.links} />}

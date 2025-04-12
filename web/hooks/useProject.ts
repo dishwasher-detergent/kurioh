@@ -33,12 +33,12 @@ export const useProject = ({ initialProject }: Props) => {
         async (response) => {
           if (
             response.events.includes(
-              "databases.*.collections.*.documents.*.update"
+              "databases.*.collections.*.documents.*.update",
             )
           ) {
             const { data } = await getUserById(response.payload.userId);
             const { data: teamData } = await getTeamById(
-              response.payload.teamId
+              response.payload.teamId,
             );
 
             setProject({
@@ -50,12 +50,12 @@ export const useProject = ({ initialProject }: Props) => {
 
           if (
             response.events.includes(
-              "databases.*.collections.*.documents.*.delete"
+              "databases.*.collections.*.documents.*.delete",
             )
           ) {
             router.push("/app");
           }
-        }
+        },
       );
     }
 

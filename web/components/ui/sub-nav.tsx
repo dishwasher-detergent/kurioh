@@ -80,8 +80,8 @@ export function SubNav() {
   if (segments[0] != "(teams)") return null;
 
   return (
-    <div className="border-t dark:bg-muted/30">
-      <ul className="mx-auto flex max-w-6xl flex-row items-center gap-2 px-4 py-1 md:px-8 overflow-x-auto">
+    <div className="dark:bg-muted/30 border-t">
+      <ul className="mx-auto flex max-w-6xl flex-row items-center gap-2 overflow-x-auto px-4 py-1 md:px-8">
         {subNav}
       </ul>
     </div>

@@ -20,7 +20,7 @@ export default async function ProjectPage({
     <>
       <header className="mb-6 flex flex-row justify-between">
         <div>
-          <h2 className="font-bold text-xl mb-1">{data.name}</h2>
+          <h2 className="mb-1 text-xl font-bold">{data.name}</h2>
           <p className="text-sm font-semibold">
             Describe your project and its goals.
           </p>

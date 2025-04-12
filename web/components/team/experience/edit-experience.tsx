@@ -160,11 +160,11 @@ export default function ExperienceForm({
             return (
               <Card
                 key={field.id}
-                className="relative overflow-hidden p-0 gap-0"
+                className="relative gap-0 overflow-hidden p-0"
               >
                 <CardHeader className="p-4">
                   <div className="flex-1">
-                    <CardTitle className="font-medium text-base flex items-center">
+                    <CardTitle className="flex items-center text-base font-medium">
                       {form.watch(`experience.${index}.company`) ||
                         "New Experience"}
                     </CardTitle>
@@ -175,7 +175,7 @@ export default function ExperienceForm({
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-5 p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name={`experience.${index}.id`}
@@ -257,7 +257,7 @@ export default function ExperienceForm({
                             <AutosizeTextarea
                               {...field}
                               placeholder="Describe your responsibilities, achievements and experience at this company..."
-                              className="pb-8 min-h-[100px]"
+                              className="min-h-[100px] pb-8"
                               maxLength={EXPERIENCE_DESCRIPTION_MAX_LENGTH}
                             />
                             <Badge
@@ -274,7 +274,7 @@ export default function ExperienceForm({
                     )}
                   />
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                       <FormField
                         control={form.control}
                         name={`experience.${index}.start_date`}
@@ -288,7 +288,7 @@ export default function ExperienceForm({
                                     variant={"outline"}
                                     className={cn(
                                       "pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
+                                      !field.value && "text-muted-foreground",
                                     )}
                                   >
                                     {field.value ? (
@@ -321,7 +321,7 @@ export default function ExperienceForm({
                         )}
                       />
                       <div className="space-y-2">
-                        <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center justify-between gap-2">
                           <FormField
                             control={form.control}
                             name={`experience.${index}.end_date`}
@@ -334,11 +334,11 @@ export default function ExperienceForm({
                                       <Button
                                         variant={"outline"}
                                         className={cn(
-                                          "pl-3 text-left font-normal w-full",
+                                          "w-full pl-3 text-left font-normal",
                                           !field.value &&
                                             !isPresent &&
                                             "text-muted-foreground",
-                                          isPresent && "opacity-50"
+                                          isPresent && "opacity-50",
                                         )}
                                         disabled={isPresent}
                                       >
@@ -386,7 +386,7 @@ export default function ExperienceForm({
                           />
                           <label
                             htmlFor={`current-job-${index}`}
-                            className="text-sm text-muted-foreground"
+                            className="text-muted-foreground text-sm"
                           >
                             I currently work here
                           </label>
@@ -406,7 +406,7 @@ export default function ExperienceForm({
                             creatable
                             placeholder="Add relevant skills (e.g., React, Project Management, Leadership)"
                             emptyIndicator={
-                              <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
+                              <p className="text-muted-foreground text-center text-sm leading-4 font-semibold">
                                 No results found.
                               </p>
                             }
@@ -436,7 +436,7 @@ export default function ExperienceForm({
                     )}
                   />
                 </CardContent>
-                <CardFooter className="border-t flex justify-between p-2">
+                <CardFooter className="flex justify-between border-t p-2">
                   <div className="flex gap-2">
                     <Button
                       type="button"
@@ -454,7 +454,7 @@ export default function ExperienceForm({
             );
           })}
         </div>
-        <div className="flex flex-row gap-2 mt-6">
+        <div className="mt-6 flex flex-row gap-2">
           <Button
             type="button"
             onClick={() =>

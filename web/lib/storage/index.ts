@@ -39,7 +39,7 @@ export async function uploadFile({
         PROJECT_BUCKET_ID,
         id,
         data,
-        permissions
+        permissions,
       );
 
       return {

@@ -46,7 +46,7 @@ export const Links = ({ links }: LinksProps) => {
           if (!isValidUrl(website)) return null;
 
           const Icon = renderSiteIcon(
-            extractWebsiteName(website.toLowerCase())
+            extractWebsiteName(website.toLowerCase()),
           );
 
           return (

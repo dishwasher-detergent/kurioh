@@ -65,7 +65,7 @@ export function ProjectSelect() {
         <div className="flex w-32">
           <AddProject
             teamId={teamId}
-            className="bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
+            className="text-foreground hover:bg-accent hover:text-accent-foreground bg-transparent"
           />
         </div>
       ) : null}
@@ -119,7 +119,7 @@ export function ProjectSelect() {
                               "mr-2 h-4 w-4 flex-none",
                               projectId == projectItem?.$id
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           <span className="truncate">{projectItem.name}</span>

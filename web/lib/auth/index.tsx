@@ -45,7 +45,7 @@ export async function getUserData(): Promise<Result<User>> {
           const data = await database.getDocument<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            id
+            id,
           );
 
           return {
@@ -72,7 +72,7 @@ export async function getUserData(): Promise<Result<User>> {
       {
         tags: ["user", `user:${user.$id}`],
         revalidate: 600,
-      }
+      },
     )(user.$id);
   });
 }
@@ -92,7 +92,7 @@ export async function getUserById(id: string): Promise<Result<UserData>> {
           const data = await database.getDocument<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            id
+            id,
           );
 
           return {
@@ -116,7 +116,7 @@ export async function getUserById(id: string): Promise<Result<UserData>> {
       {
         tags: ["user", `user:${id}`],
         revalidate: 600,
-      }
+      },
     )(id);
   });
 }
@@ -141,7 +141,7 @@ export async function updateProfile({
       await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
-        user.$id
+        user.$id,
       );
 
       await account.updateName(data.name);
@@ -204,7 +204,7 @@ export async function getUserLogs(): Promise<Result<Models.LogList>> {
       {
         tags: ["user-logs"],
         revalidate: 600,
-      }
+      },
     )();
   });
 }
@@ -234,7 +234,7 @@ export async function deleteSession(): Promise<void> {
  * @returns {Promise<AuthResponse>} A promise that resolves to an authentication response.
  */
 export async function signInWithEmail(
-  formData: SignInFormData
+  formData: SignInFormData,
 ): Promise<AuthResponse> {
   const email = formData.email;
   const password = formData.password;
@@ -245,7 +245,6 @@ export async function signInWithEmail(
     const session = await account.createEmailPasswordSession(email, password);
 
     revalidateTag("logged_in_user");
-
     (await cookies()).set(COOKIE_KEY, session.secret, {
       path: "/",
       httpOnly: true,
@@ -273,7 +272,7 @@ export async function signInWithEmail(
  * @returns {Promise<AuthResponse>} A promise that resolves to an authentication response.
  */
 export async function signUpWithEmail(
-  formData: SignUpFormData
+  formData: SignUpFormData,
 ): Promise<AuthResponse> {
   const name = formData.name;
   const email = formData.email;
@@ -322,7 +321,7 @@ export async function signUpWithGithub(): Promise<void> {
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Github,
     `${origin}/api/auth/callback`,
-    `${origin}/signup`
+    `${origin}/signup`,
   );
 
   return redirect(redirectUrl);
@@ -334,7 +333,7 @@ export async function signUpWithGithub(): Promise<void> {
  * @returns {Promise<AuthResponse>} A promise that resolves to an authentication response.
  */
 export async function createPasswordRecovery(
-  formData: ResetPasswordFormData
+  formData: ResetPasswordFormData,
 ): Promise<AuthResponse> {
   const email = formData.email;
 
@@ -368,7 +367,7 @@ export async function createPasswordRecovery(
 export async function resetPassword(
   id: string,
   token: string,
-  password: string
+  password: string,
 ): Promise<AuthResponse> {
   const { account } = await createAdminClient();
 
@@ -396,7 +395,7 @@ export async function resetPassword(
  * @returns {Promise<Result<UserData>>} A promise that resolves to a result object indicating success or failure.
  */
 export async function createUserData(
-  userId: string
+  userId: string,
 ): Promise<Result<UserData>> {
   return withAuth(async (user) => {
     const { database } = await createAdminClient();
@@ -405,7 +404,7 @@ export async function createUserData(
       await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
-        userId
+        userId,
       );
 
       return {
@@ -424,7 +423,7 @@ export async function createUserData(
           Permission.read(Role.user(userId)),
           Permission.write(Role.user(userId)),
           Permission.read(Role.users()),
-        ]
+        ],
       );
 
       return {
@@ -441,7 +440,7 @@ export async function createUserData(
  * @returns {Promise<Result<void>>} Result of the operation
  */
 export async function setLastVisitedTeam(
-  teamId: string | null
+  teamId: string | null,
 ): Promise<Result<void>> {
   return withAuth(async () => {
     const { account } = await createSessionClient();
@@ -470,11 +469,11 @@ export async function setLastVisitedTeam(
 }
 
 type AuthenticatedFunction<T> = (
-  user: Models.User<Models.Preferences>
+  user: Models.User<Models.Preferences>,
 ) => Promise<Result<T>>;
 
 export async function withAuth<T>(
-  fn: AuthenticatedFunction<T>
+  fn: AuthenticatedFunction<T>,
 ): Promise<Result<T>> {
   return (async () => {
     const user = await getLoggedInUser();

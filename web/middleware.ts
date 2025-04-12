@@ -15,7 +15,7 @@ export default async function middleware(req: NextRequest) {
   const cookieSession = req.cookies.get(COOKIE_KEY)?.value;
 
   let user = null;
-  
+
   try {
     const { account } = await createSessionClient(cookieSession);
     user = await account.get();

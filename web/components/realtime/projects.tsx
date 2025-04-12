@@ -26,7 +26,7 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
         <ProjectCard key={project.$id} {...project} />
       ))}
       {projects?.length === 0 && (
-        <p className="font-semibold text-muted-foreground">No projects found</p>
+        <p className="text-muted-foreground font-semibold">No projects found</p>
       )}
     </section>
   );

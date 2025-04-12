@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${karla.variable} min-h-dvh overflow-x-hidden antialiased flex flex-col`}
+        className={`${karla.variable} flex min-h-dvh flex-col overflow-x-hidden antialiased`}
       >
         <ThemeProvider
           attribute="class"

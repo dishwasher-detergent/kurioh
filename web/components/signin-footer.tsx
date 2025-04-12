@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export function SignInFooter() {
   return (
     <>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Don&apos;t have an account?
         <Button
           variant="link"
@@ -17,7 +17,7 @@ export function SignInFooter() {
           </Link>
         </Button>
       </p>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Forgot your password?
         <Button
           variant="link"

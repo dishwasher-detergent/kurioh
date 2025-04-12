@@ -58,5 +58,5 @@ export const getLoggedInUser = unstable_cache(
   {
     tags: ["client_user"],
     revalidate: 600,
-  }
+  },
 );

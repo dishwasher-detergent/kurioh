@@ -100,8 +100,8 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          "h-full flex flex-col gap-4 overflow-hidden p-4 md:p-0",
-          className
+          "flex h-full flex-col gap-4 overflow-hidden p-4 md:p-0",
+          className,
         )}
       >
         <div className="flex-1 space-y-4 overflow-auto p-1">
@@ -120,7 +120,7 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
                       maxLength={NAME_MAX_LENGTH}
                     />
                     <Badge
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                      className="absolute top-1/2 right-1.5 -translate-y-1/2"
                       variant="secondary"
                     >
                       {field?.value?.length || 0}/{NAME_MAX_LENGTH}

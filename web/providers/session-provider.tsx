@@ -13,7 +13,7 @@ interface SessionContextType {
 }
 
 export const SessionContext = createContext<SessionContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function SessionProvider({
@@ -24,7 +24,7 @@ export function SessionProvider({
   initialUser?: Models.User<Models.Preferences> | null;
 }) {
   const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
-    initialUser
+    initialUser,
   );
   const [loading, setLoading] = useState(initialUser === null);
   const [client, setClient] = useState<Client | null>(null);

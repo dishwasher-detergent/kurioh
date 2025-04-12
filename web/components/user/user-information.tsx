@@ -27,11 +27,11 @@ export function UserInformation({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex flex-row-reverse md:flex-row items-center gap-2 rounded-lg md:pr-1 md:pl-3 pr-3 pl-1"
+          className="flex flex-row-reverse items-center gap-2 rounded-lg pr-3 pl-1 md:flex-row md:pr-1 md:pl-3"
         >
-          <p className="text-sm hiddenmd:block">Hello, {user.name}</p>
+          <p className="hiddenmd:block text-sm">Hello, {user.name}</p>
           <Avatar className="size-7 rounded-lg">
-            <AvatarFallback className="bg-primary text-sm text-primary-foreground">
+            <AvatarFallback className="bg-primary text-primary-foreground text-sm">
               {initals}
             </AvatarFallback>
           </Avatar>

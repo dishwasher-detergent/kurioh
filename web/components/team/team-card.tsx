@@ -14,12 +14,12 @@ import { TeamData } from "@/interfaces/team.interface";
 
 export function TeamCard(team: TeamData) {
   return (
-    <Card className="break-inside-avoid-column rounded-xl overflow-hidden py-0 gap-0 ">
-      <CardContent className="p-0 relative">
-        <CardHeader className="flex flex-col justify-end w-full p-4 h-full bg-linear-to-t from-primary to-primary/20">
+    <Card className="break-inside-avoid-column gap-0 overflow-hidden rounded-xl py-0">
+      <CardContent className="relative p-0">
+        <CardHeader className="from-primary to-primary/20 flex h-full w-full flex-col justify-end bg-linear-to-t p-4">
           <CardTitle className="text-primary-foreground">
             <Button
-              className="truncate p-0! text-primary-foreground text-xl"
+              className="text-primary-foreground truncate p-0! text-xl"
               variant="link"
               asChild
             >

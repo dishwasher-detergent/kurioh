@@ -16,7 +16,7 @@ export default async function Invite({
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl mt-2">Accept Team Invite</CardTitle>
+        <CardTitle className="mt-2 text-2xl">Accept Team Invite</CardTitle>
       </CardHeader>
       <CardContent>
         <AcceptForm

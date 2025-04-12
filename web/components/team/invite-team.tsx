@@ -85,8 +85,8 @@ function InviteForm({ className, setOpen, team }: FormProps) {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          "h-full flex flex-col gap-4 overflow-hidden p-4 md:p-0",
-          className
+          "flex h-full flex-col gap-4 overflow-hidden p-4 md:p-0",
+          className,
         )}
       >
         <div className="flex-1 space-y-4 overflow-auto p-1">

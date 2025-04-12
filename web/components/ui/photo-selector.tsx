@@ -80,7 +80,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
                   disabled={createLoading}
                   onChange={(e) => handleUploadedFile(e)}
                 />
-                <div className="grid h-24 w-24 place-items-center rounded-lg border bg-muted text-muted-foreground">
+                <div className="bg-muted text-muted-foreground grid h-24 w-24 place-items-center rounded-lg border">
                   {createLoading ? (
                     <LucideLoader2 className="size-4 animate-spin" />
                   ) : (
@@ -103,7 +103,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
                 variant="destructive"
                 size="icon"
                 type="button"
-                className="absolute right-2 top-2 h-6 w-6"
+                className="absolute top-2 right-2 h-6 w-6"
                 disabled={deleteLoading !== null}
                 onClick={() => handleDeleteFile(preview.id)}
               >

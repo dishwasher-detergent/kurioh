@@ -7,12 +7,12 @@ interface MultiUserSkeletonProps {
 export function MultiUserSkeleton({ title }: MultiUserSkeletonProps) {
   return (
     <section>
-      <h2 className="font-semibold text-lg mb-2">{title}</h2>
+      <h2 className="mb-2 text-lg font-semibold">{title}</h2>
       <div className="flex -space-x-2">
         {[...Array(3)].map((_, i) => (
           <Skeleton
             key={i}
-            className="rounded-full size-10 border-2 border-background"
+            className="border-background size-10 rounded-full border-2"
           />
         ))}
       </div>

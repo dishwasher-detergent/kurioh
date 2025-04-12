@@ -22,7 +22,7 @@ export function AvatarGroup<T extends UserData>({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <Avatar className="size-10 border-2 border-background">
+                <Avatar className="border-background size-10 border-2">
                   <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                 </Avatar>
               </TooltipTrigger>

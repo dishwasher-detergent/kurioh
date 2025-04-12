@@ -14,30 +14,30 @@ export function Header({ children, src, alt }: HeaderProps) {
       <div
         role="img"
         aria-label="Banner"
-        className="w-full bg-linear-to-r from-primary to-secondary rounded-xl h-24 md:h-48"
+        className="from-primary to-secondary h-24 w-full rounded-xl bg-linear-to-r md:h-48"
       />
-      <div className="flex items-start justify-between px-4 -mt-15 md:-mt-30">
-        <figure className="relative flex-shrink-0 size-24 md:size-60">
+      <div className="-mt-15 flex items-start justify-between px-4 md:-mt-30">
+        <figure className="relative size-24 flex-shrink-0 md:size-60">
           <AspectRatio ratio={1}>
             {src ? (
               <Image
                 src={src}
                 alt={alt ?? "Picture"}
-                className="rounded-full border-4 border-background object-cover bg-primary size-full"
+                className="border-background bg-primary size-full rounded-full border-4 object-cover"
                 fill
                 priority
               />
             ) : (
               <div
                 aria-label="Default picture"
-                className="rounded-full border-4 border-background object-cover bg-primary size-full text-primary-foreground grid place-items-center font-bold"
+                className="border-background bg-primary text-primary-foreground grid size-full place-items-center rounded-full border-4 object-cover font-bold"
               >
                 No Image
               </div>
             )}
           </AspectRatio>
         </figure>
-        <div className="pt-16 md:pt-32 flex flex-row gap-1">{children}</div>
+        <div className="flex flex-row gap-1 pt-16 md:pt-32">{children}</div>
       </div>
     </header>
   );

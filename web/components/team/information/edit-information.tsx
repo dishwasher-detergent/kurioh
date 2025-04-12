@@ -153,7 +153,7 @@ export default function InformationForm({
                   creatable
                   placeholder="Add social links"
                   emptyIndicator={
-                    <p className="text-center leading-4 text-muted-foreground text-sm font-semibold">
+                    <p className="text-muted-foreground text-center text-sm leading-4 font-semibold">
                       No results found.
                     </p>
                   }

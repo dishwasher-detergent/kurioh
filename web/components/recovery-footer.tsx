@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export function RecoveryFooter() {
   return (
     <>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Don&apos;t have an account?
         <Button
           variant="link"
@@ -17,7 +17,7 @@ export function RecoveryFooter() {
           </Link>
         </Button>
       </p>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Remember your password?
         <Button
           variant="link"

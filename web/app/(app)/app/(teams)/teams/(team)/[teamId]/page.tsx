@@ -36,12 +36,12 @@ export default async function TeamPage({
     <>
       <header className="mb-6 flex flex-row justify-between gap-4">
         <div>
-          <h2 className="font-bold text-xl mb-1">{data.name}</h2>
+          <h2 className="mb-1 text-xl font-bold">{data.name}</h2>
           <p className="text-sm font-semibold">
             All projects created in this team.
           </p>
         </div>
-        <div className="flex flex-row gap-2 items-start">
+        <div className="flex flex-row items-start gap-2">
           <AddProject teamId={teamId} />
           <TeamActions team={data} isAdmin={isAdmin} isOwner={isOwner} />
         </div>

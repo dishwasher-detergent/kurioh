@@ -24,7 +24,7 @@ export function Images({ images }: ImagesProps) {
             return (
               <div
                 key={index}
-                className="flex h-full w-full flex-col place-items-center items-center justify-center rounded-lg border bg-muted text-base font-bold text-muted-foreground"
+                className="bg-muted text-muted-foreground flex h-full w-full flex-col place-items-center items-center justify-center rounded-lg border text-base font-bold"
               >
                 <LucideImage className="h-6 w-6" />
                 <span>+{images.length - 3}</span>

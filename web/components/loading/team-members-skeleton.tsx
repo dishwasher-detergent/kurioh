@@ -11,8 +11,8 @@ import {
 export function TeamMembersSkeleton() {
   return (
     <section>
-      <h2 className="font-semibold text-lg mb-2">Members</h2>
-      <div className="border rounded-xl overflow-hidden">
+      <h2 className="mb-2 text-lg font-semibold">Members</h2>
+      <div className="overflow-hidden rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow>

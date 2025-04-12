@@ -39,7 +39,7 @@ export function TeamMembers({
 }: TeamMembersProps) {
   return (
     <section>
-      <div className="border rounded-xl overflow-hidden">
+      <div className="overflow-hidden rounded-xl border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -54,7 +54,7 @@ export function TeamMembers({
             {members?.map((member) => (
               <TableRow key={member.$id}>
                 <TableCell>
-                  <div className="flex flex-row gap-2 items-center">
+                  <div className="flex flex-row items-center gap-2">
                     {member.roles.includes(ADMIN_ROLE) && (
                       <LucideStar className="size-3.5 text-amber-600" />
                     )}

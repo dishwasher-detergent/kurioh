@@ -36,12 +36,12 @@ export const useProjects = ({ initialProjects, teamId, userId }: Props) => {
 
           if (
             response.events.includes(
-              "databases.*.collections.*.documents.*.create"
+              "databases.*.collections.*.documents.*.create",
             )
           ) {
             const { data } = await getUserById(response.payload.userId);
             const { data: teamData } = await getTeamById(
-              response.payload.teamId
+              response.payload.teamId,
             );
 
             setProjects((prev) => [
@@ -56,33 +56,33 @@ export const useProjects = ({ initialProjects, teamId, userId }: Props) => {
 
           if (
             response.events.includes(
-              "databases.*.collections.*.documents.*.update"
+              "databases.*.collections.*.documents.*.update",
             )
           ) {
             const { data } = await getUserById(response.payload.userId);
             const { data: teamData } = await getTeamById(
-              response.payload.teamId
+              response.payload.teamId,
             );
 
             setProjects((prev) =>
               prev.map((x) =>
                 x.$id === response.payload.$id
                   ? { user: data, ...response.payload, team: teamData }
-                  : x
-              )
+                  : x,
+              ),
             );
           }
 
           if (
             response.events.includes(
-              "databases.*.collections.*.documents.*.delete"
+              "databases.*.collections.*.documents.*.delete",
             )
           ) {
             setProjects((prev) =>
-              prev.filter((x) => x.$id !== response.payload.$id)
+              prev.filter((x) => x.$id !== response.payload.$id),
             );
           }
-        }
+        },
       );
     }
 

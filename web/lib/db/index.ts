@@ -35,7 +35,7 @@ import {
  */
 export async function listProjectsByTeam(
   id: string,
-  queries: string[] = []
+  queries: string[] = [],
 ): Promise<Result<Models.DocumentList<Project>>> {
   return withAuth(async (user) => {
     const { database } = await createSessionClient();
@@ -47,7 +47,7 @@ export async function listProjectsByTeam(
           const projects = await database.listDocuments<Project>(
             DATABASE_ID,
             PROJECT_COLLECTION_ID,
-            [Query.equal("teamId", id), ...queries]
+            [Query.equal("teamId", id), ...queries],
           );
 
           if (!projects.documents.length) {
@@ -67,13 +67,13 @@ export async function listProjectsByTeam(
           const users = await database.listDocuments<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])]
+            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
           );
 
           const teams = await database.listDocuments<UserData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
-            [Query.equal("$id", uniqueTeamIds), Query.select(["$id", "name"])]
+            [Query.equal("$id", uniqueTeamIds), Query.select(["$id", "name"])],
           );
 
           const userMap = users.documents.reduce<Record<string, UserData>>(
@@ -83,7 +83,7 @@ export async function listProjectsByTeam(
               }
               return acc;
             },
-            {}
+            {},
           );
 
           const teamMap = teams.documents.reduce<Record<string, TeamData>>(
@@ -93,7 +93,7 @@ export async function listProjectsByTeam(
               }
               return acc;
             },
-            {}
+            {},
           );
 
           const newProjects = projects.documents.map((project) => ({
@@ -128,7 +128,7 @@ export async function listProjectsByTeam(
           `projects:team-${id}`,
         ],
         revalidate: 600,
-      }
+      },
     )(queries, id, user.$id);
   });
 }
@@ -141,7 +141,7 @@ export async function listProjectsByTeam(
  */
 export async function getProjectById(
   projectId: string,
-  queries: string[] = []
+  queries: string[] = [],
 ): Promise<Result<Project>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
@@ -153,21 +153,21 @@ export async function getProjectById(
             DATABASE_ID,
             PROJECT_COLLECTION_ID,
             projectId,
-            queries
+            queries,
           );
 
           const userRes = await database.getDocument<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
             project.userId,
-            [Query.select(["$id", "name"])]
+            [Query.select(["$id", "name"])],
           );
 
           const teamRes = await database.getDocument<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
             project.teamId,
-            [Query.select(["$id", "name"])]
+            [Query.select(["$id", "name"])],
           );
 
           return {
@@ -196,7 +196,7 @@ export async function getProjectById(
           `project:${projectId}:${queries.join("-")}`,
         ],
         revalidate: 600,
-      }
+      },
     )(projectId, queries);
   });
 }
@@ -239,21 +239,21 @@ export async function createProject({
           slug: createSlug(data.name),
           userId: user.$id,
         },
-        permissions
+        permissions,
       );
 
       const userRes = await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
         project.userId,
-        [Query.select(["$id", "name"])]
+        [Query.select(["$id", "name"])],
       );
 
       const teamRes = await database.getDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
         project.teamId,
-        [Query.select(["$id", "name"])]
+        [Query.select(["$id", "name"])],
       );
 
       revalidateTag("projects");
@@ -307,7 +307,7 @@ export async function updateProject({
       const existingProject = await database.getDocument<Project>(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
-        id
+        id,
       );
 
       if (data.images) {
@@ -317,7 +317,7 @@ export async function updateProject({
         const newImageIds: string[] = [];
 
         const imageIdsToKeep = data.images.filter(
-          (img) => typeof img === "string"
+          (img) => typeof img === "string",
         ) as string[];
 
         for (const oldImageId of existingImageIds) {
@@ -360,29 +360,29 @@ export async function updateProject({
           ...data,
           tags:
             data.tags?.map((tag) =>
-              typeof tag === "string" ? tag : tag.value
+              typeof tag === "string" ? tag : tag.value,
             ) || [],
           links:
             data.links?.map((link) =>
-              typeof link === "string" ? link : link.value
+              typeof link === "string" ? link : link.value,
             ) || [],
           userId: user.$id,
         },
-        permissions
+        permissions,
       );
 
       const userRes = await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
         project.userId,
-        [Query.select(["$id", "name"])]
+        [Query.select(["$id", "name"])],
       );
 
       const teamRes = await database.getDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
         project.teamId,
-        [Query.select(["$id", "name"])]
+        [Query.select(["$id", "name"])],
       );
 
       revalidateTag("projects");
@@ -425,7 +425,7 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
       const project = await database.getDocument<Project>(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
-        id
+        id,
       );
 
       if (project.image) {
@@ -466,7 +466,7 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
  */
 export async function getInformationById(
   informationId: string,
-  queries: string[] = []
+  queries: string[] = [],
 ): Promise<Result<Information>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
@@ -478,21 +478,21 @@ export async function getInformationById(
             DATABASE_ID,
             INFORMATION_COLLECTION_ID,
             informationId,
-            queries
+            queries,
           );
 
           const userRes = await database.getDocument<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
             information.userId,
-            [Query.select(["$id", "name"])]
+            [Query.select(["$id", "name"])],
           );
 
           const teamRes = await database.getDocument<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
             information.teamId,
-            [Query.select(["$id", "name"])]
+            [Query.select(["$id", "name"])],
           );
 
           return {
@@ -522,7 +522,7 @@ export async function getInformationById(
           `information:${informationId}:${queries.join("-")}`,
         ],
         revalidate: 600,
-      }
+      },
     )(informationId);
   });
 }
@@ -553,7 +553,7 @@ export async function updateInformation({
       const existingInformation = await database.getDocument<Information>(
         DATABASE_ID,
         INFORMATION_COLLECTION_ID,
-        id
+        id,
       );
 
       if (data.image instanceof File) {
@@ -592,25 +592,25 @@ export async function updateInformation({
           ...data,
           socials:
             data.socials?.map((social) =>
-              typeof social === "string" ? social : social.value
+              typeof social === "string" ? social : social.value,
             ) || [],
           userId: user.$id,
         },
-        permissions
+        permissions,
       );
 
       const userRes = await database.getDocument<UserData>(
         DATABASE_ID,
         USER_COLLECTION_ID,
         information.userId,
-        [Query.select(["$id", "name"])]
+        [Query.select(["$id", "name"])],
       );
 
       const teamRes = await database.getDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
         information.teamId,
-        [Query.select(["$id", "name"])]
+        [Query.select(["$id", "name"])],
       );
 
       revalidateTag(`information:${id}`);
@@ -648,7 +648,7 @@ export async function updateInformation({
  */
 export async function listExperiences(
   teamId: string,
-  queries: string[] = []
+  queries: string[] = [],
 ): Promise<Result<Models.DocumentList<Experience>>> {
   return withAuth(async (user) => {
     const { database } = await createSessionClient();
@@ -660,7 +660,7 @@ export async function listExperiences(
           const experiences = await database.listDocuments<Experience>(
             DATABASE_ID,
             EXPERIENCE_COLLECTION_ID,
-            [Query.equal("teamId", teamId), ...queries]
+            [Query.equal("teamId", teamId), ...queries],
           );
 
           return {
@@ -685,7 +685,7 @@ export async function listExperiences(
           `experiences:team-${teamId}:${queries.join("-")}`,
         ],
         revalidate: 600,
-      }
+      },
     )(teamId, queries, user.$id);
   });
 }
@@ -734,12 +734,12 @@ export async function createExperience({
               : undefined,
           skills:
             data.skills?.map((skill) =>
-              typeof skill === "string" ? skill : skill.value
+              typeof skill === "string" ? skill : skill.value,
             ) || [],
           userId: user.$id,
           teamId,
         },
-        permissions
+        permissions,
       );
 
       revalidateTag(`experiences:team-${teamId}`);
@@ -789,7 +789,7 @@ export async function updateExperience({
       await database.getDocument<Experience>(
         DATABASE_ID,
         EXPERIENCE_COLLECTION_ID,
-        id
+        id,
       );
 
       const experience = await database.updateDocument<Experience>(
@@ -801,7 +801,7 @@ export async function updateExperience({
           userId: user.$id,
           skills: data.skills || [],
         },
-        permissions
+        permissions,
       );
 
       revalidateTag(`experiences:team-${experience.teamId}`);
@@ -833,7 +833,7 @@ export async function updateExperience({
  * @returns {Promise<Result<Experience>>} The deleted experience
  */
 export async function deleteExperience(
-  id: string
+  id: string,
 ): Promise<Result<Experience>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
@@ -842,7 +842,7 @@ export async function deleteExperience(
       const experience = await database.getDocument<Experience>(
         DATABASE_ID,
         EXPERIENCE_COLLECTION_ID,
-        id
+        id,
       );
 
       await database.deleteDocument(DATABASE_ID, EXPERIENCE_COLLECTION_ID, id);
@@ -903,7 +903,7 @@ export async function updateTeamExperiences({
         .map((exp) => exp.id as string);
 
       const toDelete = existingExperiences.filter(
-        (exp) => !newExperienceIds.includes(exp.$id)
+        (exp) => !newExperienceIds.includes(exp.$id),
       );
 
       let deletedCount = 0;

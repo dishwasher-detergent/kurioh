@@ -1,11 +1,11 @@
 "use server";
 
+import { ID, Models, Permission, Role } from "node-appwrite";
+
 import { Result } from "@/interfaces/result.interface";
 import { withAuth } from "@/lib/auth";
+import { PROJECT_BUCKET_ID } from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
-
-import { ID, Models, Permission, Role } from "node-appwrite";
-import { PROJECT_BUCKET_ID } from "../constants";
 
 /**
  * Uploads a file.

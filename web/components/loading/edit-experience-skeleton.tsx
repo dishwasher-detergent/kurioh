@@ -5,13 +5,13 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   EXPERIENCE_COMPANY_MAX_LENGTH,
   EXPERIENCE_DESCRIPTION_MAX_LENGTH,
   EXPERIENCE_TITLE_MAX_LENGTH,
 } from "@/constants/experience.constants";
-import { Label } from "../ui/label";
 
 export function EditExperienceSkeleton() {
   return (

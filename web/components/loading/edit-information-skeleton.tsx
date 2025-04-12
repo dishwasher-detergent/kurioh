@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   INFORMATION_DESCRIPTION_MAX_LENGTH,
   INFORMATION_TITLE_MAX_LENGTH,
 } from "@/constants/information.constants";
-import { Label } from "../ui/label";
 
 export function EditInformationSkeleton() {
   return (

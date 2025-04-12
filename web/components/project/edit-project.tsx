@@ -38,7 +38,6 @@ interface ProjectFormProps {
 
 export default function EditProject({ project, teamId }: ProjectFormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
   const [initialImages, setInitialImages] = useState<string[] | undefined>(
     project.images
   );
@@ -56,7 +55,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
   });
 
   async function onSubmit(values: EditProjectFormData) {
-    setLoading(true);
     setInitialImages(project.images ?? initialImages);
 
     const updatedProject = await updateProject({
@@ -67,14 +65,12 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
 
     if (!updatedProject?.success) {
       toast.error(updatedProject.message);
-      setLoading(false);
 
       return;
     }
 
     toast.success("Project updated successfully.");
     router.refresh();
-    setLoading(false);
   }
 
   return (
@@ -224,10 +220,10 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
         <Button
           size="sm"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
           Save Project
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucideSave className="size-3.5" />

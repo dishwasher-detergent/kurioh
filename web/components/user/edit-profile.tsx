@@ -68,7 +68,6 @@ interface FormProps extends React.ComponentProps<"form"> {
 
 function EditForm({ className, setOpen, user }: FormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<UpdateProfileFormData>({
     resolver: zodResolver(updateProfileSchema),
@@ -79,8 +78,6 @@ function EditForm({ className, setOpen, user }: FormProps) {
   });
 
   async function onSubmit(values: UpdateProfileFormData) {
-    setLoading(true);
-
     const data = await updateProfile({
       id: user.$id,
       data: values,
@@ -94,7 +91,6 @@ function EditForm({ className, setOpen, user }: FormProps) {
       toast.error(data.message);
     }
 
-    setLoading(false);
     setOpen(false);
   }
 
@@ -161,9 +157,12 @@ function EditForm({ className, setOpen, user }: FormProps) {
             )}
           />
         </div>
-        <Button type="submit" disabled={loading || !form.formState.isValid}>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
+        >
           Save
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucideSave className="size-3.5" />

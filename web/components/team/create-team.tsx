@@ -51,7 +51,6 @@ interface FormProps extends React.ComponentProps<"form"> {
 
 function CreateForm({ className, setOpen }: FormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<AddTeamFormData>({
     resolver: zodResolver(addTeamSchema),
@@ -61,8 +60,6 @@ function CreateForm({ className, setOpen }: FormProps) {
   });
 
   async function onSubmit(values: AddTeamFormData) {
-    setLoading(true);
-
     const data = await createTeam({
       data: values,
     });
@@ -75,7 +72,6 @@ function CreateForm({ className, setOpen }: FormProps) {
       toast.error(data.message);
     }
 
-    setLoading(false);
     setOpen(false);
   }
 
@@ -119,10 +115,10 @@ function CreateForm({ className, setOpen }: FormProps) {
         <Button
           className="sticky bottom-0"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
           Create Team
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucidePlus className="size-3.5" />

@@ -66,7 +66,6 @@ interface FormProps extends React.ComponentProps<"form"> {
 
 function DeleteForm({ className, setOpen, team }: FormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<DeleteTeamFormData>({
     resolver: zodResolver(deleteTeamSchema),
@@ -76,15 +75,12 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
   });
 
   async function onSubmit(values: DeleteTeamFormData) {
-    setLoading(true);
-
     if (values.name !== team.name) {
       form.setError("name", {
         message: "Name does not match.",
       });
 
       toast.error("Name does not match.");
-      setLoading(false);
       return;
     }
 
@@ -99,7 +95,6 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
       toast.error(data.message);
     }
 
-    setLoading(false);
     setOpen(false);
   }
 
@@ -146,10 +141,10 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={loading || !form.formState.isValid}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
           Delete
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucideTrash2 className="size-3.5" />

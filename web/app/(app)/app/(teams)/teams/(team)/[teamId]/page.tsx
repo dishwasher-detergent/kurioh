@@ -5,7 +5,7 @@ import { Projects } from "@/components/realtime/projects";
 import { TeamActions } from "@/components/team/team-actions";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
 import { setLastVisitedTeam } from "@/lib/auth";
-import { listProjects } from "@/lib/db";
+import { listProjectsByTeam } from "@/lib/db";
 import { getCurrentUserRoles, getTeamById } from "@/lib/team";
 
 export default async function TeamPage({
@@ -22,9 +22,8 @@ export default async function TeamPage({
 
   await setLastVisitedTeam(teamId);
 
-  const { data: projectData } = await listProjects([
+  const { data: projectData } = await listProjectsByTeam(teamId, [
     Query.orderDesc("$createdAt"),
-    Query.equal("teamId", teamId),
   ]);
 
   const { data: roles } = await getCurrentUserRoles(teamId);

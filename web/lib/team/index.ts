@@ -220,7 +220,7 @@ export async function listTeams(): Promise<Result<TeamData[]>> {
       },
       ["teams"],
       {
-        tags: ["teams", `teams:user-${user.$id}`],
+        tags: ["teams"],
         revalidate: 600,
       }
     )(user.$id);
@@ -412,9 +412,10 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
       } while (response.documents.length > 0);
 
       revalidateTag("teams");
-      revalidateTag(`experience`);
-      revalidateTag(`experiences`);
-      revalidateTag(`information`);
+      revalidateTag(`team:${id}`);
+      revalidateTag(`experiences:team-${id}`);
+      revalidateTag(`informations:team-${id}`);
+      revalidateTag(`projects:team-${id}`);
 
       return {
         success: true,

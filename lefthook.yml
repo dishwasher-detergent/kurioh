@@ -3,8 +3,10 @@ pre-push:
     - name: lint
       tags:
         - frontend
+      root: "/web"
       run: pnpm run lint
     - name: format
       tags:
         - frontend
+      root: "/web"
       run: pnpm run format

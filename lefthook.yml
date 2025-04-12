@@ -4,3 +4,7 @@ pre-push:
       tags:
         - frontend
       run: pnpm run lint
+    - name: format
+      tags:
+        - frontend
+      run: pnpm run format

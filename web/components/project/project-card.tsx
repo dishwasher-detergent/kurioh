@@ -9,8 +9,6 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 
 export function ProjectCard(project: Project) {
-  console.log(project);
-
   return (
     <Card className="break-inside-avoid-column rounded-md p-2">
       <CardContent className="p-0">

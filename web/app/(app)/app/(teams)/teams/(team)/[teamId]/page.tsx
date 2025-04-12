@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { Query } from "node-appwrite";
 
+import { AddProject } from "@/components/project/create-project";
 import { Projects } from "@/components/realtime/projects";
 import { TeamActions } from "@/components/team/team-actions";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
@@ -33,14 +34,17 @@ export default async function TeamPage({
 
   return (
     <>
-      <header className="mb-6 flex flex-row justify-between">
+      <header className="mb-6 flex flex-row justify-between gap-4">
         <div>
           <h2 className="font-bold text-xl mb-1">{data.name}</h2>
           <p className="text-sm font-semibold">
             All projects created in this team.
           </p>
         </div>
-        <TeamActions team={data} isAdmin={isAdmin} isOwner={isOwner} />
+        <div className="flex flex-row gap-2 items-start">
+          <AddProject teamId={teamId} />
+          <TeamActions team={data} isAdmin={isAdmin} isOwner={isOwner} />
+        </div>
       </header>
       <Projects
         initialProjects={projectData?.documents ?? []}

@@ -3,7 +3,6 @@ import {
   LucideMailWarning,
   LucideStar,
 } from "lucide-react";
-import Link from "next/link";
 
 import { DemoteMemberAdmin } from "@/components/team/demote-admin";
 import { PromoteMemberAdmin } from "@/components/team/promote-admin";
@@ -64,11 +63,7 @@ export function TeamMembers({
                     )}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <Button variant="link" asChild>
-                    <Link href={`/app/users/${member.$id}`}>{member.name}</Link>
-                  </Button>
-                </TableCell>
+                <TableCell>{member.name}</TableCell>
                 <TableCell>{member.roles.join(", ")}</TableCell>
                 <TableCell>
                   {member.joinedAt

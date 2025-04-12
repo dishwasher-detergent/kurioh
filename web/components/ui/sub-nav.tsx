@@ -13,7 +13,11 @@ export function SubNav() {
     if (segments[5] === "projects") {
       return (
         <>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant={segments[7] === "api" ? "secondary" : "ghost"}
+            size="sm"
+          >
             <Link
               href={`/app/teams/${segments[3]}/projects/${segments[6]}/api`}
             >
@@ -27,23 +31,43 @@ export function SubNav() {
     if (segments[1] === "teams") {
       return (
         <>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant={!segments[4] ? "secondary" : "ghost"}
+            size="sm"
+          >
             <Link href={`/app/teams/${segments[3]}`}>Projects</Link>
           </Button>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant={segments[4] === "information" ? "secondary" : "ghost"}
+            size="sm"
+          >
             <Link href={`/app/teams/${segments[3]}/information`}>
               Information
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant={segments[4] === "experience" ? "secondary" : "ghost"}
+            size="sm"
+          >
             <Link href={`/app/teams/${segments[3]}/experience`}>
               Experience
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant={segments[4] === "api" ? "secondary" : "ghost"}
+            size="sm"
+          >
             <Link href={`/app/teams/${segments[3]}/api`}>API</Link>
           </Button>
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant={segments[4] === "members" ? "secondary" : "ghost"}
+            size="sm"
+          >
             <Link href={`/app/teams/${segments[3]}/members`}>Members</Link>
           </Button>
         </>
@@ -56,7 +80,7 @@ export function SubNav() {
   if (segments[0] != "(teams)") return null;
 
   return (
-    <div className="border-t bg-muted/50">
+    <div className="border-t dark:bg-muted/30">
       <ul className="mx-auto flex max-w-6xl flex-row items-center gap-2 px-4 py-1 md:px-8 overflow-x-auto">
         {subNav}
       </ul>

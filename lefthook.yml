@@ -1,6 +1,5 @@
-pre-push:
+pre-commit:
   commands:
-    - lint:
-      root: web/
-    - name: lint
-      run: pnpm run lint
+    frontend:
+      root: "web/"
+      run: pnpm run lint && pnpm run format

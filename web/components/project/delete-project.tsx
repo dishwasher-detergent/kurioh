@@ -91,7 +91,7 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
 
     if (data.success) {
       toast.success(data.message);
-      router.refresh();
+      router.push(`/app/teams/${project.teamId}`);
       setOpen(false);
     } else {
       toast.error(data.message);

@@ -69,7 +69,7 @@ export function ProjectSelect() {
           />
         </div>
       ) : null}
-      {projects.length > 0 && !loading && (
+      {projects.length > 0 && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>

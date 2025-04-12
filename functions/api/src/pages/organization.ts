@@ -33,18 +33,18 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
-        [Query.equal('organization_id', organization_id)]
+        [Query.equal('teamId', organization_id)]
       );
 
       const experience = await database_service.list<Experience>(
         EXPERIENCE_COLLECTION_ID,
-        [Query.equal('organization_id', organization_id)]
+        [Query.equal('teamId', organization_id)]
       );
 
       const formattedInformation = {
         title: information.title,
         description: information.description,
-        image_id: information.image_id,
+        image_id: information.images,
         socials: information.socials,
       };
 
@@ -54,7 +54,7 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
         slug: project.slug,
         short_description: project.short_description,
         description: project.description,
-        image_ids: project.image_ids,
+        images_ids: project.images,
         tags: project.tags,
         links: project.links,
       }));

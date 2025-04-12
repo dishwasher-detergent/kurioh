@@ -119,9 +119,7 @@ function CreateForm({ className, setOpen }: FormProps) {
         <Button
           className="sticky bottom-0"
           type="submit"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={loading || !form.formState.isValid}
         >
           Create Team
           {loading ? (

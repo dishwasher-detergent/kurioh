@@ -224,9 +224,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
         <Button
           size="sm"
           type="submit"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={loading || !form.formState.isValid}
         >
           Save Project
           {loading ? (

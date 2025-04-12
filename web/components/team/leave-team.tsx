@@ -131,9 +131,7 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={loading || !form.formState.isValid}
         >
           Leave Team
           {loading ? (

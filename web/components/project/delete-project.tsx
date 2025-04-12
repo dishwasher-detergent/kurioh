@@ -144,9 +144,7 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={loading || !form.formState.isValid}
         >
           Delete Project
           {loading ? (

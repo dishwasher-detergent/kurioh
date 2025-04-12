@@ -172,9 +172,7 @@ export default function InformationForm({
         <Button
           type="submit"
           size="sm"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={loading || !form.formState.isValid}
         >
           {loading ? (
             <LucideLoader2 className="size-3.5 animate-spin" />

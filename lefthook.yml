@@ -1,10 +1,6 @@
 pre-push:
-  jobs:
+  commands:
+    - lint:
+      root: web/
     - name: lint
-      tags:
-        - frontend
       run: pnpm run lint
-    - name: format
-      tags:
-        - frontend
-      run: pnpm run format

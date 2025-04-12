@@ -33,7 +33,8 @@ import {
  * @param {string[]} queries The queries to filter the projects
  * @returns {Promise<Result<Models.DocumentList<Project>>>} The list of projects
  */
-export async function listProjects(
+export async function listProjectsByTeam(
+  id: string,
   queries: string[] = []
 ): Promise<Result<Models.DocumentList<Project>>> {
   return withAuth(async (user) => {
@@ -41,12 +42,12 @@ export async function listProjects(
 
     return unstable_cache(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async (queries, userId) => {
+      async (queries, id, userId) => {
         try {
           const projects = await database.listDocuments<Project>(
             DATABASE_ID,
             PROJECT_COLLECTION_ID,
-            queries
+            [Query.equal("teamId", id), ...queries]
           );
 
           if (!projects.documents.length) {
@@ -124,11 +125,11 @@ export async function listProjects(
         tags: [
           "projects",
           `projects:${queries.join("-")}`,
-          `projects:user-${user.$id}`,
+          `projects:team-${id}`,
         ],
         revalidate: 600,
       }
-    )(queries, user.$id);
+    )(queries, id, user.$id);
   });
 }
 
@@ -146,7 +147,7 @@ export async function getProjectById(
     const { database } = await createSessionClient();
 
     return unstable_cache(
-      async () => {
+      async (projectId, queries) => {
         try {
           const project = await database.getDocument<Project>(
             DATABASE_ID,
@@ -187,12 +188,16 @@ export async function getProjectById(
           };
         }
       },
-      ["project", projectId],
+      ["projects", projectId],
       {
-        tags: ["projects", `project:${projectId}`],
+        tags: [
+          "projects",
+          `project:${projectId}`,
+          `project:${projectId}:${queries.join("-")}`,
+        ],
         revalidate: 600,
       }
-    )();
+    )(projectId, queries);
   });
 }
 
@@ -381,6 +386,7 @@ export async function updateProject({
 
       revalidateTag("projects");
       revalidateTag(`project:${id}`);
+      revalidateTag(`projects:team-${teamId}`);
 
       return {
         success: true,
@@ -431,7 +437,7 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
 
       await database.deleteDocument(DATABASE_ID, PROJECT_COLLECTION_ID, id);
 
-      revalidateTag("projects");
+      revalidateTag(`projects:team-${project.teamId}`);
 
       return {
         success: true,
@@ -465,7 +471,7 @@ export async function getInformationById(
     const { database } = await createSessionClient();
 
     return unstable_cache(
-      async () => {
+      async (informationId) => {
         try {
           const information = await database.getDocument<Information>(
             DATABASE_ID,
@@ -508,10 +514,15 @@ export async function getInformationById(
       },
       ["information", informationId],
       {
-        tags: ["information", `information:${informationId}`],
+        tags: [
+          "information",
+          `information:${informationId}`,
+          `information:team-${informationId}`,
+          `information:${informationId}:${queries.join("-")}`,
+        ],
         revalidate: 600,
       }
-    )();
+    )(informationId);
   });
 }
 
@@ -602,6 +613,7 @@ export async function updateInformation({
       );
 
       revalidateTag(`information:${id}`);
+      revalidateTag(`information:team-${teamId}`);
       revalidateTag(`team:${teamId}`);
 
       return {
@@ -666,56 +678,14 @@ export async function listExperiences(
       },
       ["experiences", teamId],
       {
-        tags: ["experiences", `experiences:team-${teamId}`],
+        tags: [
+          "experiences",
+          `experiences:team-${teamId}`,
+          `experiences:team-${teamId}:${queries.join("-")}`,
+        ],
         revalidate: 600,
       }
     )(teamId, queries, user.$id);
-  });
-}
-
-/**
- * Get an experience by ID
- * @param {string} experienceId The ID of the experience
- * @param {string[]} queries The queries to filter the experience
- * @returns {Promise<Result<Experience>>} The experience
- */
-export async function getExperienceById(
-  experienceId: string,
-  queries: string[] = []
-): Promise<Result<Experience>> {
-  return withAuth(async () => {
-    const { database } = await createSessionClient();
-
-    return unstable_cache(
-      async () => {
-        try {
-          const experience = await database.getDocument<Experience>(
-            DATABASE_ID,
-            EXPERIENCE_COLLECTION_ID,
-            experienceId,
-            queries
-          );
-
-          return {
-            success: true,
-            message: "Experience successfully retrieved.",
-            data: experience,
-          };
-        } catch (err) {
-          const error = err as Error;
-
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      ["experience", experienceId],
-      {
-        tags: [`experience:${experienceId}`],
-        revalidate: 600,
-      }
-    )();
   });
 }
 

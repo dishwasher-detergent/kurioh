@@ -3,7 +3,6 @@
 import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -23,7 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
-import { listProjects } from "@/lib/db";
+import { listProjectsByTeam } from "@/lib/db";
 import { cn } from "@/lib/utils";
 
 export function ProjectSelect() {
@@ -39,7 +38,7 @@ export function ProjectSelect() {
   async function fetchProjects() {
     setLoading(true);
 
-    const data = await listProjects([Query.equal("teamId", teamId)]);
+    const data = await listProjectsByTeam(teamId);
 
     if (!data.success) {
       toast.error(data.message);

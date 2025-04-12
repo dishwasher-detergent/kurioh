@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucideSave } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -43,7 +42,6 @@ export default function InformationForm({
   teamId,
 }: InformationFormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof editInformationSchema>>({
     resolver: zodResolver(editInformationSchema),
@@ -60,8 +58,6 @@ export default function InformationForm({
   });
 
   async function onSubmit(values: EditInformationFormData) {
-    setLoading(true);
-
     const data = await updateInformation({
       id: information.$id,
       data: values,
@@ -74,8 +70,6 @@ export default function InformationForm({
     } else {
       toast.error(data.message);
     }
-
-    setLoading(false);
   }
 
   return (
@@ -172,11 +166,9 @@ export default function InformationForm({
         <Button
           type="submit"
           size="sm"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucideSave className="size-3.5" />

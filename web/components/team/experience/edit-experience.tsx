@@ -10,7 +10,7 @@ import {
   LucideTrash,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -64,7 +64,6 @@ export default function ExperienceForm({
   teamId,
 }: ExperienceFormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<EditExperienceArrayFormData>({
     resolver: zodResolver(editExperienceArraySchema),
@@ -133,8 +132,6 @@ export default function ExperienceForm({
   };
 
   async function onSubmit(values: EditExperienceArrayFormData) {
-    setLoading(true);
-
     try {
       const result = await updateTeamExperiences({
         teamId,
@@ -150,8 +147,6 @@ export default function ExperienceForm({
     } catch (error) {
       toast.error("Failed to update experiences.");
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -483,10 +478,12 @@ export default function ExperienceForm({
             <Button
               type="submit"
               disabled={
-                loading || !form.formState.isValid || !form.formState.isDirty
+                form.formState.isSubmitting ||
+                !form.formState.isValid ||
+                !form.formState.isDirty
               }
             >
-              {loading ? (
+              {form.formState.isSubmitting ? (
                 <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
               ) : (
                 <LucideSave className="mr-2 size-3.5" />

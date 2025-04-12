@@ -60,8 +60,6 @@ interface FormProps extends React.ComponentProps<"form"> {
 }
 
 function InviteForm({ className, setOpen, team }: FormProps) {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const form = useForm<InviteTeamFormData>({
     resolver: zodResolver(inviteTeamSchema),
     defaultValues: {
@@ -70,8 +68,6 @@ function InviteForm({ className, setOpen, team }: FormProps) {
   });
 
   async function onSubmit(values: InviteTeamFormData) {
-    setLoading(true);
-
     const data = await inviteMember(team.$id, values.email);
 
     if (data.success) {
@@ -81,7 +77,6 @@ function InviteForm({ className, setOpen, team }: FormProps) {
       toast.error(data.message);
     }
 
-    setLoading(false);
     setOpen(false);
   }
 
@@ -115,12 +110,10 @@ function InviteForm({ className, setOpen, team }: FormProps) {
         </div>
         <Button
           type="submit"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
           Invite To Team
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucideUserRoundPlus className="size-3.5" />

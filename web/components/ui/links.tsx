@@ -53,7 +53,7 @@ export const Links = ({ links }: LinksProps) => {
             <TooltipProvider key={index}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button asChild size="icon" variant="ghost">
+                  <Button asChild size="icon" variant="secondary">
                     <a target="_blank" href={website}>
                       {<Icon className="h-4 w-4" />}
                     </a>

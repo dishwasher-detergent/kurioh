@@ -226,6 +226,7 @@ export async function createProject({
       Permission.read(Role.user(user.$id)),
       Permission.write(Role.user(user.$id)),
       Permission.read(Role.team(data.teamId)),
+      Permission.write(Role.team(data.teamId)),
     ];
 
     try {

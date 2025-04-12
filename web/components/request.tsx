@@ -124,7 +124,7 @@ export function Request({
               {endpoint.split("appwrite.global")[1]}
             </p>
           </div>
-          <div className="code bg-background mb-2 overflow-hidden rounded-xl relative">
+          <div className="code bg-background mb-2 overflow-hidden rounded-xl relative border">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -177,7 +177,7 @@ export function Request({
             <header className="mb-2">
               <h3 className="text-sm font-medium">Model</h3>
             </header>
-            <div className="code bg-background overflow-hidden rounded-xl relative">
+            <div className="code bg-background overflow-hidden rounded-xl relative border">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -236,7 +236,7 @@ export function Request({
                   <p className="text-sm">{error}</p>
                 </div>
               ) : (
-                <div className="code bg-background overflow-hidden rounded-xl relative">
+                <div className="code bg-background overflow-hidden rounded-xl relative border">
                   {data && (
                     <TooltipProvider>
                       <Tooltip>

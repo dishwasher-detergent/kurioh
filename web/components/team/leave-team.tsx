@@ -63,7 +63,6 @@ interface FormProps extends React.ComponentProps<"form"> {
 
 function LeaveForm({ className, setOpen, team }: FormProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<LeaveTeamFormData>({
     resolver: zodResolver(leaveTeamSchema),
@@ -73,15 +72,12 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
   });
 
   async function onSubmit(values: LeaveTeamFormData) {
-    setLoading(true);
-
     if (values.name !== team.name) {
       form.setError("name", {
         message: "Team name does not match.",
       });
 
       toast.error("Team name does not match.");
-      setLoading(false);
       return;
     }
 
@@ -95,7 +91,6 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
       toast.error(data.message);
     }
 
-    setLoading(false);
     setOpen(false);
   }
 
@@ -131,12 +126,10 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={
-            loading || !form.formState.isValid || !form.formState.isDirty
-          }
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
           Leave Team
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <LucideLoader2 className="size-3.5 animate-spin" />
           ) : (
             <LucideDoorOpen className="size-3.5" />

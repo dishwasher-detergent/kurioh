@@ -22,17 +22,11 @@ export default async function TeamMembersPage({
   const isAdmin = roles!.includes(ADMIN_ROLE);
 
   return (
-    <>
-      <header className="mb-6">
-        <h2 className="font-bold text-xl mb-1">Members</h2>
-        <p className="text-sm font-semibold">All members of this team.</p>
-      </header>
-      <TeamMembers
-        members={data ?? []}
-        teamId={teamId}
-        isOwner={isOwner}
-        isAdmin={isAdmin}
-      />
-    </>
+    <TeamMembers
+      members={data ?? []}
+      teamId={teamId}
+      isOwner={isOwner}
+      isAdmin={isAdmin}
+    />
   );
 }

@@ -17,15 +17,5 @@ export default async function TeamExperience({
 
   const { data } = experience;
 
-  return (
-    <>
-      <header className="mb-6">
-        <h2 className="font-bold text-xl mb-1">Experience</h2>
-        <p className="text-sm font-semibold">
-          Add Your Job, Volunteer, or Project Experience.
-        </p>
-      </header>
-      <ExperienceForm experience={data.documents} teamId={teamId} />
-    </>
-  );
+  return <ExperienceForm experience={data.documents} teamId={teamId} />;
 }

@@ -26,7 +26,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { TEAM_NAME_MAX_LENGTH } from "@/constants/team.constants";
 import { TeamData } from "@/interfaces/team.interface";
-import { deleteTeam, setLastVisitedTeam } from "@/lib/team";
+import { setLastVisitedTeam } from "@/lib/auth";
+import { deleteTeam } from "@/lib/team";
 import { DeleteTeamFormData, deleteTeamSchema } from "@/lib/team/schemas";
 import { cn } from "@/lib/utils";
 

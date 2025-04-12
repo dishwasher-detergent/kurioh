@@ -4,12 +4,9 @@ import { Query } from "node-appwrite";
 import { Projects } from "@/components/realtime/projects";
 import { TeamActions } from "@/components/team/team-actions";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
+import { setLastVisitedTeam } from "@/lib/auth";
 import { listProjects } from "@/lib/db";
-import {
-  getCurrentUserRoles,
-  getTeamById,
-  setLastVisitedTeam,
-} from "@/lib/team";
+import { getCurrentUserRoles, getTeamById } from "@/lib/team";
 
 export default async function TeamPage({
   params,

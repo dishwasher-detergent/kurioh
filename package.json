@@ -1,4 +1,7 @@
 {
+	"scripts": {
+		"lefthook:install": "lefthook install"
+	},
 	"dependencies": {
 		"lefthook": "^1.11.9"
 	}

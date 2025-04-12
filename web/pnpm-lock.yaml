@@ -111,9 +111,6 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.0
-      '@evilmartians/lefthook':
-        specifier: ^1.11.9
-        version: 1.11.9
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.0.10
@@ -200,11 +197,6 @@ packages:
   '@eslint/plugin-kit@0.2.7':
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@evilmartians/lefthook@1.11.9':
-    resolution: {integrity: sha512-OE3wAitLe+Vx+x6sHOxuVhvSiK2eiEbWK5frcaJBXo6Xe32YPENWYuWnd9ghdvRWG7PLH+5txsaODqFoS03c2w==}
-    os: [darwin, linux, win32]
-    hasBin: true
 
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
@@ -2667,8 +2659,6 @@ snapshots:
     dependencies:
       '@eslint/core': 0.12.0
       levn: 0.4.1
-
-  '@evilmartians/lefthook@1.11.9': {}
 
   '@floating-ui/core@1.6.9':
     dependencies:

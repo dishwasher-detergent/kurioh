@@ -1,5 +1,10 @@
-pre-commit:
-  commands:
-    frontend:
-      root: "web/"
-      run: pnpm run lint && pnpm run format
+pre-push:
+  jobs:
+    - name: lint
+      tags:
+        - frontend
+      run: pnpm run lint
+    - name: format
+      tags:
+        - frontend
+      run: pnpm run format

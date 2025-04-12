@@ -9,15 +9,23 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 
 export function ProjectCard(project: Project) {
+  console.log(project);
+
   return (
     <Card className="break-inside-avoid-column rounded-md p-2">
       <CardContent className="p-0">
-        {project.images && <Images images={project.images} />}
-        <div className="mt-2 p-2 space-y-2 ">
+        {project.images.length > 0 && (
+          <div className="mb-2">
+            <Images images={project.images} />
+          </div>
+        )}
+        <div className="p-2 space-y-2 ">
           <p className="font-bold text-lg">{project.name}</p>
-          {project.tags && <Badges badges={project.tags} />}
-          <p className="text-sm line-clamp-3">{project.description}</p>
-          {project.links && <Links links={project.links} />}
+          {project.tags.length > 0 && <Badges badges={project.tags} />}
+          <p className="text-sm line-clamp-3">
+            {project.description ?? "No Description Added."}
+          </p>
+          {project.links.length > 0 && <Links links={project.links} />}
         </div>
       </CardContent>
       <CardFooter className="p-0">

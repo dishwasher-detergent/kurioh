@@ -9,7 +9,7 @@ export interface Experience extends Models.Document {
   start_date: Date;
   end_date: Date;
   company: string;
-  website?: URL;
+  website: URL;
   skills: string[];
 
   userId: string;

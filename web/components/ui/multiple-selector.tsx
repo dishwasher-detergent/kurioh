@@ -535,7 +535,7 @@ const MultipleSelector = React.forwardRef<
                   : placeholder
               }
               className={cn(
-                "placeholder:text-muted-foreground flex-1 bg-transparent text-sm outline-hidden",
+                "placeholder:text-muted-foreground flex-1 bg-transparent text-base outline-hidden md:text-sm",
                 {
                   "w-full": hidePlaceholderWhenSelected,
                   "p-2": selected.length === 0,

@@ -30,7 +30,7 @@ const data = await res.json();`;
     slug: string,
     short_description: string,
     description: string,
-    images_ids: string[],
+    image_ids: string[],
     tags: string[],
     links: string[],
   }[],

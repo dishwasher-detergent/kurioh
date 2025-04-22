@@ -50,11 +50,11 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
 
       const formattedProject = projects.documents.map((project) => ({
         id: project.$id,
-        title: project.title,
+        title: project.name,
         slug: project.slug,
         short_description: project.short_description,
         description: project.description,
-        images_ids: project.images,
+        image_ids: project.images,
         tags: project.tags,
         links: project.links,
       }));

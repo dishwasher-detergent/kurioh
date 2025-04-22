@@ -25,6 +25,7 @@ import {
 export async function getLoggedInUser(): Promise<Models.User<Models.Preferences> | null> {
   try {
     const { account } = await createSessionClient();
+    
     return await account.get();
   } catch {
     return null;

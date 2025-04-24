@@ -24,7 +24,7 @@ export default async function TeamPage({
   await setLastVisitedTeam(teamId);
 
   const { data: projectData } = await listProjectsByTeam(teamId, [
-    Query.orderDesc("$createdAt"),
+    Query.orderAsc("ordinal"),
   ]);
 
   const { data: roles } = await getCurrentUserRoles(teamId);

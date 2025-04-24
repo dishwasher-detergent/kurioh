@@ -61,6 +61,7 @@ interface FormProps extends React.ComponentProps<"form"> {
 
 function InviteForm({ className, setOpen, team }: FormProps) {
   const form = useForm<InviteTeamFormData>({
+    mode: "onChange",
     resolver: zodResolver(inviteTeamSchema),
     defaultValues: {
       email: "",

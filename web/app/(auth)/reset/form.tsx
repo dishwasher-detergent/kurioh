@@ -32,6 +32,7 @@ export function ResetForm() {
   const userId = searchParams.get("userId");
 
   const form = useForm<NewPasswordFormData>({
+    mode: "onChange",
     resolver: zodResolver(newPasswordSchema),
     defaultValues: {
       password: "",

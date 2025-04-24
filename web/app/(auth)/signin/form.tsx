@@ -24,6 +24,7 @@ export function SignInForm() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<SignInFormData>({
+    mode: "onChange",
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",

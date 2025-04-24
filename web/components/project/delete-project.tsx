@@ -67,6 +67,7 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
   const router = useRouter();
 
   const form = useForm<DeleteProjectFormData>({
+    mode: "onChange",
     resolver: zodResolver(deleteProjectSchema),
     defaultValues: {
       name: "",

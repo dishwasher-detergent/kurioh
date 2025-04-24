@@ -50,6 +50,10 @@ export const editProjectSchema = z.object({
   images: z
     .array(z.union([z.string(), z.instanceof(File), z.null()]))
     .optional(),
+  ordinal: z.preprocess(
+    (a) => parseInt(z.string().parse(a), 10),
+    z.number().min(0),
+  ),
 });
 
 export type EditProjectFormData = z.infer<typeof editProjectSchema>;

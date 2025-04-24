@@ -66,6 +66,7 @@ export default function ExperienceForm({
   const router = useRouter();
 
   const form = useForm<EditExperienceArrayFormData>({
+    mode: "onChange",
     resolver: zodResolver(editExperienceArraySchema),
     defaultValues: {
       experience:

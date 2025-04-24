@@ -44,6 +44,7 @@ export default function InformationForm({
   const router = useRouter();
 
   const form = useForm<z.infer<typeof editInformationSchema>>({
+    mode: "onChange",
     resolver: zodResolver(editInformationSchema),
     defaultValues: {
       title: information?.title,

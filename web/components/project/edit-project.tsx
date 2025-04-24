@@ -43,6 +43,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
   );
 
   const form = useForm<EditProjectFormData>({
+    mode: "onChange",
     resolver: zodResolver(editProjectSchema),
     defaultValues: {
       name: project.name ?? "",
@@ -51,6 +52,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
       tags: project.tags?.map((tag) => ({ label: tag, value: tag })),
       links: project.links?.map((link) => ({ label: link, value: link })),
       images: project.images,
+      ordinal: project.ordinal,
     },
   });
 
@@ -212,6 +214,19 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
                     </p>
                   }
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="ordinal"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Odinal</FormLabel>
+              <FormControl>
+                <Input {...field} type="phone" />
               </FormControl>
               <FormMessage />
             </FormItem>

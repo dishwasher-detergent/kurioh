@@ -24,6 +24,7 @@ export function SignUpForm() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<SignUpFormData>({
+    mode: "onChange",
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",

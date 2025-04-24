@@ -230,6 +230,17 @@ export async function createProject({
     ];
 
     try {
+      const existingProject = await database.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECT_COLLECTION_ID,
+        [
+          Query.orderDesc("ordinal"),
+          Query.limit(1),
+          Query.equal("teamId", data.teamId),
+          Query.select(["ordinal"]),
+        ],
+      );
+
       const project = await database.createDocument<Project>(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
@@ -237,6 +248,7 @@ export async function createProject({
         {
           ...data,
           slug: createSlug(data.name),
+          ordinal: existingProject.documents[0]?.ordinal + 1 || 1,
           userId: user.$id,
         },
         permissions,
@@ -309,6 +321,54 @@ export async function updateProject({
         PROJECT_COLLECTION_ID,
         id,
       );
+
+      // Handle ordinal changes and reordering
+      if (existingProject.ordinal !== data.ordinal) {
+        // Get all projects for this team to manage ordinals
+        const allProjects = await database.listDocuments<Project>(
+          DATABASE_ID,
+          PROJECT_COLLECTION_ID,
+          [Query.equal("teamId", teamId), Query.orderAsc("ordinal")],
+        );
+
+        const oldOrdinal = existingProject.ordinal;
+        const newOrdinal = data.ordinal;
+
+        // Update other projects' ordinals based on move direction
+        if (oldOrdinal < newOrdinal) {
+          // Moving down: Projects between old and new positions move up
+          for (const project of allProjects.documents) {
+            if (
+              project.$id !== id &&
+              project.ordinal > oldOrdinal &&
+              project.ordinal <= newOrdinal
+            ) {
+              await database.updateDocument(
+                DATABASE_ID,
+                PROJECT_COLLECTION_ID,
+                project.$id,
+                { ordinal: project.ordinal - 1 },
+              );
+            }
+          }
+        } else if (oldOrdinal > newOrdinal) {
+          // Moving up: Projects between new and old positions move down
+          for (const project of allProjects.documents) {
+            if (
+              project.$id !== id &&
+              project.ordinal >= newOrdinal &&
+              project.ordinal < oldOrdinal
+            ) {
+              await database.updateDocument(
+                DATABASE_ID,
+                PROJECT_COLLECTION_ID,
+                project.$id,
+                { ordinal: project.ordinal + 1 },
+              );
+            }
+          }
+        }
+      }
 
       if (data.images) {
         const existingImageIds = Array.isArray(existingProject.images)

@@ -26,6 +26,7 @@ export function RecoverForm() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<ResetPasswordFormData>({
+    mode: "onChange",
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       email: "",

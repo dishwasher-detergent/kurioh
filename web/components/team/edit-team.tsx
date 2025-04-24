@@ -66,6 +66,7 @@ function EditForm({ className, setOpen, team }: FormProps) {
   const router = useRouter();
 
   const form = useForm<EditTeamFormData>({
+    mode: "onChange",
     resolver: zodResolver(editTeamSchema),
     defaultValues: {
       name: team.name,

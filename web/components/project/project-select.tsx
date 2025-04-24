@@ -3,6 +3,7 @@
 import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -38,7 +39,7 @@ export function ProjectSelect() {
   async function fetchProjects() {
     setLoading(true);
 
-    const data = await listProjectsByTeam(teamId);
+    const data = await listProjectsByTeam(teamId, [Query.orderAsc("ordinal")]);
 
     if (!data.success) {
       toast.error(data.message);

@@ -70,6 +70,7 @@ function EditForm({ className, setOpen, user }: FormProps) {
   const router = useRouter();
 
   const form = useForm<UpdateProfileFormData>({
+    mode: "onChange",
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       name: user.name,

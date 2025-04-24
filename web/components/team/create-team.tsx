@@ -53,6 +53,7 @@ function CreateForm({ className, setOpen }: FormProps) {
   const router = useRouter();
 
   const form = useForm<AddTeamFormData>({
+    mode: "onChange",
     resolver: zodResolver(addTeamSchema),
     defaultValues: {
       name: "",

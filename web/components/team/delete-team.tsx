@@ -68,6 +68,7 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
   const router = useRouter();
 
   const form = useForm<DeleteTeamFormData>({
+    mode: "onChange",
     resolver: zodResolver(deleteTeamSchema),
     defaultValues: {
       name: "",

@@ -1,3 +1,3 @@
-export const NAME_MAX_LENGTH = 32;
-export const DESCRIPTION_MAX_LENGTH = 128;
-export const SHORT_DESCRIPTION_MAX_LENGTH = 64;
+export const NAME_MAX_LENGTH = 64;
+export const DESCRIPTION_MAX_LENGTH = 1024;
+export const SHORT_DESCRIPTION_MAX_LENGTH = 1024;

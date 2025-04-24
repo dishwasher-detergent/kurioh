@@ -91,131 +91,45 @@ export function Request({
   const getBadgeVariant = (method: HttpMethod) => {
     const variants: Record<
       HttpMethod,
-      "default" | "secondary" | "destructive" | "outline"
+      "get" | "post" | "put" | "patch" | "delete"
     > = {
-      GET: "secondary",
-      POST: "default",
-      PUT: "outline",
-      DELETE: "destructive",
-      PATCH: "secondary",
+      GET: "get",
+      POST: "post",
+      PUT: "put",
+      PATCH: "patch",
+      DELETE: "delete",
     };
     return variants[method];
   };
 
   const getStatusBadgeVariant = (status: number | null) => {
     if (!status) return "secondary";
-    if (status >= 200 && status < 300) return "default";
+    if (status >= 200 && status < 300) return "secondary";
     if (status >= 400) return "destructive";
     return "secondary";
   };
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div className="flex h-full flex-col gap-4">
-        <article className="sticky top-30">
-          <header className="mb-2">
-            <h3 className="text-sm font-medium">Request</h3>
-          </header>
-          <div className="mb-2 flex flex-row items-start gap-2 overflow-hidden">
-            <Badge variant={getBadgeVariant(method)} className="uppercase">
-              {method}
-            </Badge>
-            <p className="overflow-hidden text-sm font-semibold break-words">
-              {endpoint.split("appwrite.global")[1]}
-            </p>
-          </div>
-          <div className="code bg-background relative mb-2 overflow-hidden rounded-xl border">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="absolute top-2 right-2 z-10"
-                    onClick={() => copyToClipboard(code, setCopied)}
-                  >
-                    {copied ? (
-                      <LucideCheckCircle className="h-4 w-4" />
-                    ) : (
-                      <LucideClipboard className="h-4 w-4" />
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{copied ? "Copied!" : "Copy code"}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <SyntaxHighlighter
-              language="javascript"
-              style={coy}
-              showLineNumbers={true}
-              customStyle={{
-                padding: "1rem",
-                paddingInline: 0,
-                paddingBlock: 0,
-                margin: 0,
-                marginBottom: 0,
-              }}
-            >
-              {code}
-            </SyntaxHighlighter>
-          </div>
-          <footer className="mt-2 p-0">
+      <div className="flex flex-col gap-4">
+        <article>
+          <div className="flex flex-row items-center justify-between gap-2 overflow-hidden">
+            <div className="flex flex-row items-center gap-2">
+              <Badge variant={getBadgeVariant(method)} className="uppercase">
+                {method}
+              </Badge>
+              <p className="overflow-hidden text-sm font-semibold break-words">
+                {endpoint.split("appwrite.run")[1]}
+              </p>
+            </div>
             <Button size="sm" onClick={handleRequest} disabled={loading}>
               {loading && (
                 <LucideLoader2 className="mr-2 size-3.5 animate-spin" />
               )}
-              Try it!
+              Send
             </Button>
-          </footer>
+          </div>
         </article>
-      </div>
-      <div className="flex h-full flex-col gap-4">
-        {model && (
-          <article>
-            <header className="mb-2">
-              <h3 className="text-sm font-medium">Model</h3>
-            </header>
-            <div className="code bg-background relative overflow-hidden rounded-xl border">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="absolute top-2 right-2 z-10"
-                      onClick={() => copyToClipboard(model, setCopiedModel)}
-                    >
-                      {copiedModel ? (
-                        <LucideCheckCircle className="h-4 w-4" />
-                      ) : (
-                        <LucideClipboard className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{copiedModel ? "Copied!" : "Copy model"}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <SyntaxHighlighter
-                language={modelLanguage}
-                style={coy}
-                showLineNumbers={true}
-                customStyle={{
-                  padding: "1rem",
-                  paddingInline: 0,
-                  paddingBlock: 0,
-                  margin: 0,
-                  marginBottom: 0,
-                }}
-              >
-                {model}
-              </SyntaxHighlighter>
-            </div>
-          </article>
-        )}
         {(data || error) && (
           <article>
             <header className="mb-2">
@@ -285,6 +199,94 @@ export function Request({
                   </SyntaxHighlighter>
                 </div>
               )}
+            </div>
+          </article>
+        )}
+      </div>
+      <div className="flex h-full flex-col gap-4">
+        <article>
+          <header className="mb-2">
+            <Badge variant="secondary">JavaScript</Badge>
+          </header>
+          <div className="code bg-background relative mb-2 overflow-hidden rounded-xl border">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="absolute top-2 right-2 z-10"
+                    onClick={() => copyToClipboard(code, setCopied)}
+                  >
+                    {copied ? (
+                      <LucideCheckCircle className="h-4 w-4" />
+                    ) : (
+                      <LucideClipboard className="h-4 w-4" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{copied ? "Copied!" : "Copy code"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <SyntaxHighlighter
+              language="javascript"
+              style={coy}
+              showLineNumbers={true}
+              customStyle={{
+                padding: "1rem",
+                paddingInline: 0,
+                paddingBlock: 0,
+                margin: 0,
+                marginBottom: 0,
+              }}
+            >
+              {code}
+            </SyntaxHighlighter>
+          </div>
+        </article>
+        {model && (
+          <article>
+            <header className="mb-2">
+              <Badge variant="secondary">STATUS 200</Badge>
+            </header>
+            <div className="code bg-background relative overflow-hidden rounded-xl border">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="absolute top-2 right-2 z-10"
+                      onClick={() => copyToClipboard(model, setCopiedModel)}
+                    >
+                      {copiedModel ? (
+                        <LucideCheckCircle className="h-4 w-4" />
+                      ) : (
+                        <LucideClipboard className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{copiedModel ? "Copied!" : "Copy model"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <SyntaxHighlighter
+                language={modelLanguage}
+                style={coy}
+                showLineNumbers={true}
+                customStyle={{
+                  padding: "1rem",
+                  paddingInline: 0,
+                  paddingBlock: 0,
+                  margin: 0,
+                  marginBottom: 0,
+                }}
+              >
+                {model}
+              </SyntaxHighlighter>
             </div>
           </article>
         )}

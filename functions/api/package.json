@@ -10,9 +10,9 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "node-appwrite": "^14.1.0",
-    "@hono/node-server": "^1.13.7",
-    "hono": "^4.6.15",
+    "node-appwrite": "^16.0.0",
+    "@hono/node-server": "^1.14.1",
+    "hono": "^4.7.7",
     "typescript": "^5.7.2"
   },
   "devDependencies": {

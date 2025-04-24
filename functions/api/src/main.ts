@@ -12,7 +12,7 @@ import { Organizations } from './pages/organization.js';
 import { Projects } from './pages/project.js';
 import { Context } from './types/types.js';
 
-const cache = 1440; //24 hours in seconds
+const cache = 0; //24 hours in seconds
 
 const app = new Hono();
 

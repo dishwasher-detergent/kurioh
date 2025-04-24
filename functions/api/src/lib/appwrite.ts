@@ -20,8 +20,10 @@ export const PROJECTS_COLLECTION_ID = process.env
 // Buckets
 export const PROJECTS_BUCKET_ID = process.env.PROJECTS_BUCKET_ID as string;
 
-const client = new Client();
-client.setEndpoint(ENDPOINT).setProject(PROJECT_ID).setKey(API_KEY);
+const client = new Client()
+  .setEndpoint(ENDPOINT)
+  .setProject(PROJECT_ID)
+  .setKey(API_KEY);
 
 const database = new Databases(client);
 const storage = new Storage(client);
@@ -56,6 +58,8 @@ export const database_service = {
     collectionId: string,
     queries: string[] = []
   ) {
+    console.log(client.config);
+
     const response = await database.listDocuments<T>(
       DATABASE_ID,
       collectionId,

@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { ImageFormat } from 'node-appwrite';
+import { ImageFormat, Query } from 'node-appwrite';
 import {
   ORGANIZATION_COLLECTION_ID,
   PROJECTS_BUCKET_ID,
@@ -10,6 +10,37 @@ import {
 import { Organization, Project } from '../types/types.js';
 
 export function Projects(app: Hono, cacheDuration: number = 1440) {
+  app.get('/organizations/:organization_id/projects', async (c) => {
+    try {
+      const organization_id = c.req.param('organization_id');
+
+      const projects = await database_service.list<Project>(
+        PROJECTS_COLLECTION_ID,
+        [Query.equal('teamId', organization_id)]
+      );
+
+      const formattedProjects = projects.documents.map((project) => ({
+        id: project.$id,
+        organziation_id: project.organization_id,
+        title: project.title,
+        slug: project.slug,
+        short_description: project.short_description,
+        description: project.description,
+        image_ids: project.images,
+        tags: project.tags,
+        links: project.links,
+      }));
+
+      return c.json(formattedProjects, 200, {
+        'Cache-Control': `public, max-age=${cacheDuration}`,
+      });
+    } catch (error) {
+      console.error(error);
+
+      return c.json({ error: 'Failed to fetch projects data.' }, 500);
+    }
+  });
+
   app.get('/organizations/:organization_id/projects/:project_id', async (c) => {
     try {
       const organization_id = c.req.param('organization_id');
@@ -41,6 +72,8 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         'Cache-Control': `public, max-age=${cacheDuration}`,
       });
     } catch (error) {
+      console.error(error);
+
       return c.json({ error: 'Failed to fetch project data.' }, 500);
     }
   });
@@ -89,6 +122,8 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         c.header('Cache-Control', `public, max-age=${cacheDuration}`);
         return c.body(file);
       } catch (error) {
+        console.error(error);
+
         return c.json({ error: 'Failed to fetch image.' }, 500);
       }
     }

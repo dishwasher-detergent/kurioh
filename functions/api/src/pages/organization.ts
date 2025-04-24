@@ -83,6 +83,8 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
         'Cache-Control': `public, max-age=${cacheDuration}`,
       });
     } catch (error) {
+      console.error(error);
+
       return c.json({ error: 'Failed to fetch organization data.' }, 500);
     }
   });
@@ -113,6 +115,8 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
       c.header('Cache-Control', `public, max-age=${cacheDuration}`);
       return c.body(file);
     } catch (error) {
+      console.error(error);
+
       return c.json({ error: 'Failed to fetch image.' }, 500);
     }
   });
@@ -148,6 +152,8 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
       c.header('Cache-Control', `public, max-age=${cacheDuration}`);
       return c.body(file);
     } catch (error) {
+      console.error(error);
+
       return c.json({ error: 'Failed to fetch favicon.' }, 500);
     }
   });

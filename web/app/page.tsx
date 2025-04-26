@@ -179,8 +179,8 @@ export default function Home() {
           </p>
           <div>
             <h3 className="mb-4 font-mono text-2xl font-bold">
-              <span className="text-green-500">GET</span>{" "}
-              {endpoint.split("run")[1]}
+              <span className="text-green-500">GET</span>
+              {endpoint.split(/(run|global)/)[2]}
             </h3>
             <p className="mb-4">
               Fetch a complete portfolio with one simple API call. Include

@@ -119,7 +119,7 @@ export function Request({
                 {method}
               </Badge>
               <p className="overflow-hidden text-sm font-semibold break-words">
-                {endpoint.split("appwrite.run")[1]}
+                {endpoint.split(/(run|global)/)[2]}
               </p>
             </div>
             <Button size="sm" onClick={handleRequest} disabled={loading}>

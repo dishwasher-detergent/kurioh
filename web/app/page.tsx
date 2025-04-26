@@ -1,4 +1,4 @@
-import { LucideBox, LucideCode2, LucideEarth } from "lucide-react";
+import { LucideCode2, LucideEarth, LucidePiggyBank } from "lucide-react";
 import Link from "next/link";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -131,8 +131,8 @@ export default function Home() {
             Everything you need, nothing you don&apos;t.
           </p>
         </div>
-        <div className="border-marketing-background grid grid-cols-1 overflow-hidden border-1 md:grid-cols-2 lg:grid-cols-3">
-          <div className="after:bg-marketing-background relative p-12 transition-shadow after:absolute after:top-0 after:right-0 after:block after:h-full after:w-[1px] after:last:hidden hover:shadow-lg md:after:block md:last:after:hidden lg:last:after:hidden lg:odd:last:after:hidden md:[&:nth-child(2)]:after:block">
+        <div className="border-marketing-background grid grid-cols-1 overflow-hidden border-t md:grid-cols-2 lg:grid-cols-3">
+          <div className="bg-marketing-background/5 p-6 md:border-r md:p-12">
             <div className="mb-4 flex items-start justify-between">
               <h3 className="text-2xl font-bold">Simple API</h3>
               <LucideCode2 className="size-6 stroke-2" />
@@ -142,17 +142,17 @@ export default function Home() {
               with our developer-friendly API.
             </p>
           </div>
-          <div className="border-marketing-background after:bg-marketing-background relative border-t-1 p-12 transition-shadow after:absolute after:top-0 after:right-0 after:block after:h-full after:w-[1px] after:last:hidden hover:shadow-lg md:border-t-0 md:after:block lg:border-t-0 lg:last:after:hidden">
+          <div className="bg-marketing-background/5 border-t p-6 md:border-t-0 md:border-r md:p-12">
             <div className="mb-4 flex items-start justify-between">
               <h3 className="text-2xl font-bold">100% Free</h3>
-              <LucideBox className="size-6 stroke-2" />
+              <LucidePiggyBank className="size-6 stroke-2" />
             </div>
             <p className="font-mono">
               No premium tiers, no hidden costs. All features available to
               everyone, forever.
             </p>
           </div>
-          <div className="border-marketing-background relative border-t-1 p-12 transition-shadow hover:shadow-lg md:border-t-1 lg:border-t-0">
+          <div className="bg-marketing-background/5 border-t p-6 md:border-t-0 md:p-12">
             <div className="mb-4 flex items-start justify-between">
               <h3 className="text-2xl font-bold">Unlimited</h3>
               <LucideEarth className="size-6 stroke-2" />
@@ -210,18 +210,16 @@ export default function Home() {
         id="pricing"
         className="border-marketing-background border-b p-6 md:p-12"
       >
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="mb-6 text-5xl font-bold">Free. Forever.</h2>
-          <p className="mb-8 font-mono text-xl">
-            No credit card required. No hidden fees.
-          </p>
-          <Button
-            className="text-marketing-foreground bg-marketing-background hover:bg-marketing-background/80 hover:text-marketing-foreground rounded-none px-8 py-6 text-lg transition-all"
-            asChild
-          >
-            <Link href="/signup">Start free now</Link>
-          </Button>
-        </div>
+        <h2 className="mb-6 text-5xl font-bold">Free. Forever.</h2>
+        <p className="mb-8 font-mono text-xl md:text-2xl">
+          No credit card required. No hidden fees.
+        </p>
+        <Button
+          className="text-marketing-foreground bg-marketing-background hover:bg-marketing-background/80 hover:text-marketing-foreground rounded-none px-8 py-6 text-lg transition-all"
+          asChild
+        >
+          <Link href="/signup">Start free now</Link>
+        </Button>
       </section>
       <footer className="bg-marketing-background text-marketing-foreground p-6 md:p-12">
         <div className="flex flex-col items-start justify-between md:flex-row md:items-center">

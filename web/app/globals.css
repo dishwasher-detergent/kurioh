@@ -31,6 +31,9 @@
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
 
+  --marketing-background: hsl(340, 3%, 17%);
+  --marketing-foreground: hsl(0, 0%, 92%);
+
   --radius: 0.5rem;
 }
 
@@ -86,6 +89,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  --color-marketing-background: var(--marketing-background);
+  --color-marketing-foreground: var(--marketing-foreground);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

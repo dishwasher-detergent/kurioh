@@ -29,20 +29,16 @@ return (
 
 const apiExample = `// Response
 {
-  "id": "12345",
-  "name": "Jane Smith",
-  "title": "Product Designer",
-  "bio": "Creating intuitive experiences",
-  "links": [
-    {
-      "type": "github",
-      "url": "https://github.com/janesmith"
-    },
-    {
-      "type": "linkedin",
-      "url": "https://linkedin.com/in/janesmith"
-    }
-  ],
+  "id": "123456",
+  "information": {
+    "title": "Kenneth Bass",
+    "description": "A full-stack developer based in Oklahoma",
+    "socials": [
+      "https://github.com/dishwasher-detergent",
+      "https://codepen.com/kennethbass",
+      "https://linkedin.com/in/kennethtylerbass"
+    ]
+  },
   "projects": [...],
   "experience": [...]
 }`;
@@ -179,7 +175,7 @@ export default function Home() {
           </p>
           <div>
             <h3 className="mb-4 font-mono text-2xl font-bold">
-              <span className="text-green-500">GET</span>
+              <span className="text-green-500">GET</span>{" "}
               {endpoint.split(/(run|global)/)[2]}
             </h3>
             <p className="mb-4">

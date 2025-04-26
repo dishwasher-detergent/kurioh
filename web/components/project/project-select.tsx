@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
 import { listProjectsByTeam } from "@/lib/db";
 import { cn } from "@/lib/utils";
@@ -58,18 +59,23 @@ export function ProjectSelect() {
     }
   }, [teamId, projectId]);
 
+  if (loading) {
+    return <Skeleton className="h-6 w-32" />;
+  }
+
   if (!teamId) return null;
+
+  if (projects.length == 0) {
+    <div className="flex w-32">
+      <AddProject
+        teamId={teamId}
+        className="text-foreground hover:bg-accent hover:text-accent-foreground bg-transparent"
+      />
+    </div>;
+  }
 
   return (
     <>
-      {projects.length == 0 && !loading ? (
-        <div className="flex w-32">
-          <AddProject
-            teamId={teamId}
-            className="text-foreground hover:bg-accent hover:text-accent-foreground bg-transparent"
-          />
-        </div>
-      ) : null}
       {projects.length > 0 && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>

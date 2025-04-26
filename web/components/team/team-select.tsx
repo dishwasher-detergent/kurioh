@@ -21,6 +21,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TeamData } from "@/interfaces/team.interface";
 import { listTeams } from "@/lib/team";
 import { cn } from "@/lib/utils";
@@ -53,13 +54,20 @@ export function TeamSelect() {
     fetchTeams();
   }, [teamId]);
 
+  if (loading) {
+    return <Skeleton className="h-6 w-32" />;
+  }
+
+  if (teams.length == 0) {
+    return (
+      <div className="flex w-32">
+        <CreateTeam />
+      </div>
+    );
+  }
+
   return (
     <>
-      {teams.length == 0 && !loading ? (
-        <div className="flex w-32">
-          <CreateTeam />
-        </div>
-      ) : null}
       {teams.length > 0 && (
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>

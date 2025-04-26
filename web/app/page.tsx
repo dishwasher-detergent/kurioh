@@ -132,7 +132,7 @@ export default function Home() {
         <div className="p-6 md:p-12">
           <h2 className="mb-4 text-5xl font-bold">Features</h2>
           <p className="font-mono text-xl md:text-2xl">
-            Everything you need, nothing you don't.
+            Everything you need, nothing you don&apos;t.
           </p>
         </div>
         <div className="border-marketing-background grid grid-cols-1 overflow-hidden border-1 md:grid-cols-2 lg:grid-cols-3">

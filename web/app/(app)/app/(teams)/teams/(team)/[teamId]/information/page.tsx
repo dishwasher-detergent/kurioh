@@ -24,7 +24,7 @@ export default async function TeamInformation({
         title="Information"
         description="Basic portfolio information."
       />
-      <InformationForm information={data} teamId={data.teamId} />;
+      <InformationForm information={data} teamId={data.teamId} />
     </>
   );
 }

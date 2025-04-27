@@ -37,6 +37,7 @@ export function TeamSelect() {
 
   async function fetchTeams() {
     setLoading(true);
+    console.log("test");
 
     const data = await listTeams();
 

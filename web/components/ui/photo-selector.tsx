@@ -68,7 +68,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
 
   return (
     <div>
-      <Card className="bg-background p-2 shadow-none">
+      <Card className="bg-card p-2 shadow-none">
         <ul className="flex flex-row flex-wrap gap-2">
           {!preview && (
             <li>

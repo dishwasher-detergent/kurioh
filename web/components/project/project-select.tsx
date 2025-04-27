@@ -69,7 +69,7 @@ export function ProjectSelect() {
     <div className="flex w-32">
       <AddProject
         teamId={teamId}
-        className="text-foreground hover:bg-accent hover:text-accent-foreground bg-transparent"
+        className="text-foreground hover:bg-accent hover:text-accent-foreground bg-card"
       />
     </div>;
   }

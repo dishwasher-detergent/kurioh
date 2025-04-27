@@ -446,7 +446,7 @@ const MultipleSelector = React.forwardRef<
           commandProps?.onKeyDown?.(e);
         }}
         className={cn(
-          "h-auto overflow-visible bg-transparent",
+          "bg-card h-auto overflow-visible",
           commandProps?.className,
         )}
         shouldFilter={
@@ -458,7 +458,7 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            "border-input ring-offset-background focus-within:ring-ring min-h-9 rounded-md border bg-transparent text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
+            "border-input ring-offset-background focus-within:ring-ring bg-card min-h-9 rounded-md border text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
             {
               "py-1": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
@@ -535,7 +535,7 @@ const MultipleSelector = React.forwardRef<
                   : placeholder
               }
               className={cn(
-                "placeholder:text-muted-foreground flex-1 bg-transparent text-base outline-hidden md:text-sm",
+                "placeholder:text-muted-foreground bg-card flex-1 text-base outline-hidden md:text-sm",
                 {
                   "w-full": hidePlaceholderWhenSelected,
                   "p-2": selected.length === 0,

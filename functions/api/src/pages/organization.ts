@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Query } from 'node-appwrite';
 
 import {
+  EDUCATION_COLLECTION_ID,
   EXPERIENCE_COLLECTION_ID,
   INFORMATION_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
@@ -10,7 +11,13 @@ import {
   database_service,
   storage_service,
 } from '../lib/appwrite.js';
-import { Experience, Information, Project, Team } from '../types/types.js';
+import {
+  Education,
+  Experience,
+  Information,
+  Project,
+  Team,
+} from '../types/types.js';
 
 export function Teams(app: Hono, cacheDuration: number = 1440) {
   app.get('/teams/:team_id', async (c) => {
@@ -36,6 +43,11 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         [Query.equal('teamId', team_id)]
       );
 
+      const education = await database_service.list<Education>(
+        EDUCATION_COLLECTION_ID,
+        [Query.equal('teamId', team_id)]
+      );
+
       const formattedProject = projects.documents.map((project) => ({
         id: project.$id,
         title: project.name,
@@ -47,7 +59,6 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
       }));
 
       const formattedExperience = experience.documents.map((exp) => ({
-        id: exp.$id,
         title: exp.title,
         description: exp.description,
         skills: exp.skills,
@@ -55,6 +66,14 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         endDate: exp.end_date,
         company: exp.company,
         website: exp.website,
+      }));
+
+      const formattedEducation = education.documents.map((exp) => ({
+        school: exp.school,
+        major: exp.major,
+        degree: exp.degree,
+        startDate: exp.start_date,
+        graduationDate: exp.end_date,
       }));
 
       const prunedResponse = {
@@ -66,6 +85,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         image: information.image,
         projects: formattedProject,
         experience: formattedExperience,
+        education: formattedEducation,
       };
 
       return c.json(prunedResponse, 200, {

@@ -15,7 +15,7 @@ export interface Project extends Models.Document {
   tags: string[];
   links: string[];
   slug: string;
-  organization_id: string;
+  teamId: string;
 }
 
 export interface Information extends Models.Document {
@@ -23,8 +23,8 @@ export interface Information extends Models.Document {
   description: string;
   image: string;
   socials: string[];
-  organization_id: string;
-  createdBy: string;
+  teamId: string;
+  userId: string;
 }
 
 export interface Social {
@@ -38,7 +38,7 @@ export interface Team extends Models.Document {
   information_id: string;
   project_ids: string[];
   experience_id: string | null;
-  createdBy: string;
+  userId: string;
 }
 
 export interface Experience extends Models.Document {
@@ -49,8 +49,18 @@ export interface Experience extends Models.Document {
   company: string;
   website: URL;
   skills: string[];
-  createdBy: string;
-  organization_id: string;
+  userId: string;
+  teamId: string;
+}
+
+export interface Education extends Models.Document {
+  school: string;
+  major: string;
+  degree: string;
+  start_date: Date;
+  end_date: Date;
+  userId: string;
+  teamId: string;
 }
 
 export interface ImagePreview {

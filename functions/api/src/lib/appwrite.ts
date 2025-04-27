@@ -16,6 +16,8 @@ export const INFORMATION_COLLECTION_ID = process.env
   .INFORMATION_COLLECTION_ID as string;
 export const PROJECTS_COLLECTION_ID = process.env
   .PROJECTS_COLLECTION_ID as string;
+export const EDUCATION_COLLECTION_ID = process.env
+  .EDUCATION_COLLECTION_ID as string;
 
 // Buckets
 export const PROJECTS_BUCKET_ID = process.env.PROJECTS_BUCKET_ID as string;

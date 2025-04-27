@@ -31,7 +31,6 @@ const data = await res.json();`;
     links: string[],
   }[],
   experience: {
-    id: string,
     title: string,
     description: string,
     skills: string[],
@@ -39,6 +38,13 @@ const data = await res.json();`;
     endDate: Date,
     company: string,
     website: string,
+  }[],
+  education: {
+    school: string,
+    major: string,
+    degree: string,
+    startDate: Date,
+    graduationDate: Date,
   }[],
 }`;
 

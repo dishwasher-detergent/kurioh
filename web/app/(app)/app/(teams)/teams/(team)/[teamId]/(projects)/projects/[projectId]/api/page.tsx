@@ -11,14 +11,13 @@ export default async function ApiPage({
 }) {
   const { projectId, teamId } = await params;
 
-  const endpoint = `${API_ENDPOINT}/organizations/${teamId}/projects/${projectId}`;
+  const endpoint = `${API_ENDPOINT}/teams/${teamId}/projects/${projectId}`;
   const javascript = `const res = await fetch("${endpoint}");
 const data = await res.json();`;
   const model = `interface Project {
   id: string,
   team: string,
   title: string,
-  slug: string,
   shortDescription: string,
   description: string,
   images: string[],

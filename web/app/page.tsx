@@ -7,17 +7,17 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Button } from "@/components/ui/button";
 import { API_ENDPOINT } from "@/lib/constants";
 
-const endpoint = `${API_ENDPOINT}/organizations/TEAM_ID`;
+const endpoint = `${API_ENDPOINT}/teams/TEAM_ID`;
 
 const mainExample = `// Fetch portfolio data
 const res = await fetch("${endpoint}");
-const portfolio, { projects, experience } = await res.json();
+const { title, description, projects, experience } = await res.json();
 
 // Render in your app
 return (
   <div>
-    <h1>{portfolio.title}</h1>
-    <p>{portfolio.description}</p>
+    <h1>{title}</h1>
+    <p>{description}</p>
     {expierience.map(exp => (
       <ExperienceCard key={exp.id} {...exp} />
     ))}

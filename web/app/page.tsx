@@ -131,7 +131,7 @@ export default function Home() {
           </p>
         </div>
         <div className="border-background grid grid-cols-1 overflow-hidden border-t lg:grid-cols-3">
-          <div className="bg-background/5 p-6 lg:border-r lg:p-12">
+          <div className="bg-background/5 text-secondary p-6 lg:border-r lg:p-12">
             <div className="mb-4 flex items-start justify-between">
               <h3 className="text-xl font-bold lg:text-2xl">Simple API</h3>
               <LucideCode2 className="size-6 stroke-2" />
@@ -141,7 +141,7 @@ export default function Home() {
               with our developer-friendly API.
             </p>
           </div>
-          <div className="bg-background/5 border-t p-6 lg:border-t-0 lg:border-r lg:p-12">
+          <div className="bg-background/5 text-secondary border-t p-6 lg:border-t-0 lg:border-r lg:p-12">
             <div className="mb-4 flex items-start justify-between">
               <h3 className="text-xl font-bold lg:text-2xl">100% Free</h3>
               <LucidePiggyBank className="size-6 stroke-2" />
@@ -151,7 +151,7 @@ export default function Home() {
               everyone, forever.
             </p>
           </div>
-          <div className="bg-background/5 border-t p-6 lg:border-t-0 lg:p-12">
+          <div className="bg-background/5 text-secondary border-t p-6 lg:border-t-0 lg:p-12">
             <div className="mb-4 flex items-start justify-between">
               <h3 className="text-lg font-bold lg:text-2xl">
                 Team Collaboration
@@ -165,7 +165,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section id="api" className="bg-background text-foreground">
+      <section id="api" className="bg-secondary text-secondary-foreground">
         <div className="flex flex-col p-6 lg:p-12">
           <h2 className="mb-4 text-3xl font-bold lg:text-5xl">
             API that just works
@@ -193,7 +193,7 @@ export default function Home() {
               paddingBlock: "2rem",
               margin: 0,
               marginBottom: 0,
-              backgroundColor: "var(--muted)",
+              backgroundColor: "var(--accent)",
               fontSize: "var(--text-sm)",
             }}
             wrapLines={true}

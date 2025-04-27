@@ -11,9 +11,9 @@ import { SignInForm } from "./form";
 
 export default function SignInPage() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="bg-background w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
+        <CardTitle>Welcome Back!</CardTitle>
         <CardDescription>
           Enter your email below to sign in to your account.
         </CardDescription>

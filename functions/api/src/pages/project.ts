@@ -24,9 +24,9 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         organziation_id: project.organization_id,
         title: project.title,
         slug: project.slug,
-        short_description: project.short_description,
+        shortDescription: project.short_description,
         description: project.description,
-        image_ids: project.images,
+        images: project.images,
         tags: project.tags,
         links: project.links,
       }));
@@ -61,9 +61,9 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         organziation_id: project.organization_id,
         title: project.title,
         slug: project.slug,
-        short_description: project.short_description,
+        shortDescription: project.short_description,
         description: project.description,
-        image_ids: project.images,
+        images: project.images,
         tags: project.tags,
         links: project.links,
       };

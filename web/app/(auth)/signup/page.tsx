@@ -11,9 +11,9 @@ import { SignUpForm } from "./form";
 
 export default function SignUpPage() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="bg-background w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
+        <CardTitle>Welcome!</CardTitle>
         <CardDescription>
           Enter your email below to create your account.
         </CardDescription>

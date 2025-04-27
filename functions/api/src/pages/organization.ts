@@ -41,20 +41,13 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
         [Query.equal('teamId', organization_id)]
       );
 
-      const formattedInformation = {
-        title: information.title,
-        description: information.description,
-        image_id: information.images,
-        socials: information.socials,
-      };
-
       const formattedProject = projects.documents.map((project) => ({
         id: project.$id,
         title: project.name,
         slug: project.slug,
-        short_description: project.short_description,
+        shortDescription: project.short_description,
         description: project.description,
-        image_ids: project.images,
+        images: project.images,
         tags: project.tags,
         links: project.links,
       }));
@@ -64,17 +57,19 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
         title: exp.title,
         description: exp.description,
         skills: exp.skills,
-        start_date: exp.start_date,
-        end_date: exp.end_date,
+        startDate: exp.start_date,
+        endDate: exp.end_date,
         company: exp.company,
         website: exp.website,
       }));
 
       const prunedResponse = {
         id: organization.$id,
-        title: organization.title,
-        slug: organization.slug,
-        information: formattedInformation,
+        name: organization.name,
+        title: information.title,
+        description: information.description,
+        socials: information.socials,
+        image: information.image,
         projects: formattedProject,
         experience: formattedExperience,
       };

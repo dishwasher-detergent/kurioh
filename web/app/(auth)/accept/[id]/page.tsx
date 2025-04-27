@@ -14,7 +14,7 @@ export default async function Invite({
   const { teamId, membershipId, userId, secret } = await searchParams;
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="bg-background w-full max-w-sm">
       <CardHeader>
         <CardTitle className="mt-2 text-2xl">Accept Team Invite</CardTitle>
       </CardHeader>

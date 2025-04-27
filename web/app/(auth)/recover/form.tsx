@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucideMail } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -23,8 +22,6 @@ import {
 } from "@/lib/auth/schemas";
 
 export function RecoverForm() {
-  const [loading, setLoading] = useState(false);
-
   const form = useForm<ResetPasswordFormData>({
     mode: "onChange",
     resolver: zodResolver(resetPasswordSchema),
@@ -34,10 +31,8 @@ export function RecoverForm() {
   });
 
   async function onSubmit(values: ResetPasswordFormData) {
-    setLoading(true);
     const result = await createPasswordRecovery(values);
     toast.error(result.message);
-    setLoading(false);
   }
 
   return (
@@ -59,9 +54,9 @@ export function RecoverForm() {
         <Button
           className="w-full"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <>
               Sending Reset Link
               <LucideLoader2 className="ml-2 size-3.5 animate-spin" />

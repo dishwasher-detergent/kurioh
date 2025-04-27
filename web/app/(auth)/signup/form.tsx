@@ -34,10 +34,13 @@ export function SignUpForm() {
   });
 
   async function onSubmit(values: SignUpFormData) {
-    setLoading(true);
     const result = await signUpWithEmail(values);
     toast.error(result.message);
-    setLoading(false);
+  }
+
+  async function onGithubSignUp() {
+    setLoading(true);
+    await signUpWithGithub();
   }
 
   return (
@@ -90,9 +93,9 @@ export function SignUpForm() {
           <Button
             className="w-full"
             type="submit"
-            disabled={loading || !form.formState.isValid}
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
           >
-            {loading ? (
+            {form.formState.isSubmitting ? (
               <>
                 Signing up
                 <LucideLoader2 className="ml-2 size-3.5 animate-spin" />
@@ -106,11 +109,29 @@ export function SignUpForm() {
           </Button>
         </form>
       </Form>
-      <Separator />
-      <form className="w-full" action={signUpWithGithub}>
-        <Button type="submit" variant="secondary" className="w-full">
+      <div className="relative w-full py-2">
+        <p className="bg-background text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl px-2 text-sm font-semibold">
+          OR
+        </p>
+        <Separator />
+      </div>
+      <form className="w-full" action={onGithubSignUp}>
+        <Button
+          type="submit"
+          variant="secondary"
+          className="w-full"
+          disabled={loading}
+        >
           Github
-          <LucideGithub className="ml-2 size-3.5" />
+          {loading ? (
+            <>
+              <LucideLoader2 className="ml-2 size-3.5 animate-spin" />
+            </>
+          ) : (
+            <>
+              <LucideGithub className="ml-2 size-3.5" />
+            </>
+          )}
         </Button>
       </form>
     </>

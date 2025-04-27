@@ -19,14 +19,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideLoader2, LucideLock } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function ResetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
 
   const secret = searchParams.get("secret");
   const userId = searchParams.get("userId");
@@ -50,10 +48,8 @@ export function ResetForm() {
       return;
     }
 
-    setLoading(true);
     const result = await resetPassword(userId, secret, values.password);
     toast.error(result.message);
-    setLoading(false);
   }
 
   return (
@@ -96,9 +92,9 @@ export function ResetForm() {
         <Button
           className="w-full"
           type="submit"
-          disabled={loading || !form.formState.isValid}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
-          {loading ? (
+          {form.formState.isSubmitting ? (
             <>
               Resetting Password
               <LucideLoader2 className="ml-2 size-3.5 animate-spin" />

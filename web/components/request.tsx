@@ -32,13 +32,11 @@ export function Request({
   const [data, setData] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<number | null>(null);
 
   async function handleRequest() {
     setLoading(true);
     setData(null);
     setError(null);
-    setStatus(null);
 
     try {
       const options: RequestInit = {
@@ -51,7 +49,6 @@ export function Request({
       };
 
       const res = await fetch(endpoint, options);
-      setStatus(res.status);
 
       try {
         const responseData = await res.json();

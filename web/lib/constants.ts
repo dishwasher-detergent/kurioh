@@ -18,6 +18,8 @@ export const EXPERIENCE_COLLECTION_ID = process.env
   .NEXT_PUBLIC_EXPERIENCE_COLLECTION_ID as string;
 export const INFORMATION_COLLECTION_ID = process.env
   .NEXT_PUBLIC_INFORMATION_COLLECTION_ID as string;
+export const EDUCATION_COLLECTION_ID = process.env
+  .NEXT_PUBLIC_EDUCATION_COLLECTION_ID as string;
 
 // Buckets
 export const PROJECT_BUCKET_ID = process.env

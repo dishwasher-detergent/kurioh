@@ -187,6 +187,15 @@
                     "array": false,
                     "size": 128,
                     "default": null
+                },
+                {
+                    "key": "ordinal",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
                 }
             ],
             "indexes": [
@@ -294,6 +303,98 @@
                     "required": true,
                     "array": false,
                     "size": 128,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "team",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "teamId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                },
+                {
+                    "key": "user",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "userId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "education",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "portfolio",
+            "name": "education",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "school",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "major",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "start_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "end_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "teamId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "degree",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
                     "default": null
                 }
             ],
@@ -450,7 +551,7 @@
                     "type": "string",
                     "required": true,
                     "array": false,
-                    "size": 50,
+                    "size": 64,
                     "default": null
                 }
             ],

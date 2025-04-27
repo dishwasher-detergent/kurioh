@@ -1,4 +1,9 @@
 import {
+  EDUCATION_DEGREE_MAX_LENGTH,
+  EDUCATION_MAJOR_MAX_LENGTH,
+  EDUCATION_SCHOOL_MAX_LENGTH,
+} from "@/constants/education.constants";
+import {
   EXPERIENCE_COMPANY_MAX_LENGTH,
   EXPERIENCE_DESCRIPTION_MAX_LENGTH,
   EXPERIENCE_TITLE_MAX_LENGTH,
@@ -88,4 +93,23 @@ export const editExperienceArraySchema = z.object({
 
 export type EditExperienceArrayFormData = z.infer<
   typeof editExperienceArraySchema
+>;
+
+export const editEducationSchema = z.object({
+  id: z.string().optional(),
+  school: z.string().min(1).max(EDUCATION_SCHOOL_MAX_LENGTH),
+  major: z.string().min(1).max(EDUCATION_MAJOR_MAX_LENGTH),
+  degree: z.string().min(1).max(EDUCATION_DEGREE_MAX_LENGTH),
+  start_date: z.date(),
+  end_date: z.date().optional(),
+});
+
+export type EditEducationFormData = z.infer<typeof editEducationSchema>;
+
+export const editEducationArraySchema = z.object({
+  education: z.array(editEducationSchema),
+});
+
+export type EditEducationArrayFormData = z.infer<
+  typeof editEducationArraySchema
 >;

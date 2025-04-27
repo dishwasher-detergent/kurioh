@@ -32,5 +32,13 @@ const data = await res.json();`;
     notFound();
   }
 
-  return <Request endpoint={endpoint} code={javascript} model={model} />;
+  return (
+    <Request endpoint={endpoint} code={javascript} model={model}>
+      <p className="text-lg font-bold">Fetch Project</p>
+      <p className="text-muted-foreground text-sm">
+        Fetch a complete project with one simple API call. Includes title,
+        description, images, tags, and links.
+      </p>
+    </Request>
+  );
 }

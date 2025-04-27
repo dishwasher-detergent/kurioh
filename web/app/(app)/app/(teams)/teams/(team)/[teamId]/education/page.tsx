@@ -22,7 +22,7 @@ export default async function TeamEducation({
     <>
       <PageHeader
         title="Education"
-        description="Manage your education details here."
+        description="Add your education details to showcase your academic background."
       />
       <EducationForm education={data.documents} teamId={teamId} />
     </>

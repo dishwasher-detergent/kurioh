@@ -1,4 +1,4 @@
-import { EditExperienceSkeleton } from "@/components/loading/edit-experience-skeleton";
+import { EditEducationSkeleton } from "@/components/loading/edit-education-skeleton";
 import { PageHeader } from "@/components/ui/page-header";
 
 export default function Loading() {
@@ -8,7 +8,7 @@ export default function Loading() {
         title="Education"
         description="Add your education details to showcase your academic background."
       />
-      <EditExperienceSkeleton />
+      <EditEducationSkeleton />
     </>
   );
 }

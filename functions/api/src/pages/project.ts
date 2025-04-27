@@ -21,7 +21,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
 
       const formattedProjects = projects.documents.map((project) => ({
         id: project.$id,
-        organziation_id: project.organization_id,
+        team: project.organization_id,
         title: project.title,
         slug: project.slug,
         shortDescription: project.short_description,
@@ -58,7 +58,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
 
       const formattedProject = {
         id: project.$id,
-        organziation_id: project.organization_id,
+        team: project.organization_id,
         title: project.title,
         slug: project.slug,
         shortDescription: project.short_description,

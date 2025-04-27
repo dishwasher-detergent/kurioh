@@ -11,7 +11,7 @@ const endpoint = `${API_ENDPOINT}/organizations/TEAM_ID`;
 
 const mainExample = `// Fetch portfolio data
 const res = await fetch("${endpoint}");
-const { information, projects, experience } = await res.json();
+const portfolio, { projects, experience } = await res.json();
 
 // Render in your app
 return (
@@ -29,15 +29,14 @@ return (
 
 const apiExample = `{
   "id": "123456",
-  "information": {
-    "title": "Kenneth Bass",
-    "description": "A full-stack developer based in Oklahoma",
-    "socials": [
-      "https://github.com/dishwasher-detergent",
-      "https://codepen.com/kennethbass",
-      "https://linkedin.com/in/kennethtylerbass"
-    ]
-  },
+  "name": "My Portfolio",
+  "title": "Kenneth Bass",
+  "description": "A full-stack developer based in Oklahoma",
+  "socials": [
+    "https://github.com/dishwasher-detergent",
+    "https://codepen.com/kennethbass",
+    "https://linkedin.com/in/kennethtylerbass"
+  ]
   "projects": [...],
   "experience": [...]
 }`;

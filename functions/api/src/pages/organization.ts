@@ -90,7 +90,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
 
       const file = await storage_service.getFilePreview(
         PROJECTS_BUCKET_ID,
-        information.image_id,
+        information.image,
         {
           ...queryParams,
         }
@@ -119,13 +119,13 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         team_id
       );
 
-      if (!information.image_id) {
+      if (!information.image) {
         return c.json({ error: 'Image not found' }, 404);
       }
 
       const file = await storage_service.getFilePreview(
         PROJECTS_BUCKET_ID,
-        information.image_id,
+        information.image,
         {
           quality: 50,
           width: 256,

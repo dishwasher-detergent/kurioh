@@ -44,7 +44,7 @@ const apiExample = `{
 
 export default function Home() {
   return (
-    <div className="bg-foreground text-background flex min-h-screen flex-col">
+    <div className="bg-foreground text-background dark flex min-h-screen flex-col">
       <header className="bg-background text-foreground sticky top-0 z-50 flex items-center justify-between px-6 py-4">
         <h1 className="hidden text-4xl font-bold tracking-tighter lg:block">
           KURIOH.
@@ -110,9 +110,7 @@ export default function Home() {
               paddingBlock: "2rem",
               margin: 0,
               marginBottom: 0,
-              height: "100%",
-              width: "100%",
-              backgroundColor: "var(--background)",
+              backgroundColor: "var(--muted)",
               fontSize: "var(--text-sm)",
             }}
             wrapLines={true}

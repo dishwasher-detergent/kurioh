@@ -288,7 +288,7 @@ export default function ExperienceForm({
                                   <Button
                                     variant={"outline"}
                                     className={cn(
-                                      "pl-3 text-left font-normal",
+                                      "bg-transparent pl-3 text-left font-normal",
                                       !field.value && "text-muted-foreground",
                                     )}
                                   >

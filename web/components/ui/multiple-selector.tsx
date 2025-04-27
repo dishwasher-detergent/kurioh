@@ -458,7 +458,7 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            "border-input bg-background ring-offset-background focus-within:ring-ring min-h-9 rounded-md border text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
+            "border-input ring-offset-background focus-within:ring-ring min-h-9 rounded-md border bg-transparent text-base focus-within:ring-2 focus-within:ring-offset-2 md:text-base",
             {
               "py-1": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
@@ -552,7 +552,7 @@ const MultipleSelector = React.forwardRef<
                 onChange?.(selected.filter((s) => s.fixed));
               }}
               className={cn(
-                "absolute top-0.5 right-0.5 grid h-8 w-8 place-items-center p-0",
+                "absolute -top-0.5 right-0.5 grid h-8 w-8 place-items-center p-0",
                 (hideClearAllButton ||
                   disabled ||
                   selected.length < 1 ||

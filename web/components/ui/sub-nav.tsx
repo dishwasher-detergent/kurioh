@@ -40,12 +40,10 @@ export function SubNav() {
           </Button>
           <Button
             asChild
-            variant={segments[4] === "information" ? "secondary" : "ghost"}
+            variant={segments[4] === "details" ? "secondary" : "ghost"}
             size="sm"
           >
-            <Link href={`/app/teams/${segments[3]}/information`}>
-              Information
-            </Link>
+            <Link href={`/app/teams/${segments[3]}/details`}>Details</Link>
           </Button>
           <Button
             asChild

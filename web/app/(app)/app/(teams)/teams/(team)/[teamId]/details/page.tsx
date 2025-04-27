@@ -20,10 +20,7 @@ export default async function TeamInformation({
 
   return (
     <>
-      <PageHeader
-        title="Information"
-        description="Basic portfolio information."
-      />
+      <PageHeader title="Details" description="Basic portfolio information." />
       <InformationForm information={data} teamId={data.teamId} />
     </>
   );

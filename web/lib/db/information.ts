@@ -16,7 +16,7 @@ import {
 } from "@/lib/constants";
 import { createSessionClient } from "@/lib/server/appwrite";
 import { deleteFile, uploadFile } from "@/lib/storage";
-import { EditInformationFormData, EditProjectFormData } from "./schemas";
+import { EditInformationFormData } from "./schemas";
 
 /**
  * Get a information by ID
@@ -91,7 +91,7 @@ export async function getInformationById(
  * Update a information
  * @param {Object} params The parameters for creating a information
  * @param {string} [params.id] The ID of the information
- * @param {EditProjectFormData} [params.data] The information data
+ * @param {EditInformationFormData} [params.data] The information data
  * @param {string[]} [params.permissions] The permissions for the information (optional)
  * @returns {Promise<Result<Information>>} The updated information
  */

@@ -19,8 +19,22 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio CMS",
-  description: "A Portfolio CMS",
+  title: "KURIOH.",
+  description: "Curate your portfolio without the hassle.",
+  metadataBase: new URL("https://kurioh.com"),
+  openGraph: {
+    title: "KURIOH.",
+    description: "Curate your portfolio without the hassle.",
+    url: "https://kurioh.com",
+    siteName: "kurioh.com",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "KURIOH.",
+    description: "Curate your portfolio without the hassle.",
+  },
 };
 
 export default function RootLayout({

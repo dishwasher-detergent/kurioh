@@ -11,13 +11,16 @@ const endpoint = `${API_ENDPOINT}/teams/TEAM_ID`;
 
 const mainExample = `// Fetch portfolio data
 const res = await fetch("${endpoint}");
-const { title, description, projects, experience } = await res.json();
+const { title, description, projects, education, experience } = await res.json();
 
 // Render in your app
 return (
   <div>
     <h1>{title}</h1>
     <p>{description}</p>
+    {education.map(edu => (
+      <EducationCard key={edu.id} {...edu} />
+    ))}
     {expierience.map(exp => (
       <ExperienceCard key={exp.id} {...exp} />
     ))}
@@ -37,6 +40,7 @@ const apiExample = `{
     "https://codepen.com/kennethbass",
     "https://linkedin.com/in/kennethtylerbass"
   ]
+  "education": [...],
   "projects": [...],
   "experience": [...]
 }`;

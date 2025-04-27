@@ -1,4 +1,4 @@
-import { LucideCode2, LucideEarth, LucidePiggyBank } from "lucide-react";
+import { LucideCode2, LucidePiggyBank, LucideUsers } from "lucide-react";
 import Link from "next/link";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -149,12 +149,14 @@ export default function Home() {
           </div>
           <div className="bg-background/5 border-t p-6 lg:border-t-0 lg:p-12">
             <div className="mb-4 flex items-start justify-between">
-              <h3 className="text-lg font-bold lg:text-2xl">Unlimited</h3>
-              <LucideEarth className="size-6 stroke-2" />
+              <h3 className="text-lg font-bold lg:text-2xl">
+                Team Collaboration
+              </h3>
+              <LucideUsers className="size-6 stroke-2" />
             </div>
             <p className="font-mono">
-              Create as many projects and portfolios as you need. No artificial
-              limits on your creativity.
+              Invite team members to collaborate on your portfolio projects.
+              Share management and editing responsibilities seamlessly.
             </p>
           </div>
         </div>

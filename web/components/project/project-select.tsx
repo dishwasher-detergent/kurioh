@@ -66,12 +66,14 @@ export function ProjectSelect() {
   if (!teamId) return null;
 
   if (projects.length == 0) {
-    <div className="flex w-32">
-      <AddProject
-        teamId={teamId}
-        className="text-foreground hover:bg-accent hover:text-accent-foreground bg-card"
-      />
-    </div>;
+    return (
+      <div className="flex w-32">
+        <AddProject
+          teamId={teamId}
+          className="text-foreground hover:bg-accent hover:text-accent-foreground bg-card"
+        />
+      </div>
+    );
   }
 
   return (

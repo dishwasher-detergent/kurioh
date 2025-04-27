@@ -35,7 +35,7 @@ const data = await res.json();`;
     id: string,
     title: string,
     description: string,
-    skills: string,
+    skills: string[],
     startDate: Date,
     endDate: Date,
     company: string,

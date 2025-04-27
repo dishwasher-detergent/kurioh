@@ -162,10 +162,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section
-        id="api"
-        className="bg-background text-foreground grid grid-cols-1 lg:grid-cols-2"
-      >
+      <section id="api" className="bg-background text-foreground">
         <div className="flex flex-col p-6 lg:p-12">
           <h2 className="mb-4 text-3xl font-bold lg:text-5xl">
             API that just works
@@ -183,8 +180,6 @@ export default function Home() {
               projects, experience, and more.
             </p>
           </div>
-        </div>
-        <div className="relative flex items-center justify-center overflow-hidden">
           <SyntaxHighlighter
             language="jsx"
             style={oneDark}
@@ -195,9 +190,7 @@ export default function Home() {
               paddingBlock: "2rem",
               margin: 0,
               marginBottom: 0,
-              height: "100%",
-              width: "100%",
-              backgroundColor: "var(--background)",
+              backgroundColor: "var(--muted)",
               fontSize: "var(--text-sm)",
             }}
             wrapLines={true}

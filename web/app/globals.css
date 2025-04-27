@@ -23,16 +23,13 @@
   --destructive-foreground: hsl(0, 0%, 100%);
   --border: hsl(340, 5%, 85%);
   --input: hsl(340, 5%, 85%);
-  --ring: hsl(340, 60%, 45%);
+  --ring: hsl(0, 0%, 80%);
 
   --chart-1: hsl(12, 76%, 61%);
   --chart-2: hsl(173, 58%, 39%);
   --chart-3: hsl(197, 37%, 24%);
   --chart-4: hsl(43, 74%, 66%);
   --chart-5: hsl(27, 87%, 67%);
-
-  --marketing-background: hsl(340, 60%, 45%);
-  --marketing-foreground: hsl(0, 0%, 100%);
 
   --radius: 0.5rem;
 }

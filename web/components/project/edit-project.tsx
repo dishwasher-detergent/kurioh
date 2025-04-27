@@ -52,7 +52,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
       tags: project.tags?.map((tag) => ({ label: tag, value: tag })),
       links: project.links?.map((link) => ({ label: link, value: link })),
       images: project.images,
-      ordinal: project.ordinal,
+      ordinal: Number(project.ordinal),
     },
   });
 
@@ -224,7 +224,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
           name="ordinal"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Odinal</FormLabel>
+              <FormLabel>Ordinal</FormLabel>
               <FormControl>
                 <Input {...field} type="phone" />
               </FormControl>

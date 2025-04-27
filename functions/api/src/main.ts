@@ -8,7 +8,7 @@ import {
 } from './lib/utils.js';
 import { Home } from './pages/home.js';
 import { KeepWarm } from './pages/keepWarm.js';
-import { Organizations } from './pages/organization.js';
+import { Teams } from './pages/organization.js';
 import { Projects } from './pages/project.js';
 import { Context } from './types/types.js';
 
@@ -28,7 +28,7 @@ KeepWarm(app);
 
 // API Routes
 Home(app, cache);
-Organizations(app, cache);
+Teams(app, cache);
 Projects(app, cache);
 
 export default async (context: Context) => {

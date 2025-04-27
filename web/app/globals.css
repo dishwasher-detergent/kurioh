@@ -13,11 +13,11 @@
   --popover-foreground: hsl(340, 5%, 15%);
   --primary: hsl(340, 3%, 13%);
   --primary-foreground: hsl(0, 0%, 95%);
-  --secondary: hsl(340, 10%, 90%);
+  --secondary: hsl(340, 10%, 93%);
   --secondary-foreground: hsl(340, 5%, 20%);
   --muted: hsl(340, 5%, 92%);
   --muted-foreground: hsl(340, 5%, 40%);
-  --accent: hsl(340, 15%, 85%);
+  --accent: hsl(340, 15%, 90%);
   --accent-foreground: hsl(340, 5%, 15%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(0, 0%, 100%);
@@ -98,6 +98,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --font-rubik: var(--font-rubik);
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
 @layer base {

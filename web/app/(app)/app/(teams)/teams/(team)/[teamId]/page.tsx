@@ -4,6 +4,7 @@ import { Query } from "node-appwrite";
 import { AddProject } from "@/components/project/create-project";
 import { Projects } from "@/components/realtime/projects";
 import { TeamActions } from "@/components/team/team-actions";
+import { PageHeader } from "@/components/ui/page-header";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
 import { setLastVisitedTeam } from "@/lib/auth";
 import { listProjectsByTeam } from "@/lib/db";
@@ -34,18 +35,15 @@ export default async function TeamPage({
 
   return (
     <>
-      <header className="mb-6 flex flex-row justify-between gap-4">
-        <div>
-          <h2 className="mb-1 text-xl font-bold">{data.name}</h2>
-          <p className="text-sm font-semibold">
-            All projects created in this team.
-          </p>
-        </div>
+      <PageHeader
+        title={data.name}
+        description="All projects created in this team."
+      >
         <div className="flex flex-row items-start gap-2">
           <AddProject teamId={teamId} />
           <TeamActions team={data} isAdmin={isAdmin} isOwner={isOwner} />
         </div>
-      </header>
+      </PageHeader>
       <Projects
         initialProjects={projectData?.documents ?? []}
         teamId={teamId}

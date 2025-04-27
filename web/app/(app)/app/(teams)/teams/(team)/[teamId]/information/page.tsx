@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import InformationForm from "@/components/team/information/edit-information";
+import { PageHeader } from "@/components/ui/page-header";
 import { getInformationById } from "@/lib/db";
 
 export default async function TeamInformation({
@@ -17,5 +18,13 @@ export default async function TeamInformation({
 
   const { data } = information;
 
-  return <InformationForm information={data} teamId={data.teamId} />;
+  return (
+    <>
+      <PageHeader
+        title="Information"
+        description="Basic portfolio information."
+      />
+      <InformationForm information={data} teamId={data.teamId} />;
+    </>
+  );
 }

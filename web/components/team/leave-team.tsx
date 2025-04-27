@@ -127,7 +127,11 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={form.formState.isSubmitting || !form.formState.isValid}
+          disabled={
+            form.formState.isSubmitting ||
+            !form.formState.isValid ||
+            !form.formState.isDirty
+          }
         >
           Leave Team
           {form.formState.isSubmitting ? (

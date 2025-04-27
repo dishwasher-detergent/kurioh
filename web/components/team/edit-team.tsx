@@ -129,7 +129,11 @@ function EditForm({ className, setOpen, team }: FormProps) {
         </div>
         <Button
           type="submit"
-          disabled={form.formState.isSubmitting || !form.formState.isValid}
+          disabled={
+            form.formState.isSubmitting ||
+            !form.formState.isValid ||
+            !form.formState.isDirty
+          }
         >
           Save Team
           {form.formState.isSubmitting ? (

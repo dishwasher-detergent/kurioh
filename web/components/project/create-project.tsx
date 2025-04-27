@@ -154,7 +154,11 @@ function CreateForm({ className, setOpen, teamId }: FormProps) {
         <Button
           className="sticky bottom-0"
           type="submit"
-          disabled={form.formState.isSubmitting || !form.formState.isValid}
+          disabled={
+            form.formState.isSubmitting ||
+            !form.formState.isValid ||
+            !form.formState.isDirty
+          }
         >
           Create Project
           {form.formState.isSubmitting ? (

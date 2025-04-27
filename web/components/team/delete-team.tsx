@@ -142,7 +142,11 @@ function DeleteForm({ className, setOpen, team }: FormProps) {
         <Button
           type="submit"
           variant="destructive"
-          disabled={form.formState.isSubmitting || !form.formState.isValid}
+          disabled={
+            form.formState.isSubmitting ||
+            !form.formState.isValid ||
+            !form.formState.isDirty
+          }
         >
           Delete
           {form.formState.isSubmitting ? (

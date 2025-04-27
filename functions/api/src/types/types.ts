@@ -32,7 +32,7 @@ export interface Social {
   value: string;
 }
 
-export interface Organization extends Models.Document {
+export interface Team extends Models.Document {
   title: string;
   slug: string;
   information_id: string;

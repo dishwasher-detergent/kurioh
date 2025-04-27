@@ -5,31 +5,31 @@ export function Home(app: Hono, cacheDuration: number = 1440) {
     const response = {
       routes: [
         {
-          name: 'organizations',
-          description: 'Get all information about a specific organization.',
-          path: '/organizations/:organization_slug',
+          name: 'teams',
+          description: 'Get all information about a specific team.',
+          path: '/teams/:team_id',
           children: [
             {
               name: 'favicon',
-              description: 'Get the image for your organization.',
-              path: '/organizations/:organization_slug/favicon',
+              description: 'Get the image for your team.',
+              path: '/teams/:team_id/favicon',
             },
             {
               name: 'image',
-              description: 'Get the image for your organization.',
-              path: '/organizations/:organization_slug/image',
+              description: 'Get the image for your team.',
+              path: '/teams/:team_id/image',
             },
           ],
         },
         {
           name: 'projects',
           description: 'Get all information about a specific project.',
-          path: '/organizations/:organization_slug/projects/:project_slug',
+          path: '/teams/:team_id/projects/:project_id',
           children: [
             {
               name: 'images',
               description: 'Get all images for a specific project.',
-              path: '/organizations/:organization_slug/projects/:project_slug/images/:image_id',
+              path: '/teams/:team_id/projects/:project_id/images/:image_id',
             },
           ],
         },

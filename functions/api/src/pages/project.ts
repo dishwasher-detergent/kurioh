@@ -7,23 +7,22 @@ import {
   database_service,
   storage_service,
 } from '../lib/appwrite.js';
-import { Organization, Project } from '../types/types.js';
+import { Project, Team } from '../types/types.js';
 
 export function Projects(app: Hono, cacheDuration: number = 1440) {
-  app.get('/organizations/:organization_id/projects', async (c) => {
+  app.get('/teams/:team_id/projects', async (c) => {
     try {
-      const organization_id = c.req.param('organization_id');
+      const team_id = c.req.param('team_id');
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
-        [Query.equal('teamId', organization_id), Query.orderAsc('ordinal')]
+        [Query.equal('teamId', team_id), Query.orderAsc('ordinal')]
       );
 
       const formattedProjects = projects.documents.map((project) => ({
         id: project.$id,
-        team: project.organization_id,
+        team: project.team_id,
         title: project.title,
-        slug: project.slug,
         shortDescription: project.short_description,
         description: project.description,
         images: project.images,
@@ -41,15 +40,12 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
     }
   });
 
-  app.get('/organizations/:organization_id/projects/:project_id', async (c) => {
+  app.get('/teams/:team_id/projects/:project_id', async (c) => {
     try {
-      const organization_id = c.req.param('organization_id');
+      const team_id = c.req.param('team_id');
       const project_id = c.req.param('project_id');
 
-      await database_service.get<Organization>(
-        ORGANIZATION_COLLECTION_ID,
-        organization_id
-      );
+      await database_service.get<Team>(ORGANIZATION_COLLECTION_ID, team_id);
 
       const project = await database_service.get<Project>(
         PROJECTS_COLLECTION_ID,
@@ -58,7 +54,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
 
       const formattedProject = {
         id: project.$id,
-        team: project.organization_id,
+        team: project.team_id,
         title: project.title,
         slug: project.slug,
         shortDescription: project.short_description,
@@ -79,18 +75,15 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
   });
 
   app.get(
-    '/organizations/:organization_id/projects/:project_id/images/:image_id',
+    '/teams/:team_id/projects/:project_id/images/:image_id',
     async (c) => {
       try {
-        const organization_id = c.req.param('organization_id');
+        const team_id = c.req.param('team_id');
         const project_id = c.req.param('project_id');
         const image_id = c.req.param('image_id');
         const queryParams = c.req.query();
 
-        await database_service.get<Organization>(
-          ORGANIZATION_COLLECTION_ID,
-          organization_id
-        );
+        await database_service.get<Team>(ORGANIZATION_COLLECTION_ID, team_id);
 
         const project = await database_service.get<Project>(
           PROJECTS_COLLECTION_ID,

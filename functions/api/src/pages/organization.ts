@@ -10,41 +10,35 @@ import {
   database_service,
   storage_service,
 } from '../lib/appwrite.js';
-import {
-  Experience,
-  Information,
-  Organization,
-  Project,
-} from '../types/types.js';
+import { Experience, Information, Project, Team } from '../types/types.js';
 
-export function Organizations(app: Hono, cacheDuration: number = 1440) {
-  app.get('/organizations/:organization_id', async (c) => {
+export function Teams(app: Hono, cacheDuration: number = 1440) {
+  app.get('/teams/:team_id', async (c) => {
     try {
-      const organization_id = c.req.param('organization_id');
-      const organization = await database_service.get<Organization>(
+      const team_id = c.req.param('team_id');
+      const team = await database_service.get<Team>(
         ORGANIZATION_COLLECTION_ID,
-        organization_id
+        team_id
       );
 
       const information = await database_service.get<Information>(
         INFORMATION_COLLECTION_ID,
-        organization_id
+        team_id
       );
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
-        [Query.equal('teamId', organization_id), Query.orderAsc('ordinal')]
+        [Query.equal('teamId', team_id), Query.orderAsc('ordinal')]
       );
 
       const experience = await database_service.list<Experience>(
         EXPERIENCE_COLLECTION_ID,
-        [Query.equal('teamId', organization_id)]
+        [Query.equal('teamId', team_id)]
       );
 
       const formattedProject = projects.documents.map((project) => ({
         id: project.$id,
         title: project.name,
-        slug: project.slug,
         shortDescription: project.short_description,
         description: project.description,
         images: project.images,
@@ -64,8 +58,8 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
       }));
 
       const prunedResponse = {
-        id: organization.$id,
-        name: organization.name,
+        id: team.$id,
+        name: team.name,
         title: information.title,
         description: information.description,
         socials: information.socials,
@@ -80,18 +74,18 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
     } catch (error) {
       console.error(error);
 
-      return c.json({ error: 'Failed to fetch organization data.' }, 500);
+      return c.json({ error: 'Failed to fetch team data.' }, 500);
     }
   });
 
-  app.get('/organizations/:organization_id/image', async (c) => {
+  app.get('/teams/:team_id/image', async (c) => {
     try {
-      const organization_id = c.req.param('organization_id');
+      const team_id = c.req.param('team_id');
       const queryParams = c.req.query();
 
       const information = await database_service.get<Information>(
         INFORMATION_COLLECTION_ID,
-        organization_id
+        team_id
       );
 
       const file = await storage_service.getFilePreview(
@@ -116,13 +110,13 @@ export function Organizations(app: Hono, cacheDuration: number = 1440) {
     }
   });
 
-  app.get('/organizations/:organization_id/favicon', async (c) => {
+  app.get('/teams/:team_id/favicon', async (c) => {
     try {
-      const organization_id = c.req.param('organization_id');
+      const team_id = c.req.param('team_id');
 
       const information = await database_service.get<Information>(
         INFORMATION_COLLECTION_ID,
-        organization_id
+        team_id
       );
 
       if (!information.image_id) {

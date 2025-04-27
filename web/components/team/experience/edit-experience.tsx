@@ -26,6 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -124,11 +125,14 @@ export default function ExperienceForm({
     return !endDate;
   };
 
-  const handlePresentChange = (index: number, isPresent: boolean) => {
+  const handleCheckbox = (index: number, isPresent: boolean) => {
     if (isPresent) {
       form.setValue(`experience.${index}.end_date`, undefined);
     } else {
-      form.setValue(`experience.${index}.end_date`, new Date());
+      form.setValue(
+        `experience.${index}.end_date`,
+        experience[index].start_date,
+      );
     }
   };
 
@@ -376,13 +380,14 @@ export default function ExperienceForm({
                           />
                         </div>
                         <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
+                          <Checkbox
                             id={`current-job-${index}`}
                             checked={isPresent}
-                            onChange={(e) =>
-                              handlePresentChange(index, e.target.checked)
-                            }
+                            onCheckedChange={(e) => {
+                              if (typeof e === "boolean") {
+                                handleCheckbox(index, e);
+                              }
+                            }}
                             className="h-4 w-4"
                           />
                           <label

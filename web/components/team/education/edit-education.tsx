@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -119,11 +120,11 @@ export default function EducationForm({
     return !endDate;
   };
 
-  const handlePresentChange = (index: number, isUnknown: boolean) => {
+  const handleCheckbox = (index: number, isUnknown: boolean) => {
     if (isUnknown) {
       form.setValue(`education.${index}.end_date`, undefined);
     } else {
-      form.setValue(`education.${index}.end_date`, new Date());
+      form.setValue(`education.${index}.end_date`, education[index]?.end_date);
     }
   };
 
@@ -373,13 +374,14 @@ export default function EducationForm({
                           />
                         </div>
                         <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
+                          <Checkbox
                             id={`current-job-${index}`}
                             checked={isUnknown}
-                            onChange={(e) =>
-                              handlePresentChange(index, e.target.checked)
-                            }
+                            onCheckedChange={(e) => {
+                              if (typeof e === "boolean") {
+                                handleCheckbox(index, e);
+                              }
+                            }}
                             className="h-4 w-4"
                           />
                           <label

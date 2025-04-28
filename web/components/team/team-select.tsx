@@ -73,7 +73,7 @@ export function TeamSelect() {
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-              <div className="flex items-center">
+              <div className="flex max-w-32 items-center">
                 {teams.find((x) => x.$id === teamId)?.name ? (
                   <Link
                     href={`/app/teams/${teamId}`}
@@ -82,7 +82,7 @@ export function TeamSelect() {
                         variant: "ghost",
                         size: "sm",
                       }),
-                      "gap-2",
+                      "flex-1 gap-2 overflow-hidden",
                     )}
                   >
                     {teams.find((x) => x.$id === teamId)?.image && (
@@ -91,7 +91,9 @@ export function TeamSelect() {
                         src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teams.find((x) => x.$id === teamId)?.image}/view?project=${PROJECT_ID}`}
                       />
                     )}
-                    {teams.find((x) => x.$id === teamId)?.name}
+                    <span className="truncate">
+                      {teams.find((x) => x.$id === teamId)?.name}
+                    </span>
                   </Link>
                 ) : (
                   <>

@@ -80,7 +80,7 @@ export function ProjectSelect() {
   return (
     <>
       {projects.length > 0 && (
-        <div className="flex flex-col gap-1 md:flex-row">
+        <div className="flex flex-1 flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -89,7 +89,7 @@ export function ProjectSelect() {
                 variant="ghost"
                 role="combobox"
                 aria-expanded={open}
-                className="text-muted-foreground max-w-48 gap-2"
+                className="text-muted-foreground max-w-32 gap-2"
                 disabled={loading}
               >
                 {projects.find((x) => x.$id == projectId)?.images[0] && (

@@ -8,9 +8,9 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <header className="mb-6 flex items-center justify-between">
-      <div>
-        <h2 className="mb-1 text-2xl font-bold">{title}</h2>
+    <header className="mb-6 flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
+      <div className="w-full">
+        <h2 className="mb-1 truncate text-2xl font-bold">{title}</h2>
         {description && <p className="text-sm font-semibold">{description}</p>}
       </div>
       {children}

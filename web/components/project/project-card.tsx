@@ -19,7 +19,7 @@ export function ProjectCard(project: Project) {
           </div>
         )}
         <div className="space-y-2 p-2">
-          <p className="text-lg font-bold">{project.name}</p>
+          <p className="truncate text-lg font-bold">{project.name}</p>
           {project.tags.length > 0 && <Badges badges={project.tags} />}
           <p className="line-clamp-3 text-sm">
             {project.description ?? "No Description Added."}

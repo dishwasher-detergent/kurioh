@@ -61,7 +61,7 @@ export async function listProjectsByTeam(
             [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
           );
 
-          const teams = await database.listDocuments<UserData>(
+          const teams = await database.listDocuments<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
             [Query.equal("$id", uniqueTeamIds), Query.select(["$id", "name"])],
@@ -479,11 +479,13 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
         id,
       );
 
-      if (project.image) {
-        const image = await deleteFile(project.image);
+      if (project.images) {
+        for (const imageId of project.images) {
+          const image = await deleteFile(imageId);
 
-        if (!image.success) {
-          throw new Error(image.message);
+          if (!image.success) {
+            throw new Error(image.message);
+          }
         }
       }
 

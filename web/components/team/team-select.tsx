@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TeamData } from "@/interfaces/team.interface";
+import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { listTeams } from "@/lib/team";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,6 @@ export function TeamSelect() {
 
   async function fetchTeams() {
     setLoading(true);
-    console.log("test");
 
     const data = await listTeams();
 
@@ -77,11 +77,20 @@ export function TeamSelect() {
                 {teams.find((x) => x.$id === teamId)?.name ? (
                   <Link
                     href={`/app/teams/${teamId}`}
-                    className={buttonVariants({
-                      variant: "ghost",
-                      size: "sm",
-                    })}
+                    className={cn(
+                      buttonVariants({
+                        variant: "ghost",
+                        size: "sm",
+                      }),
+                      "gap-2",
+                    )}
                   >
+                    {teams.find((x) => x.$id === teamId)?.image && (
+                      <img
+                        className="size-4 rounded-full object-fill"
+                        src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teams.find((x) => x.$id === teamId)?.image}/view?project=${PROJECT_ID}`}
+                      />
+                    )}
                     {teams.find((x) => x.$id === teamId)?.name}
                   </Link>
                 ) : (

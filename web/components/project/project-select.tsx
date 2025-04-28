@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
+import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { listProjectsByTeam } from "@/lib/db";
 import { cn } from "@/lib/utils";
 
@@ -88,9 +89,15 @@ export function ProjectSelect() {
                 variant="ghost"
                 role="combobox"
                 aria-expanded={open}
-                className="text-muted-foreground max-w-48"
+                className="text-muted-foreground max-w-48 gap-2"
                 disabled={loading}
               >
+                {projects.find((x) => x.$id == projectId)?.images[0] && (
+                  <img
+                    className="size-4 rounded-full object-fill"
+                    src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projects.find((x) => x.$id == projectId)?.images[0]}/view?project=${PROJECT_ID}`}
+                  />
+                )}
                 <span className="truncate">
                   {projects.find((x) => x.$id == projectId)?.name ??
                     "Select Project..."}

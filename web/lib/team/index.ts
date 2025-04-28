@@ -9,7 +9,6 @@ import {
   OWNER_ROLE,
 } from "@/constants/team.constants";
 import { Experience } from "@/interfaces/experience.interface";
-import { Information } from "@/interfaces/information.interface";
 import { Project } from "@/interfaces/project.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
@@ -19,7 +18,6 @@ import {
   DATABASE_ID,
   EXPERIENCE_COLLECTION_ID,
   HOSTNAME,
-  INFORMATION_COLLECTION_ID,
   MAX_TEAM_LIMIT,
   PROJECT_COLLECTION_ID,
   TEAM_COLLECTION_ID,
@@ -44,12 +42,6 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
           const data = await database.getDocument<TeamData>(
             DATABASE_ID,
             TEAM_COLLECTION_ID,
-            id,
-          );
-
-          const information = await database.getDocument<Information>(
-            DATABASE_ID,
-            INFORMATION_COLLECTION_ID,
             id,
           );
 
@@ -91,7 +83,6 @@ export async function getTeamById(id: string): Promise<Result<TeamData>> {
             message: "Team successfully retrieved.",
             data: {
               ...data,
-              information,
               experience: experience.documents,
               members: usersMembershipData,
             },
@@ -284,20 +275,10 @@ export async function createTeam({
         teamResponse.$id,
         {
           name: data.name,
-        },
-        permissions,
-      );
-
-      await database.createDocument<Information>(
-        DATABASE_ID,
-        INFORMATION_COLLECTION_ID,
-        teamResponse.$id,
-        {
           title: "Welcome to your team!",
           description: "This is your team's information page.",
           image: null,
           socials: [],
-          teamId: teamResponse.$id,
           userId: user.$id,
         },
         permissions,

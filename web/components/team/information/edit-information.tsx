@@ -25,7 +25,7 @@ import {
   INFORMATION_DESCRIPTION_MAX_LENGTH,
   INFORMATION_TITLE_MAX_LENGTH,
 } from "@/constants/information.constants";
-import { Information } from "@/interfaces/information.interface";
+import { TeamData } from "@/interfaces/team.interface";
 import { updateInformation } from "@/lib/db";
 import {
   EditInformationFormData,
@@ -33,7 +33,7 @@ import {
 } from "@/lib/db/schemas";
 
 interface InformationFormProps {
-  information: Information;
+  information: TeamData;
   teamId: string;
 }
 
@@ -47,8 +47,8 @@ export default function InformationForm({
     mode: "onChange",
     resolver: zodResolver(editInformationSchema),
     defaultValues: {
-      title: information?.title,
-      description: information?.description,
+      title: information?.title ?? "",
+      description: information?.description ?? "",
       socials:
         information?.socials.map((link) => ({
           label: link,

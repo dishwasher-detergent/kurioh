@@ -10,7 +10,6 @@ import { UserData } from "@/interfaces/user.interface";
 import { withAuth } from "@/lib/auth";
 import {
   DATABASE_ID,
-  INFORMATION_COLLECTION_ID,
   TEAM_COLLECTION_ID,
   USER_COLLECTION_ID,
 } from "@/lib/constants";
@@ -20,38 +19,31 @@ import { EditInformationFormData } from "./schemas";
 
 /**
  * Get a information by ID
- * @param {string} informationId The ID of the information
+ * @param {string} teamId The ID of the information
  * @param {string[]} queries The queries to filter the information
- * @returns {Promise<Result<Information>>} The information
+ * @returns {Promise<Result<TeamData>>} The information
  */
 export async function getInformationById(
-  informationId: string,
+  teamId: string,
   queries: string[] = [],
-): Promise<Result<Information>> {
+): Promise<Result<TeamData>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
 
     return unstable_cache(
-      async (informationId) => {
+      async (teamId) => {
         try {
-          const information = await database.getDocument<Information>(
+          const team = await database.getDocument<TeamData>(
             DATABASE_ID,
-            INFORMATION_COLLECTION_ID,
-            informationId,
+            TEAM_COLLECTION_ID,
+            teamId,
             queries,
           );
 
           const userRes = await database.getDocument<UserData>(
             DATABASE_ID,
             USER_COLLECTION_ID,
-            information.userId,
-            [Query.select(["$id", "name"])],
-          );
-
-          const teamRes = await database.getDocument<TeamData>(
-            DATABASE_ID,
-            TEAM_COLLECTION_ID,
-            information.teamId,
+            team.userId,
             [Query.select(["$id", "name"])],
           );
 
@@ -59,13 +51,14 @@ export async function getInformationById(
             success: true,
             message: "Information successfully retrieved.",
             data: {
-              ...information,
+              ...team,
               user: userRes,
-              team: teamRes,
             },
           };
         } catch (err) {
           const error = err as Error;
+
+          console.error(error);
 
           return {
             success: false,
@@ -73,17 +66,17 @@ export async function getInformationById(
           };
         }
       },
-      ["information", informationId],
+      ["information", teamId],
       {
         tags: [
           "information",
-          `information:${informationId}`,
-          `information:team-${informationId}`,
-          `information:${informationId}:${queries.join("-")}`,
+          `information:${teamId}`,
+          `information:team-${teamId}`,
+          `information:${teamId}:${queries.join("-")}`,
         ],
         revalidate: 600,
       },
-    )(informationId);
+    )(teamId);
   });
 }
 
@@ -112,7 +105,7 @@ export async function updateInformation({
     try {
       const existingInformation = await database.getDocument<Information>(
         DATABASE_ID,
-        INFORMATION_COLLECTION_ID,
+        TEAM_COLLECTION_ID,
         id,
       );
 
@@ -146,7 +139,7 @@ export async function updateInformation({
 
       const information = await database.updateDocument<Information>(
         DATABASE_ID,
-        INFORMATION_COLLECTION_ID,
+        TEAM_COLLECTION_ID,
         id,
         {
           ...data,
@@ -166,13 +159,6 @@ export async function updateInformation({
         [Query.select(["$id", "name"])],
       );
 
-      const teamRes = await database.getDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        information.teamId,
-        [Query.select(["$id", "name"])],
-      );
-
       revalidateTag(`information:${id}`);
       revalidateTag(`information:team-${teamId}`);
       revalidateTag(`team:${teamId}`);
@@ -183,7 +169,6 @@ export async function updateInformation({
         data: {
           ...information,
           user: userRes,
-          team: teamRes,
         },
       };
     } catch (err) {

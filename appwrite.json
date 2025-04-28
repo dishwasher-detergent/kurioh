@@ -46,67 +46,6 @@
     ],
     "collections": [
         {
-            "$id": "organization",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "organization",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "title",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null
-                },
-                {
-                    "key": "slug",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 80,
-                    "default": null
-                },
-                {
-                    "key": "project_ids",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "experience_id",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 129,
-                    "default": null
-                },
-                {
-                    "key": "createdBy",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "information_id",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                }
-            ],
-            "indexes": []
-        },
-        {
             "$id": "project",
             "$permissions": [
                 "create(\"users\")"
@@ -424,90 +363,6 @@
             ]
         },
         {
-            "$id": "info",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "information",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "title",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 64,
-                    "default": null
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 512,
-                    "default": null
-                },
-                {
-                    "key": "socials",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 32,
-                    "default": null
-                },
-                {
-                    "key": "image",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
-        },
-        {
             "$id": "user",
             "$permissions": [
                 "create(\"users\")"
@@ -552,6 +407,46 @@
                     "required": true,
                     "array": false,
                     "size": 64,
+                    "default": null
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 64,
+                    "default": null
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 512,
+                    "default": null
+                },
+                {
+                    "key": "socials",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "image",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
                     "default": null
                 }
             ],

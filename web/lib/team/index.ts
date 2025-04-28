@@ -269,7 +269,8 @@ export async function createTeam({
       permissions = [
         ...permissions,
         Permission.read(Role.team(teamResponse.$id)),
-        Permission.write(Role.team(teamResponse.$id, ADMIN_ROLE)),
+        Permission.update(Role.team(teamResponse.$id)),
+        Permission.delete(Role.team(teamResponse.$id, ADMIN_ROLE)),
       ];
 
       const teamData = await database.createDocument<TeamData>(

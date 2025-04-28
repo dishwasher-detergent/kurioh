@@ -41,6 +41,8 @@ export async function listExperiences(
         } catch (err) {
           const error = err as Error;
 
+          console.error(error);
+
           return {
             success: false,
             message: error.message,
@@ -318,6 +320,7 @@ export async function updateTeamExperiences({
 
       // This is where you would look to something like Splunk.
       console.error(error);
+
       return {
         success: false,
         message: error.message,

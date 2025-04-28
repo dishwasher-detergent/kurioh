@@ -173,6 +173,8 @@ export async function getProjectById(
         } catch (err) {
           const error = err as Error;
 
+          console.error(error);
+
           return {
             success: false,
             message: error.message,

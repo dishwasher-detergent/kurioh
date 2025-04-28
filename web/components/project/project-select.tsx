@@ -138,6 +138,12 @@ export function ProjectSelect() {
                                 : "opacity-0",
                             )}
                           />
+                          {projectItem?.images[0] && (
+                            <img
+                              className="size-4 rounded-full object-fill"
+                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projectItem?.images[0]}/view?project=${PROJECT_ID}`}
+                            />
+                          )}
                           <span className="truncate">{projectItem.name}</span>
                         </Link>
                       </CommandItem>

@@ -328,3 +328,50 @@ export async function updateTeamExperiences({
     }
   });
 }
+
+/**
+ * Delete all experiences for a team
+ * @param teamId The ID of the team
+ * @returns {Promise<Result<void>>} The result of the operation
+ */
+export async function deleteAllExperienceByTeam(
+  teamId: string,
+): Promise<Result<void>> {
+  return withAuth(async () => {
+    const { database } = await createSessionClient();
+
+    try {
+      let response;
+      const queries = [Query.limit(50), Query.equal("teamId", teamId)];
+
+      do {
+        response = await database.listDocuments<Experience>(
+          DATABASE_ID,
+          EXPERIENCE_COLLECTION_ID,
+          queries,
+        );
+
+        await Promise.all(
+          response.documents.map((document) => deleteExperience(document.$id)),
+        );
+      } while (response.documents.length > 0);
+
+      revalidateTag(`experiences:team-${teamId}`);
+
+      return {
+        success: true,
+        message: "Experience successfully deleted.",
+      };
+    } catch (err) {
+      const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  });
+}

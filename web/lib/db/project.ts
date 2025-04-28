@@ -468,9 +468,9 @@ export async function updateProject({
 /**
  * Delete a project
  * @param {string} id The ID of the project
- * @returns {Promise<Result<Project>>} The deleted project
+ * @returns {Promise<Result<void>>} The deleted project
  */
-export async function deleteProject(id: string): Promise<Result<Project>> {
+export async function deleteProject(id: string): Promise<Result<void>> {
   return withAuth(async () => {
     const { database } = await createSessionClient();
 
@@ -494,6 +494,54 @@ export async function deleteProject(id: string): Promise<Result<Project>> {
       await database.deleteDocument(DATABASE_ID, PROJECT_COLLECTION_ID, id);
 
       revalidateTag(`projects:team-${project.teamId}`);
+
+      return {
+        success: true,
+        message: "Project successfully deleted.",
+      };
+    } catch (err) {
+      const error = err as Error;
+
+      // This is where you would look to something like Splunk.
+      console.error(error);
+
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  });
+}
+
+/**
+ * Delete all projects by team ID
+
+ * @param teamId The ID of the team
+ * @returns {Promise<Result<void>>} The deleted project
+ */
+export async function deleteAllProjectsByTeam(
+  teamId: string,
+): Promise<Result<void>> {
+  return withAuth(async () => {
+    const { database } = await createSessionClient();
+
+    try {
+      let response;
+      const queries = [Query.limit(50), Query.equal("teamId", teamId)];
+
+      do {
+        response = await database.listDocuments<Project>(
+          DATABASE_ID,
+          PROJECT_COLLECTION_ID,
+          queries,
+        );
+
+        await Promise.all(
+          response.documents.map((document) => deleteProject(document.$id)),
+        );
+      } while (response.documents.length > 0);
+
+      revalidateTag(`projects:team-${teamId}`);
 
       return {
         success: true,

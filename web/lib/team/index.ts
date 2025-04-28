@@ -9,7 +9,6 @@ import {
   OWNER_ROLE,
 } from "@/constants/team.constants";
 import { Experience } from "@/interfaces/experience.interface";
-import { Project } from "@/interfaces/project.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData, UserMemberData } from "@/interfaces/user.interface";
@@ -19,11 +18,15 @@ import {
   EXPERIENCE_COLLECTION_ID,
   HOSTNAME,
   MAX_TEAM_LIMIT,
-  PROJECT_COLLECTION_ID,
+  PROJECT_BUCKET_ID,
   TEAM_COLLECTION_ID,
   USER_COLLECTION_ID,
 } from "@/lib/constants";
-import { deleteProject } from "@/lib/db";
+import {
+  deleteAllEducationByTeam,
+  deleteAllExperienceByTeam,
+  deleteAllProjectsByTeam,
+} from "@/lib/db";
 import { createAdminClient, createSessionClient } from "@/lib/server/appwrite";
 import { AddTeamFormData, EditTeamFormData } from "./schemas";
 
@@ -369,34 +372,32 @@ export async function updateTeam({
  */
 export async function deleteTeam(id: string): Promise<Result<TeamData>> {
   return withAuth(async (user) => {
-    const { database, team } = await createSessionClient();
+    const { database, team, storage } = await createSessionClient();
 
     try {
       await checkUserRole(id, user.$id, [OWNER_ROLE]);
 
+      const teamData = await database.getDocument<TeamData>(
+        DATABASE_ID,
+        TEAM_COLLECTION_ID,
+        id,
+      );
+
       await team.delete(id);
       await database.deleteDocument(DATABASE_ID, TEAM_COLLECTION_ID, id);
 
-      let response;
-      const queries = [Query.limit(50), Query.equal("teamId", id)];
+      if (teamData.image) {
+        await storage.deleteFile(PROJECT_BUCKET_ID, teamData.image);
+      }
 
-      do {
-        response = await database.listDocuments<Project>(
-          DATABASE_ID,
-          PROJECT_COLLECTION_ID,
-          queries,
-        );
-
-        await Promise.all(
-          response.documents.map((document) => deleteProject(document.$id)),
-        );
-      } while (response.documents.length > 0);
+      await deleteAllProjectsByTeam(id);
+      await deleteAllExperienceByTeam(id);
+      await deleteAllEducationByTeam(id);
 
       revalidateTag("teams");
       revalidateTag(`team:${id}`);
-      revalidateTag(`experiences:team-${id}`);
+
       revalidateTag(`informations:team-${id}`);
-      revalidateTag(`projects:team-${id}`);
 
       return {
         success: true,

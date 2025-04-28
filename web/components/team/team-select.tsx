@@ -141,6 +141,12 @@ export function TeamSelect() {
                                 : "opacity-0",
                             )}
                           />
+                          {teamItem?.image && (
+                            <img
+                              className="size-4 rounded-full object-fill"
+                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teamItem?.image}/view?project=${PROJECT_ID}`}
+                            />
+                          )}
                           <span className="truncate">{teamItem.name}</span>
                         </Link>
                       </CommandItem>

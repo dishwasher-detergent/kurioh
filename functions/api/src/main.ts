@@ -37,7 +37,6 @@ export default async (context: Context) => {
     'DATABASE_ID',
     'EXPERIENCE_COLLECTION_ID',
     'ORGANIZATION_COLLECTION_ID',
-    'INFORMATION_COLLECTION_ID',
     'PROJECTS_COLLECTION_ID',
     'PROJECTS_BUCKET_ID',
   ]);

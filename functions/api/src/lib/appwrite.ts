@@ -12,8 +12,6 @@ export const EXPERIENCE_COLLECTION_ID = process.env
   .EXPERIENCE_COLLECTION_ID as string;
 export const ORGANIZATION_COLLECTION_ID = process.env
   .ORGANIZATION_COLLECTION_ID as string;
-export const INFORMATION_COLLECTION_ID = process.env
-  .INFORMATION_COLLECTION_ID as string;
 export const PROJECTS_COLLECTION_ID = process.env
   .PROJECTS_COLLECTION_ID as string;
 export const EDUCATION_COLLECTION_ID = process.env

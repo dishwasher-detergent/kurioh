@@ -18,15 +18,6 @@ export interface Project extends Models.Document {
   teamId: string;
 }
 
-export interface Information extends Models.Document {
-  title: string;
-  description: string;
-  image: string;
-  socials: string[];
-  teamId: string;
-  userId: string;
-}
-
 export interface Social {
   url: string;
   value: string;
@@ -34,10 +25,10 @@ export interface Social {
 
 export interface Team extends Models.Document {
   title: string;
-  slug: string;
-  information_id: string;
-  project_ids: string[];
-  experience_id: string | null;
+  name: string;
+  description: string;
+  socials: Social[];
+  image: string;
   userId: string;
 }
 

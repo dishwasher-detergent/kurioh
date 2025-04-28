@@ -4,20 +4,13 @@ import { Query } from 'node-appwrite';
 import {
   EDUCATION_COLLECTION_ID,
   EXPERIENCE_COLLECTION_ID,
-  INFORMATION_COLLECTION_ID,
   ORGANIZATION_COLLECTION_ID,
   PROJECTS_BUCKET_ID,
   PROJECTS_COLLECTION_ID,
   database_service,
   storage_service,
 } from '../lib/appwrite.js';
-import {
-  Education,
-  Experience,
-  Information,
-  Project,
-  Team,
-} from '../types/types.js';
+import { Education, Experience, Project, Team } from '../types/types.js';
 
 export function Teams(app: Hono, cacheDuration: number = 1440) {
   app.get('/teams/:team_id', async (c) => {
@@ -25,11 +18,6 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
       const team_id = c.req.param('team_id');
       const team = await database_service.get<Team>(
         ORGANIZATION_COLLECTION_ID,
-        team_id
-      );
-
-      const information = await database_service.get<Information>(
-        INFORMATION_COLLECTION_ID,
         team_id
       );
 
@@ -79,10 +67,10 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
       const prunedResponse = {
         id: team.$id,
         name: team.name,
-        title: information.title,
-        description: information.description,
-        socials: information.socials,
-        image: information.image,
+        title: team.title,
+        description: team.description,
+        socials: team.socials,
+        image: team.image,
         projects: formattedProject,
         experience: formattedExperience,
         education: formattedEducation,
@@ -103,14 +91,14 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
       const team_id = c.req.param('team_id');
       const queryParams = c.req.query();
 
-      const information = await database_service.get<Information>(
-        INFORMATION_COLLECTION_ID,
+      const team = await database_service.get<Team>(
+        ORGANIZATION_COLLECTION_ID,
         team_id
       );
 
       const file = await storage_service.getFilePreview(
         PROJECTS_BUCKET_ID,
-        information.image,
+        team.image,
         {
           ...queryParams,
         }
@@ -134,18 +122,18 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
     try {
       const team_id = c.req.param('team_id');
 
-      const information = await database_service.get<Information>(
-        INFORMATION_COLLECTION_ID,
+      const team = await database_service.get<Team>(
+        ORGANIZATION_COLLECTION_ID,
         team_id
       );
 
-      if (!information.image) {
+      if (!team.image) {
         return c.json({ error: 'Image not found' }, 404);
       }
 
       const file = await storage_service.getFilePreview(
         PROJECTS_BUCKET_ID,
-        information.image,
+        team.image,
         {
           quality: 50,
           width: 256,

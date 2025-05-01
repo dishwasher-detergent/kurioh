@@ -57,7 +57,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
       }));
 
       const formattedEducation = education.documents.map((edu) => ({
-        school: edu.school,
+        institution: edu.institution,
         fieldOfStudy: edu.fieldOfStudy,
         degree: edu.degree,
         startDate: edu.start_date,

@@ -59,7 +59,7 @@ const data = await res.json();`,
     website: string,
   }[],
   education: {
-    school: string,
+    institution: string,
     fieldOfStudy: string,
     degree: string,
     startDate: Date,

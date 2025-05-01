@@ -281,7 +281,7 @@
             "documentSecurity": true,
             "attributes": [
                 {
-                    "key": "school",
+                    "key": "institution",
                     "type": "string",
                     "required": true,
                     "array": false,

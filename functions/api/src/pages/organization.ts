@@ -53,6 +53,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         startDate: exp.start_date,
         endDate: exp.end_date,
         company: exp.company,
+        type: exp.type,
         website: exp.website,
       }));
 

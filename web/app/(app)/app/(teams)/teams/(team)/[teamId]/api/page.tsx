@@ -56,6 +56,7 @@ const data = await res.json();`,
     startDate: Date,
     endDate: Date,
     company: string,
+    type: string,
     website: string,
   }[],
   education: {

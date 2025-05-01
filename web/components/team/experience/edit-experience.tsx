@@ -43,6 +43,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   EXPERIENCE_COMPANY_MAX_LENGTH,
   EXPERIENCE_DESCRIPTION_MAX_LENGTH,
   EXPERIENCE_TITLE_MAX_LENGTH,
@@ -78,6 +85,7 @@ export default function ExperienceForm({
           start_date: exp?.start_date ? new Date(exp.start_date) : new Date(),
           end_date: exp?.end_date ? new Date(exp.end_date) : undefined,
           company: exp?.company,
+          type: exp?.type,
           skills:
             exp.skills?.map((skill) => ({ label: skill, value: skill })) ?? [],
           website: exp.website?.toString(),
@@ -131,7 +139,7 @@ export default function ExperienceForm({
     } else {
       form.setValue(
         `experience.${index}.end_date`,
-        experience[index].start_date,
+        experience[index]?.end_date,
       );
     }
   };
@@ -180,23 +188,23 @@ export default function ExperienceForm({
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-5 p-4">
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name={`experience.${index}.id`}
-                      render={({ field }) => (
-                        <FormItem className="hidden">
-                          <FormControl>
-                            <Input {...field} className="hidden" />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  <FormField
+                    control={form.control}
+                    name={`experience.${index}.id`}
+                    render={({ field }) => (
+                      <FormItem className="hidden">
+                        <FormControl>
+                          <Input {...field} className="hidden" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                     <FormField
                       control={form.control}
                       name={`experience.${index}.company`}
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="md:col-span-2">
                           <FormLabel className="flex items-center">
                             Company
                           </FormLabel>
@@ -223,34 +231,65 @@ export default function ExperienceForm({
                     />
                     <FormField
                       control={form.control}
-                      name={`experience.${index}.title`}
+                      name={`experience.${index}.type`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center">
-                            Job Title
+                            Type
                           </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                {...field}
-                                placeholder="Senior Software Engineer"
-                                className="truncate pr-20"
-                                maxLength={EXPERIENCE_TITLE_MAX_LENGTH}
-                              />
-                              <Badge
-                                className="absolute top-1/2 right-1.5 -translate-y-1/2"
-                                variant="secondary"
-                              >
-                                {field?.value?.length || 0}/
-                                {EXPERIENCE_TITLE_MAX_LENGTH}
-                              </Badge>
-                            </div>
-                          </FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="job">Job</SelectItem>
+                              <SelectItem value="internship">
+                                Internship
+                              </SelectItem>
+                              <SelectItem value="volunteer">
+                                Volunteer
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
+                  <FormField
+                    control={form.control}
+                    name={`experience.${index}.title`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          Job Title
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              placeholder="Senior Software Engineer"
+                              className="truncate pr-20"
+                              maxLength={EXPERIENCE_TITLE_MAX_LENGTH}
+                            />
+                            <Badge
+                              className="absolute top-1/2 right-1.5 -translate-y-1/2"
+                              variant="secondary"
+                            >
+                              {field?.value?.length || 0}/
+                              {EXPERIENCE_TITLE_MAX_LENGTH}
+                            </Badge>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name={`experience.${index}.description`}
@@ -470,6 +509,7 @@ export default function ExperienceForm({
                 start_date: new Date(),
                 end_date: undefined,
                 company: "",
+                type: "job",
                 skills: [],
                 website: "",
               })

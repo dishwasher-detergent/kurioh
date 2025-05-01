@@ -173,7 +173,7 @@ export async function updateExperience({
         {
           ...data,
           userId: user.$id,
-          skills: data.skills || [],
+          skills: data.skills?.map((x) => x.label) || [],
         },
         permissions,
       );

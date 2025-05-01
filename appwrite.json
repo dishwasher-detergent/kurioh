@@ -243,6 +243,14 @@
                     "array": false,
                     "size": 128,
                     "default": null
+                },
+                {
+                    "key": "type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": null
                 }
             ],
             "indexes": [
@@ -332,6 +340,14 @@
                     "key": "degree",
                     "type": "string",
                     "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "type",
+                    "type": "string",
+                    "required": false,
                     "array": false,
                     "size": 32,
                     "default": null

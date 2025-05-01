@@ -20,11 +20,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "KURIOH.",
-  description: "Curate your portfolio without the hassle.",
+  description:
+    "Curate your portfolio without the hassle. A headless CMS designed specifically for portfolio websites.",
   metadataBase: new URL("https://kurioh.com"),
   openGraph: {
     title: "KURIOH.",
-    description: "Curate your portfolio without the hassle.",
+    description:
+      "Curate your portfolio without the hassle. A headless CMS designed specifically for portfolio websites.",
     url: "https://kurioh.com",
     siteName: "kurioh.com",
     locale: "en_US",
@@ -33,7 +35,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "KURIOH.",
-    description: "Curate your portfolio without the hassle.",
+    description:
+      "Curate your portfolio without the hassle. A headless CMS designed specifically for portfolio websites.",
   },
 };
 

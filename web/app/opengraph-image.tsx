@@ -1,9 +1,7 @@
 import { ImageResponse } from "next/og";
 
-// Route segment config
 export const runtime = "edge";
 
-// Image metadata
 export const alt = "KURIOH - Curate your portfolio without the hassle";
 export const size = {
   width: 1200,
@@ -12,7 +10,7 @@ export const size = {
 export const contentType = "image/png";
 
 async function loadGoogleFont(font: string, text: string) {
-  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@700`;
+  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@700&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(url)).text();
   const resource = css.match(
     /src: url\((.+)\) format\('(opentype|truetype)'\)/,

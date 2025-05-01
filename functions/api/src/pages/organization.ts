@@ -56,12 +56,12 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         website: exp.website,
       }));
 
-      const formattedEducation = education.documents.map((exp) => ({
-        school: exp.school,
-        major: exp.major,
-        degree: exp.degree,
-        startDate: exp.start_date,
-        graduationDate: exp.end_date,
+      const formattedEducation = education.documents.map((edu) => ({
+        school: edu.school,
+        fieldOfStudy: edu.fieldOfStudy,
+        degree: edu.degree,
+        startDate: edu.start_date,
+        graduationDate: edu.end_date,
       }));
 
       const prunedResponse = {

@@ -61,6 +61,7 @@ export const editProjectSchema = z.object({
     }
     return val;
   }, z.number().min(0)),
+  published: z.boolean(),
 });
 
 export type EditProjectFormData = z.infer<typeof editProjectSchema>;

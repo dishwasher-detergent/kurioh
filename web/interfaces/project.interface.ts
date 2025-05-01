@@ -11,6 +11,7 @@ export interface Project extends Models.Document {
   images: string[];
   tags: string[];
   links: string[];
+  published: boolean;
 
   userId: string;
   user?: UserData;

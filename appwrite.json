@@ -135,6 +135,13 @@
                     "min": -9223372036854775808,
                     "max": 9223372036854775807,
                     "default": null
+                },
+                {
+                    "key": "published",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
                 }
             ],
             "indexes": [

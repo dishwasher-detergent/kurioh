@@ -71,7 +71,7 @@ export default function EducationForm({
       education:
         education?.map((ed) => ({
           id: ed?.$id,
-          school: ed?.school,
+          institution: ed?.institution,
           fieldOfStudy: ed?.fieldOfStudy,
           degree: ed?.degree,
           start_date: ed?.start_date ? new Date(ed.start_date) : new Date(),
@@ -162,7 +162,7 @@ export default function EducationForm({
                 <CardHeader className="p-4">
                   <div className="flex-1">
                     <CardTitle className="flex items-center text-base font-medium">
-                      {form.watch(`education.${index}.school`) ||
+                      {form.watch(`education.${index}.institution`) ||
                         "New Education"}
                     </CardTitle>
                     <CardDescription>
@@ -185,11 +185,11 @@ export default function EducationForm({
                   />
                   <FormField
                     control={form.control}
-                    name={`education.${index}.school`}
+                    name={`education.${index}.institution`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center">
-                          School/University
+                          Institution
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
@@ -418,7 +418,7 @@ export default function EducationForm({
             type="button"
             onClick={() =>
               append({
-                school: "",
+                institution: "",
                 fieldOfStudy: "",
                 degree: "",
                 start_date: new Date(),

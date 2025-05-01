@@ -4,7 +4,7 @@ import { TeamData } from "@/interfaces/team.interface";
 import { UserData } from "@/interfaces/user.interface";
 
 export interface Education extends Models.Document {
-  school: string;
+  institution: string;
   fieldOfStudy: string;
   degree: string;
   start_date: Date;

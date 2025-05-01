@@ -1,7 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LucideLoader2, LucideSave } from "lucide-react";
+import {
+  LucideLoader2,
+  LucidePartyPopper,
+  LucideSave,
+  LucideUndo,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -53,6 +58,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
       links: project.links?.map((link) => ({ label: link, value: link })),
       images: project.images,
       ordinal: Number(project.ordinal),
+      published: project.published ?? false,
     },
   });
 
@@ -73,6 +79,10 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
 
     toast.success("Project updated successfully.");
     router.refresh();
+  }
+
+  async function handleSave(published: boolean) {
+    form.setValue("published", published);
   }
 
   return (
@@ -232,22 +242,72 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
             </FormItem>
           )}
         />
-        <Button
-          size="sm"
-          type="submit"
-          disabled={
-            form.formState.isSubmitting ||
-            !form.formState.isValid ||
-            !form.formState.isDirty
-          }
-        >
-          Save Project
-          {form.formState.isSubmitting ? (
-            <LucideLoader2 className="size-3.5 animate-spin" />
-          ) : (
-            <LucideSave className="size-3.5" />
-          )}
-        </Button>
+        {project.published && (
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              disabled={
+                form.formState.isSubmitting ||
+                !form.formState.isValid ||
+                !form.formState.isDirty
+              }
+              onClick={() => handleSave(true)}
+            >
+              Save Project
+              {form.formState.isSubmitting ? (
+                <LucideLoader2 className="size-3.5 animate-spin" />
+              ) : (
+                <LucideSave className="size-3.5" />
+              )}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={form.formState.isSubmitting || !form.formState.isValid}
+              onClick={() => handleSave(false)}
+            >
+              Un-Publish
+              {form.formState.isSubmitting ? (
+                <LucideLoader2 className="size-3.5 animate-spin" />
+              ) : (
+                <LucideUndo className="size-3.5" />
+              )}
+            </Button>
+          </div>
+        )}
+        {!project.published && (
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              disabled={form.formState.isSubmitting || !form.formState.isValid}
+              onClick={() => handleSave(true)}
+            >
+              Save & Publish
+              {form.formState.isSubmitting ? (
+                <LucideLoader2 className="size-3.5 animate-spin" />
+              ) : (
+                <LucidePartyPopper className="size-3.5" />
+              )}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={
+                form.formState.isSubmitting ||
+                !form.formState.isValid ||
+                !form.formState.isDirty
+              }
+              onClick={() => handleSave(false)}
+            >
+              Save Draft
+              {form.formState.isSubmitting ? (
+                <LucideLoader2 className="size-3.5 animate-spin" />
+              ) : (
+                <LucideSave className="size-3.5" />
+              )}
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   );

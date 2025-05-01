@@ -38,7 +38,7 @@ export function ApiRequestSnippit({
           <div className="bg-muted/50 text-foreground/70 border-y p-2 px-4">
             <p className="flex gap-2 text-xs font-semibold">
               <span className="font-semibold text-green-600">GET</span>
-              {endpoint.split(/(run|global)/)[2]}
+              {endpoint.split(/(run|global|com)/)[2]}
             </p>
           </div>
         )}

@@ -16,7 +16,11 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
-        [Query.equal('teamId', team_id), Query.orderAsc('ordinal')]
+        [
+          Query.equal('teamId', team_id),
+          Query.orderAsc('ordinal'),
+          Query.equal('published', true),
+        ]
       );
 
       const formattedProjects = projects.documents.map((project) => ({

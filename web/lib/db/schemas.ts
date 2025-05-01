@@ -98,6 +98,7 @@ export type EditExperienceArrayFormData = z.infer<
 export const editEducationSchema = z.object({
   id: z.string().optional(),
   institution: z.string().min(1).max(EDUCATION_SCHOOL_MAX_LENGTH),
+  type: z.string().optional(),
   fieldOfStudy: z.string().min(1).max(EDUCATION_MAJOR_MAX_LENGTH),
   degree: z.string().min(1).max(EDUCATION_DEGREE_MAX_LENGTH),
   start_date: z.date(),

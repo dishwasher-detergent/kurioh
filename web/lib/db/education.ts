@@ -157,6 +157,8 @@ export async function updateEducation({
         id,
       );
 
+      delete data.id;
+
       const education = await database.updateDocument<Education>(
         DATABASE_ID,
         EDUCATION_COLLECTION_ID,

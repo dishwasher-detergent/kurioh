@@ -5,6 +5,7 @@ import { UserData } from "@/interfaces/user.interface";
 
 export interface Education extends Models.Document {
   institution: string;
+  type: string;
   fieldOfStudy: string;
   degree: string;
   start_date: Date;

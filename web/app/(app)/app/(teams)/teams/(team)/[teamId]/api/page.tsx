@@ -60,6 +60,7 @@ const data = await res.json();`,
   }[],
   education: {
     institution: string,
+    type: string,
     fieldOfStudy: string,
     degree: string,
     startDate: Date,

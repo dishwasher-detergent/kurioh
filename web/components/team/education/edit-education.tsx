@@ -41,6 +41,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   EDUCATION_DEGREE_MAX_LENGTH,
   EDUCATION_MAJOR_MAX_LENGTH,
   EDUCATION_SCHOOL_MAX_LENGTH,
@@ -72,6 +79,7 @@ export default function EducationForm({
         education?.map((ed) => ({
           id: ed?.$id,
           institution: ed?.institution,
+          type: ed?.type,
           fieldOfStudy: ed?.fieldOfStudy,
           degree: ed?.degree,
           start_date: ed?.start_date ? new Date(ed.start_date) : new Date(),
@@ -183,35 +191,71 @@ export default function EducationForm({
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name={`education.${index}.institution`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center">
-                          Institution
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              placeholder="University of Central Oklahoma"
-                              className="truncate pr-20"
-                              maxLength={EDUCATION_SCHOOL_MAX_LENGTH}
-                            />
-                            <Badge
-                              className="absolute top-1/2 right-1.5 -translate-y-1/2"
-                              variant="secondary"
-                            >
-                              {field?.value?.length || 0}/
-                              {EDUCATION_SCHOOL_MAX_LENGTH}
-                            </Badge>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                    <FormField
+                      control={form.control}
+                      name={`education.${index}.institution`}
+                      render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                          <FormLabel className="flex items-center">
+                            Institution
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                placeholder="University of Central Oklahoma"
+                                className="truncate pr-20"
+                                maxLength={EDUCATION_SCHOOL_MAX_LENGTH}
+                              />
+                              <Badge
+                                className="absolute top-1/2 right-1.5 -translate-y-1/2"
+                                variant="secondary"
+                              >
+                                {field?.value?.length || 0}/
+                                {EDUCATION_SCHOOL_MAX_LENGTH}
+                              </Badge>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`education.${index}.type`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            Type
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="university">
+                                University
+                              </SelectItem>
+                              <SelectItem value="bootcamp">Bootcamp</SelectItem>
+                              <SelectItem value="selfTaught">
+                                Self-Taught
+                              </SelectItem>
+                              <SelectItem value="certification">
+                                Certification
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <FormField
                       control={form.control}
@@ -419,6 +463,7 @@ export default function EducationForm({
             onClick={() =>
               append({
                 institution: "",
+                type: "university",
                 fieldOfStudy: "",
                 degree: "",
                 start_date: new Date(),

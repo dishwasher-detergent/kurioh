@@ -71,6 +71,7 @@ export const editInformationSchema = z.object({
   description: z.string().max(INFORMATION_DESCRIPTION_MAX_LENGTH).optional(),
   socials: z.array(linkSchema).optional(),
   image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
+  skills: z.array(tagSchema).optional(),
 });
 
 export type EditInformationFormData = z.infer<typeof editInformationSchema>;

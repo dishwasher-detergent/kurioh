@@ -55,6 +55,9 @@ export default function InformationForm({
           value: link,
         })) ?? [],
       image: information?.image,
+      skills:
+        information.skills?.map((skill) => ({ label: skill, value: skill })) ??
+        [],
     },
   });
 
@@ -153,6 +156,28 @@ export default function InformationForm({
                   {...field}
                   creatable
                   placeholder="Add social links"
+                  emptyIndicator={
+                    <p className="text-muted-foreground text-center text-sm leading-4 font-semibold">
+                      No results found.
+                    </p>
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`skills`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Skills</FormLabel>
+              <FormControl>
+                <MultipleSelector
+                  {...field}
+                  creatable
+                  placeholder="Add relevant skills (e.g., React, Project Management, Leadership)"
                   emptyIndicator={
                     <p className="text-muted-foreground text-center text-sm leading-4 font-semibold">
                       No results found.

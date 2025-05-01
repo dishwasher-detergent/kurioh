@@ -73,7 +73,7 @@ export function TeamSelect() {
         <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-              <div className="flex max-w-32 items-center">
+              <div className="flex max-w-32 items-center md:max-w-48">
                 {teams.find((x) => x.$id === teamId)?.name ? (
                   <Link
                     href={`/app/teams/${teamId}`}

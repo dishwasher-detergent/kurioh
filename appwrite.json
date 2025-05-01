@@ -289,7 +289,7 @@
                     "default": null
                 },
                 {
-                    "key": "major",
+                    "key": "fieldOfStudy",
                     "type": "string",
                     "required": true,
                     "array": false,

@@ -72,7 +72,7 @@ export default function EducationForm({
         education?.map((ed) => ({
           id: ed?.$id,
           school: ed?.school,
-          major: ed?.major,
+          fieldOfStudy: ed?.fieldOfStudy,
           degree: ed?.degree,
           start_date: ed?.start_date ? new Date(ed.start_date) : new Date(),
           end_date: ed?.end_date ? new Date(ed.end_date) : undefined,
@@ -166,8 +166,8 @@ export default function EducationForm({
                         "New Education"}
                     </CardTitle>
                     <CardDescription>
-                      {form.watch(`education.${index}.major`) &&
-                        form.watch(`education.${index}.major`)}
+                      {form.watch(`education.${index}.fieldOfStudy`) &&
+                        form.watch(`education.${index}.fieldOfStudy`)}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -215,11 +215,11 @@ export default function EducationForm({
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name={`education.${index}.major`}
+                      name={`education.${index}.fieldOfStudy`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center">
-                            Major
+                            Field of Study
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -419,7 +419,7 @@ export default function EducationForm({
             onClick={() =>
               append({
                 school: "",
-                major: "",
+                fieldOfStudy: "",
                 degree: "",
                 start_date: new Date(),
                 end_date: undefined,

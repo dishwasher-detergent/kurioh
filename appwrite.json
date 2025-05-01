@@ -471,6 +471,14 @@
                     "array": false,
                     "size": 128,
                     "default": null
+                },
+                {
+                    "key": "skills",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 32,
+                    "default": null
                 }
             ],
             "indexes": []

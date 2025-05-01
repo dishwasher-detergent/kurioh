@@ -9,6 +9,7 @@ export interface TeamData extends Models.Document {
   description: string;
   image: string;
   socials: string[];
+  skills: string[];
 
   userId: string;
   user?: UserData;

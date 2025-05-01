@@ -3,7 +3,6 @@
 import { revalidateTag, unstable_cache } from "next/cache";
 import { Permission, Query, Role } from "node-appwrite";
 
-import { Information } from "@/interfaces/information.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData } from "@/interfaces/user.interface";
@@ -86,7 +85,7 @@ export async function getInformationById(
  * @param {string} [params.id] The ID of the information
  * @param {EditInformationFormData} [params.data] The information data
  * @param {string[]} [params.permissions] The permissions for the information (optional)
- * @returns {Promise<Result<Information>>} The updated information
+ * @returns {Promise<Result<TeamData>>} The updated information
  */
 export async function updateInformation({
   id,
@@ -98,12 +97,12 @@ export async function updateInformation({
   teamId: string;
   data: EditInformationFormData;
   permissions?: string[];
-}): Promise<Result<Information>> {
+}): Promise<Result<TeamData>> {
   return withAuth(async (user) => {
     const { database } = await createSessionClient();
 
     try {
-      const existingInformation = await database.getDocument<Information>(
+      const existingInformation = await database.getDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
         id,
@@ -137,16 +136,14 @@ export async function updateInformation({
         data.image = null;
       }
 
-      const information = await database.updateDocument<Information>(
+      const information = await database.updateDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,
         id,
         {
           ...data,
-          socials:
-            data.socials?.map((social) =>
-              typeof social === "string" ? social : social.value,
-            ) || [],
+          socials: data.socials?.map((x) => x.label),
+          skills: data.skills?.map((x) => x.label),
           userId: user.$id,
         },
         permissions,

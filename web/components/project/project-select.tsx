@@ -89,7 +89,7 @@ export function ProjectSelect() {
                 variant="ghost"
                 role="combobox"
                 aria-expanded={open}
-                className="text-muted-foreground max-w-32 gap-2"
+                className="text-muted-foreground max-w-32 gap-2 md:max-w-48"
                 disabled={loading}
               >
                 {projects.find((x) => x.$id == projectId)?.images[0] && (

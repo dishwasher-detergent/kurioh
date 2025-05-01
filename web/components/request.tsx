@@ -85,7 +85,7 @@ export function Request({
           {method}
         </Badge>
         <p className="text-muted-foreground overflow-hidden text-sm font-semibold break-words">
-          {endpoint.split(/(run|global)/)[2]}
+          {endpoint.split(/(run|global|com)/)[2]}
         </p>
       </div>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

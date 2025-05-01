@@ -20,7 +20,7 @@ export default async function ApiPage({
       code: `import { Client } from "@kurioh/client";
 
 const client = new Client("${API_ENDPOINT}", "${teamId}");
-const { data, error, isError, isSuccess, isLoading } = await client.project.get('PROJECT_ID');`,
+const { data, error, isError, isSuccess, isLoading } = await client.project.get("${projectId}");`,
     },
     {
       title: "JS",

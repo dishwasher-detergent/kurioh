@@ -4,19 +4,19 @@ import { LucideLoader2 } from "lucide-react";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "./ui/button";
-import { ApiRequestSnippit } from "./ui/code-snippit";
+import { Button } from "@/components/ui/button";
+import { ApiRequestSnippit, CodeData } from "@/components/ui/code-snippit";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 type HeadersType = Record<string, string>;
 
 interface RequestProps {
   endpoint: string;
-  code: string;
+  code: CodeData[];
   method?: HttpMethod;
   headers?: HeadersType;
   body?: object;
-  model?: string;
+  model?: CodeData[];
   children?: React.ReactNode;
 }
 
@@ -112,7 +112,10 @@ export function Request({
         <div className="flex h-full flex-col gap-4">
           <ApiRequestSnippit code={code} endpoint={endpoint} language="js" />
           {(data || error) && (
-            <ApiRequestSnippit code={data} title="Response" />
+            <ApiRequestSnippit
+              code={[{ title: "JS", language: "js", code: data }]}
+              title="Response"
+            />
           )}
         </div>
       </div>

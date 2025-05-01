@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { Request } from "@/components/request";
+import { CodeData } from "@/components/ui/code-snippit";
 import { API_ENDPOINT } from "@/lib/constants";
 import { getProjectById } from "@/lib/db";
 
@@ -12,9 +13,27 @@ export default async function ApiPage({
   const { projectId, teamId } = await params;
 
   const endpoint = `${API_ENDPOINT}/teams/${teamId}/projects/${projectId}`;
-  const javascript = `const res = await fetch("${endpoint}");
-const data = await res.json();`;
-  const model = `interface Project {
+  const javascript: CodeData[] = [
+    {
+      title: "SDK",
+      language: "js",
+      code: `import { Client } from "@kurioh/client";
+
+const client = new Client("${API_ENDPOINT}", "${teamId}");
+const { data, error, isError, isSuccess, isLoading } = await client.project.get('PROJECT_ID');`,
+    },
+    {
+      title: "JS",
+      language: "js",
+      code: `const res = await fetch("${endpoint}");
+const data = await res.json();`,
+    },
+  ];
+  const model: CodeData[] = [
+    {
+      title: "JS",
+      language: "js",
+      code: `interface Project {
   id: string,
   team: string,
   title: string,
@@ -23,7 +42,9 @@ const data = await res.json();`;
   images: string[],
   tags: string[],
   links: string[],
-}`;
+}`,
+    },
+  ];
 
   const project = await getProjectById(projectId);
 

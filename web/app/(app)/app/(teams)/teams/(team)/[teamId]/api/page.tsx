@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { Request } from "@/components/request";
+import { CodeData } from "@/components/ui/code-snippit";
 import { API_ENDPOINT } from "@/lib/constants";
 import { getTeamById } from "@/lib/team";
 
@@ -12,9 +13,27 @@ export default async function ApiPage({
   const { teamId } = await params;
 
   const endpoint = `${API_ENDPOINT}/teams/${teamId}`;
-  const javascript = `const res = await fetch("${endpoint}");
-const data = await res.json();`;
-  const model = `interface Team {
+  const javascript: CodeData[] = [
+    {
+      title: "SDK",
+      language: "js",
+      code: `import { Client } from "@kurioh/client";
+
+const client = new Client("${API_ENDPOINT}", "${teamId}");
+const { data, error, isError, isSuccess, isLoading } = await client.team.get();`,
+    },
+    {
+      title: "JS",
+      language: "js",
+      code: `const res = await fetch("${endpoint}");
+const data = await res.json();`,
+    },
+  ];
+  const model: CodeData[] = [
+    {
+      title: "JS",
+      language: "js",
+      code: `interface Team {
   id: string,
   name: string,
   title: string,
@@ -46,7 +65,9 @@ const data = await res.json();`;
     startDate: Date,
     graduationDate: Date,
   }[],
-}`;
+}`,
+    },
+  ];
 
   const org = await getTeamById(teamId);
 

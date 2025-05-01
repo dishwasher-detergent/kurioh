@@ -164,6 +164,8 @@ export async function updateExperience({
         id,
       );
 
+      delete data.id;
+
       const experience = await database.updateDocument<Experience>(
         DATABASE_ID,
         EXPERIENCE_COLLECTION_ID,

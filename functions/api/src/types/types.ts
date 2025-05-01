@@ -46,7 +46,7 @@ export interface Experience extends Models.Document {
 
 export interface Education extends Models.Document {
   school: string;
-  major: string;
+  fieldOfStudy: string;
   degree: string;
   start_date: Date;
   end_date: Date;

@@ -264,18 +264,18 @@ export async function updateMultipleEducations({
       const existingEducations = existingEducationsResult.data?.documents || [];
 
       const newEducationIds = educations
-        .filter((exp) => exp.id)
-        .map((exp) => exp.id as string);
+        .filter((edu) => edu.id)
+        .map((edu) => edu.id as string);
 
       const toDelete = existingEducations.filter(
-        (exp) => !newEducationIds.includes(exp.$id),
+        (edu) => !newEducationIds.includes(edu.$id),
       );
 
       let deletedCount = 0;
       let failedCount = 0;
 
-      for (const exp of toDelete) {
-        const result = await deleteEducation(exp.$id);
+      for (const edu of toDelete) {
+        const result = await deleteEducation(edu.$id);
         if (result.success) deletedCount++;
         else failedCount++;
       }
@@ -283,17 +283,17 @@ export async function updateMultipleEducations({
       let updatedCount = 0;
       let addedCount = 0;
 
-      for (const exp of educations) {
-        if (exp.id) {
+      for (const edu of educations) {
+        if (edu.id) {
           const result = await updateEducation({
-            id: exp.id,
-            data: exp,
+            id: edu.id,
+            data: edu,
           });
           if (result.success) updatedCount++;
           else failedCount++;
         } else {
           const result = await createEducation({
-            data: exp,
+            data: edu,
             teamId,
           });
           if (result.success) addedCount++;

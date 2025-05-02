@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { UserData } from "@/interfaces/user.interface";
 import { COOKIE_KEY, DATABASE_ID, USER_COLLECTION_ID } from "@/lib/constants";
-import { createAdminClient } from "@/lib/server/appwrite";
+import { createAdminClient, createSessionClient } from "@/lib/server/appwrite";
 import { Permission, Role } from "node-appwrite";
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
 
   const { account, database } = await createAdminClient();
   const session = await account.createSession(userId, secret);
-  const user = await account.get();
+  const { account: clientAccount } = await createSessionClient(session.secret);
+  const user = await clientAccount.get();
 
   try {
     await database.getDocument<UserData>(

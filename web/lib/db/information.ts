@@ -171,7 +171,7 @@ export async function updateInformation({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {

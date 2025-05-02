@@ -53,7 +53,7 @@ import {
   EDUCATION_SCHOOL_MAX_LENGTH,
 } from "@/constants/education.constants";
 import { Education } from "@/interfaces/education.interface";
-import { updateTeamEducations } from "@/lib/db";
+import { updateMultipleEducations } from "@/lib/db";
 import {
   EditEducationArrayFormData,
   editEducationArraySchema,
@@ -138,7 +138,7 @@ export default function EducationForm({
 
   async function onSubmit(values: EditEducationArrayFormData) {
     toast.promise(
-      updateTeamEducations({ teamId, educations: values.education }),
+      updateMultipleEducations({ teamId, educations: values.education }),
       {
         loading: "Saving education...",
         success: (data) => {

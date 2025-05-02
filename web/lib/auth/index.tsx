@@ -60,7 +60,7 @@ export async function getUserData(): Promise<Result<User>> {
         } catch (err) {
           const error = err as Error;
 
-          // This is where you would look to something like Splunk.
+          // Logging to Vercel
           console.error(error);
 
           return {
@@ -104,7 +104,7 @@ export async function getUserById(id: string): Promise<Result<UserData>> {
         } catch (err) {
           const error = err as Error;
 
-          // This is where you would look to something like Splunk.
+          // Logging to Vercel
           console.error(error);
 
           return {
@@ -161,7 +161,7 @@ export async function updateProfile({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -193,7 +193,7 @@ export async function getUserLogs(): Promise<Result<Models.LogList>> {
         } catch (err) {
           const error = err as Error;
 
-          // This is where you would look to something like Splunk.
+          // Logging to Vercel
           console.error(error);
 
           return {
@@ -256,7 +256,7 @@ export async function signInWithEmail(
   } catch (err) {
     const error = err as Error;
 
-    // This is where you would look to something like Splunk.
+    // Logging to Vercel
     console.error(error);
 
     return {
@@ -300,7 +300,7 @@ export async function signUpWithEmail(
   } catch (err) {
     const error = err as Error;
 
-    // This is where you would look to something like Splunk.
+    // Logging to Vercel
     console.error(error);
 
     return {
@@ -347,7 +347,7 @@ export async function createPasswordRecovery(
   } catch (err) {
     const error = err as Error;
 
-    // This is where you would look to something like Splunk.
+    // Logging to Vercel
     console.error(error);
 
     return {
@@ -378,7 +378,7 @@ export async function resetPassword(
   } catch (err) {
     const error = err as Error;
 
-    // This is where you would look to something like Splunk.
+    // Logging to Vercel
     console.error(error);
 
     return {
@@ -459,7 +459,7 @@ export async function setLastVisitedTeam(
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {

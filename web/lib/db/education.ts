@@ -119,7 +119,7 @@ export async function createEducation({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -182,7 +182,7 @@ export async function updateEducation({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -223,7 +223,7 @@ export async function deleteEducation(id: string): Promise<Result<Education>> {
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -239,15 +239,17 @@ export async function deleteEducation(id: string): Promise<Result<Education>> {
  * @param {Object} params The parameters for updating educations
  * @param {string} params.teamId The ID of the team
  * @param {EditEducationFormData[]} params.educations The education data array
- * @returns {Promise<Result<{ added: number, updated: number, deleted: number }>>} Results summary
+ * @returns {Promise<Result<{ added: number, updated: number, deleted: number, failed: number }>>} Results summary
  */
-export async function updateTeamEducations({
+export async function updateMultipleEducations({
   teamId,
   educations,
 }: {
   teamId: string;
   educations: EditEducationFormData[];
-}): Promise<Result<{ added: number; updated: number; deleted: number }>> {
+}): Promise<
+  Result<{ added: number; updated: number; deleted: number; failed: number }>
+> {
   return withAuth(async () => {
     try {
       const existingEducationsResult = await listEducations(teamId);
@@ -262,35 +264,40 @@ export async function updateTeamEducations({
       const existingEducations = existingEducationsResult.data?.documents || [];
 
       const newEducationIds = educations
-        .filter((exp) => exp.id)
-        .map((exp) => exp.id as string);
+        .filter((edu) => edu.id)
+        .map((edu) => edu.id as string);
 
       const toDelete = existingEducations.filter(
-        (exp) => !newEducationIds.includes(exp.$id),
+        (edu) => !newEducationIds.includes(edu.$id),
       );
 
       let deletedCount = 0;
-      for (const exp of toDelete) {
-        const result = await deleteEducation(exp.$id);
+      let failedCount = 0;
+
+      for (const edu of toDelete) {
+        const result = await deleteEducation(edu.$id);
         if (result.success) deletedCount++;
+        else failedCount++;
       }
 
       let updatedCount = 0;
       let addedCount = 0;
 
-      for (const exp of educations) {
-        if (exp.id) {
+      for (const edu of educations) {
+        if (edu.id) {
           const result = await updateEducation({
-            id: exp.id,
-            data: exp,
+            id: edu.id,
+            data: edu,
           });
           if (result.success) updatedCount++;
+          else failedCount++;
         } else {
           const result = await createEducation({
-            data: exp,
+            data: edu,
             teamId,
           });
           if (result.success) addedCount++;
+          else failedCount++;
         }
       }
 
@@ -299,17 +306,18 @@ export async function updateTeamEducations({
 
       return {
         success: true,
-        message: `Educations updated successfully: ${addedCount} added, ${updatedCount} updated, ${deletedCount} deleted.`,
+        message: `Education updated: ${addedCount} added, ${updatedCount} updated, ${deletedCount} deleted, ${failedCount} failed.`,
         data: {
           added: addedCount,
           updated: updatedCount,
           deleted: deletedCount,
+          failed: failedCount,
         },
       };
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
       return {
         success: false,
@@ -355,7 +363,7 @@ export async function deleteAllEducationByTeam(
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {

@@ -50,7 +50,7 @@ export async function uploadFile({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -80,7 +80,7 @@ export async function deleteFile(id: string): Promise<Result<undefined>> {
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {

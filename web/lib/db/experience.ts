@@ -126,7 +126,7 @@ export async function createExperience({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -190,7 +190,7 @@ export async function updateExperience({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -233,7 +233,7 @@ export async function deleteExperience(
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -249,15 +249,17 @@ export async function deleteExperience(
  * @param {Object} params The parameters for updating experiences
  * @param {string} params.teamId The ID of the team
  * @param {EditExperienceFormData[]} params.experiences The experience data array
- * @returns {Promise<Result<{ added: number, updated: number, deleted: number }>>} Results summary
+ * @returns {Promise<Result<{ added: number, updated: number, deleted: number, failed: number }>>} Results summary
  */
-export async function updateTeamExperiences({
+export async function updateMultipleExperiences({
   teamId,
   experiences,
 }: {
   teamId: string;
   experiences: EditExperienceFormData[];
-}): Promise<Result<{ added: number; updated: number; deleted: number }>> {
+}): Promise<
+  Result<{ added: number; updated: number; deleted: number; failed: number }>
+> {
   return withAuth(async () => {
     try {
       const existingExperiencesResult = await listExperiences(teamId);
@@ -281,13 +283,17 @@ export async function updateTeamExperiences({
       );
 
       let deletedCount = 0;
+      let failedCount = 0;
+
       for (const exp of toDelete) {
         const result = await deleteExperience(exp.$id);
         if (result.success) deletedCount++;
+        else failedCount++;
       }
 
       let updatedCount = 0;
       let addedCount = 0;
+
       for (const exp of experiences) {
         if (exp.id) {
           const result = await updateExperience({
@@ -295,12 +301,14 @@ export async function updateTeamExperiences({
             data: exp,
           });
           if (result.success) updatedCount++;
+          else failedCount++;
         } else {
           const result = await createExperience({
             data: exp,
             teamId,
           });
           if (result.success) addedCount++;
+          else failedCount++;
         }
       }
 
@@ -309,17 +317,18 @@ export async function updateTeamExperiences({
 
       return {
         success: true,
-        message: `Experiences updated successfully: ${addedCount} added, ${updatedCount} updated, ${deletedCount} deleted.`,
+        message: `Experiences updated: ${addedCount} added, ${updatedCount} updated, ${deletedCount} deleted, ${failedCount} failed.`,
         data: {
           added: addedCount,
           updated: updatedCount,
           deleted: deletedCount,
+          failed: failedCount,
         },
       };
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -366,7 +375,7 @@ export async function deleteAllExperienceByTeam(
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {

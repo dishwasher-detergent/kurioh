@@ -8,11 +8,20 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Images } from "@/components/ui/images";
 import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
+import { Badge } from "../ui/badge";
 
 export function ProjectCard(project: Project) {
   return (
     <Card className="break-inside-avoid-column rounded-md p-2">
-      <CardContent className="p-0">
+      <CardContent className="relative p-0">
+        <Badge variant="secondary" className="absolute top-2 left-2">
+          {project.ordinal}
+        </Badge>
+        {project.published && (
+          <Badge variant="secondary" className="absolute top-2 right-2">
+            Published
+          </Badge>
+        )}
         {project.images.length > 0 && (
           <div className="mb-2">
             <Images images={project.images} />

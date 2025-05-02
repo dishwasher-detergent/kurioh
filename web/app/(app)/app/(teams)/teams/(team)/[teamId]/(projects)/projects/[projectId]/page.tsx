@@ -5,7 +5,6 @@ import EditProject from "@/components/project/edit-project";
 import { ProjectActions } from "@/components/project/project-actions";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { getProjectById } from "@/lib/db";
 
 export async function generateMetadata({
@@ -20,23 +19,16 @@ export async function generateMetadata({
     return {};
   }
 
-  const image =
-    data.images.length > 0
-      ? `${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${data.image[0]}/view?project=${PROJECT_ID}`
-      : null;
-
   return {
     title: data.name,
     description: data.description,
     openGraph: {
       title: data.name,
       description: data.description,
-      images: image ? [image] : [],
     },
     twitter: {
       title: data.name,
       description: data.description,
-      images: image ? [image] : [],
     },
   };
 }

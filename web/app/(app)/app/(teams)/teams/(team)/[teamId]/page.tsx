@@ -8,7 +8,6 @@ import { TeamActions } from "@/components/team/team-actions";
 import { PageHeader } from "@/components/ui/page-header";
 import { ADMIN_ROLE, OWNER_ROLE } from "@/constants/team.constants";
 import { setLastVisitedTeam } from "@/lib/auth";
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { listProjectsByTeam } from "@/lib/db";
 import { getCurrentUserRoles, getTeamById } from "@/lib/team";
 
@@ -24,20 +23,16 @@ export async function generateMetadata({
     return {};
   }
 
-  const image = `${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${data.image}/view?project=${PROJECT_ID}`;
-
   return {
     title: data.name,
     description: data.description,
     openGraph: {
       title: data.name,
       description: data.description,
-      images: [image],
     },
     twitter: {
       title: data.name,
       description: data.description,
-      images: [image],
     },
   };
 }

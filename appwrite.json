@@ -1,6 +1,6 @@
 {
     "projectId": "portfolio-cms-ny",
-    "projectName": "portfolio-cms-ny",
+    "projectName": "Kurioh",
     "settings": {
         "services": {
             "account": true,
@@ -514,26 +514,6 @@
         }
     ],
     "teams": [
-        {
-            "$id": "6770a32e0005597e321a",
-            "name": "test"
-        },
-        {
-            "$id": "6770a5f3002015e196eb",
-            "name": "test"
-        },
-        {
-            "$id": "6771fb5e00156e3c9638",
-            "name": "kenny"
-        },
-        {
-            "$id": "67868dfb0017fee042f4",
-            "name": "test"
-        },
-        {
-            "$id": "67f9d1800016ebc29205",
-            "name": "asdf"
-        }
     ],
     "functions": [
         {
@@ -557,7 +537,8 @@
             "logging": true,
             "entrypoint": "dist/main.js",
             "commands": "npm install && npm run build",
-            "path": "functions/api"
+            "path": "functions/api",
+            "specification": "s-1vcpu-512mb"
         }
     ]
 }

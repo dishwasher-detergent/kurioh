@@ -25,7 +25,7 @@ export const useProjects = ({
   teamId,
   userId,
   searchTerm,
-  limit = 25,
+  limit = 5,
   cursor,
 }: Props) => {
   const [projects, setProjects] = useState<Project[]>(initialProjects ?? []);

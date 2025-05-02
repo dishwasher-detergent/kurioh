@@ -28,7 +28,6 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
     undefined,
   );
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const LIMIT = 25;
 
   const { loading, projects, hasMore, totalProjects, nextCursor } = useProjects(
     {
@@ -36,7 +35,6 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
       teamId,
       userId,
       searchTerm: searchTerm || undefined,
-      limit: LIMIT,
       cursor: currentCursor,
     },
   );

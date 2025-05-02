@@ -105,17 +105,17 @@ export function Request({
               Send Request
             </Button>
           </div>
-          {model && (
-            <ApiRequestSnippit title="Model" code={model} language="js" />
-          )}
-        </div>
-        <div className="flex h-full flex-col gap-4">
-          <ApiRequestSnippit code={code} endpoint={endpoint} language="js" />
           {(data || error) && (
             <ApiRequestSnippit
               code={[{ title: "JS", language: "js", code: data }]}
               title="Response"
             />
+          )}
+        </div>
+        <div className="flex h-full flex-col gap-4">
+          <ApiRequestSnippit code={code} endpoint={endpoint} language="js" />
+          {model && (
+            <ApiRequestSnippit title="Model" code={model} language="js" />
           )}
         </div>
       </div>

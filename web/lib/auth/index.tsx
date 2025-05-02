@@ -25,7 +25,7 @@ import {
 export async function getLoggedInUser(): Promise<Models.User<Models.Preferences> | null> {
   try {
     const { account } = await createSessionClient();
-    
+
     return await account.get();
   } catch {
     return null;
@@ -480,6 +480,8 @@ export async function withAuth<T>(
     const user = await getLoggedInUser();
 
     if (!user) {
+      console.error("User is not logged in.");
+
       return {
         success: false,
         message: "You must be logged in to perform this action.",

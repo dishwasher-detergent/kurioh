@@ -79,20 +79,26 @@ function EditForm({ className, setOpen, user }: FormProps) {
   });
 
   async function onSubmit(values: UpdateProfileFormData) {
-    const data = await updateProfile({
-      id: user.$id,
-      data: values,
-    });
+    toast.promise(
+      updateProfile({
+        id: user.$id,
+        data: values,
+      }),
+      {
+        loading: "Updating Profile...",
+        success: (data) => {
+          if (data.success) {
+            router.refresh();
+            setOpen(false);
+          }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-      setOpen(false);
-    } else {
-      toast.error(data.message);
-    }
-
-    setOpen(false);
+          return data.message;
+        },
+        error: (err) => {
+          return err.message;
+        },
+      },
+    );
   }
 
   return (

@@ -35,14 +35,19 @@ export function DemoteMemberAdmin({ userId, teamId }: DemoteMemberAdminProps) {
   async function handleDemote() {
     setLoading(true);
 
-    const data = await removeAdminRole(teamId, userId);
+    toast.promise(removeAdminRole(teamId, userId), {
+      loading: "Demoting member...",
+      success: (data) => {
+        if (data.success) {
+          router.refresh();
+        }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-    } else {
-      toast.error(data.message);
-    }
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
+    });
 
     setLoading(false);
     setOpen(false);

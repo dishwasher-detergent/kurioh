@@ -62,18 +62,24 @@ export default function InformationForm({
   });
 
   async function onSubmit(values: EditInformationFormData) {
-    const data = await updateInformation({
-      id: information.$id,
-      data: values,
-      teamId,
-    });
+    toast.promise(
+      updateInformation({
+        id: information.$id,
+        data: values,
+        teamId,
+      }),
+      {
+        loading: "Saving information...",
+        success: (data) => {
+          if (data.success) {
+            router.refresh();
+          }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-    } else {
-      toast.error(data.message);
-    }
+          return data.message;
+        },
+        error: (error) => error.message,
+      },
+    );
   }
 
   return (

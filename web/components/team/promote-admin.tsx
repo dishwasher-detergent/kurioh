@@ -38,17 +38,22 @@ export function PromoteMemberAdmin({
   async function handlePromote() {
     setLoading(true);
 
-    const data = await promoteToAdmin(teamId, userId);
+    toast.promise(promoteToAdmin(teamId, userId), {
+      loading: "Promoting member...",
+      success: (data) => {
+        if (data.success) {
+          router.refresh();
+          setOpen(false);
+        }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-    } else {
-      toast.error(data.message);
-    }
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
+    });
 
     setLoading(false);
-    setOpen(false);
   }
 
   return (

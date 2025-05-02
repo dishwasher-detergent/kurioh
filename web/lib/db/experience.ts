@@ -288,7 +288,6 @@ export async function updateTeamExperiences({
 
       let updatedCount = 0;
       let addedCount = 0;
-
       for (const exp of experiences) {
         if (exp.id) {
           const result = await updateExperience({

@@ -35,17 +35,22 @@ export function RemoveTeamMember({ userId, teamId }: RemoveTeamMemberProps) {
   async function handleRemove() {
     setLoading(true);
 
-    const data = await removeMember(teamId, userId);
+    toast.promise(removeMember(teamId, userId), {
+      loading: "Removing member...",
+      success: (data) => {
+        if (data.success) {
+          router.refresh();
+          setOpen(false);
+        }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-    } else {
-      toast.error(data.message);
-    }
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
+    });
 
     setLoading(false);
-    setOpen(false);
   }
 
   return (

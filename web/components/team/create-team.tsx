@@ -61,19 +61,24 @@ function CreateForm({ className, setOpen }: FormProps) {
   });
 
   async function onSubmit(values: AddTeamFormData) {
-    const data = await createTeam({
-      data: values,
-    });
+    toast.promise(
+      createTeam({
+        data: values,
+      }),
+      {
+        loading: "Creating team...",
+        success: (data) => {
+          if (data.success) {
+            router.push(`/app/teams/${data.data!.$id}`);
+          }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.push(`/app/teams/${data.data!.$id}`);
-      setOpen(false);
-    } else {
-      toast.error(data.message);
-    }
-
-    setOpen(false);
+          return data.message;
+        },
+        error: (err) => {
+          return err.message;
+        },
+      },
+    );
   }
 
   return (

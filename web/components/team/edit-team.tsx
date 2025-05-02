@@ -74,20 +74,20 @@ function EditForm({ className, setOpen, team }: FormProps) {
   });
 
   async function onSubmit(values: EditTeamFormData) {
-    const data = await updateTeam({
-      id: team.$id,
-      data: values,
+    toast.promise(updateTeam({ id: team.$id, data: values }), {
+      loading: "Updating team...",
+      success: (data) => {
+        if (data.success) {
+          router.refresh();
+          setOpen(false);
+        }
+
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
     });
-
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-      setOpen(false);
-    } else {
-      toast.error(data.message);
-    }
-
-    setOpen(false);
   }
 
   return (

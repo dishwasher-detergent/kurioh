@@ -137,22 +137,20 @@ export default function EducationForm({
   };
 
   async function onSubmit(values: EditEducationArrayFormData) {
-    try {
-      const result = await updateTeamEducations({
-        teamId,
-        educations: values.education,
-      });
+    toast.promise(
+      updateTeamEducations({ teamId, educations: values.education }),
+      {
+        loading: "Saving education...",
+        success: (data) => {
+          if (data.success) {
+            router.refresh();
+          }
 
-      if (result.success) {
-        toast.success(result.message);
-        router.refresh();
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      toast.error("Failed to update educations.");
-      console.error(error);
-    }
+          return data.message;
+        },
+        error: "Failed to update education.",
+      },
+    );
   }
 
   return (

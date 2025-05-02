@@ -65,20 +65,26 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
   async function onSubmit(values: EditProjectFormData) {
     setInitialImages(project.images ?? initialImages);
 
-    const updatedProject = await updateProject({
-      id: project.$id,
-      data: values,
-      teamId,
-    });
+    toast.promise(
+      updateProject({
+        id: project.$id,
+        data: values,
+        teamId,
+      }),
+      {
+        loading: "Updating project...",
+        success: (data) => {
+          if (data.success) {
+            router.refresh();
+          }
 
-    if (!updatedProject?.success) {
-      toast.error(updatedProject.message);
-
-      return;
-    }
-
-    toast.success("Project updated successfully.");
-    router.refresh();
+          return data.message;
+        },
+        error: (err) => {
+          return err.message;
+        },
+      },
+    );
   }
 
   async function handleSave(published: boolean) {

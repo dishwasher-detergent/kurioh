@@ -58,7 +58,7 @@ export default function RootLayout({
         >
           <SessionProvider>
             {children}
-            <Toaster />
+            <Toaster position="top-right" richColors closeButton />
             <div id="modal-root" />
           </SessionProvider>
         </ThemeProvider>

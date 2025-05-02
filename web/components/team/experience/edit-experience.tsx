@@ -145,22 +145,23 @@ export default function ExperienceForm({
   };
 
   async function onSubmit(values: EditExperienceArrayFormData) {
-    try {
-      const result = await updateTeamExperiences({
+    toast.promise(
+      updateTeamExperiences({
         teamId,
         experiences: values.experience,
-      });
+      }),
+      {
+        loading: "Updating experiences...",
+        success: (data) => {
+          if (data.success) {
+            router.refresh();
+          }
 
-      if (result.success) {
-        toast.success(result.message);
-        router.refresh();
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      toast.error("Failed to update experiences.");
-      console.error(error);
-    }
+          return data.message;
+        },
+        error: "Failed to update experiences.",
+      },
+    );
   }
 
   return (

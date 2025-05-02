@@ -82,17 +82,20 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
       return;
     }
 
-    const data = await leaveTeam(team.$id);
+    toast.promise(leaveTeam(team.$id), {
+      loading: "Inviting new member...",
+      success: (data) => {
+        if (data.success) {
+          router.refresh();
+          setOpen(false);
+        }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.refresh();
-      setOpen(false);
-    } else {
-      toast.error(data.message);
-    }
-
-    setOpen(false);
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
+    });
   }
 
   return (

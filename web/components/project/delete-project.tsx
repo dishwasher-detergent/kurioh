@@ -84,16 +84,19 @@ function DeleteForm({ className, setOpen, project }: FormProps) {
       return;
     }
 
-    const data = await deleteProject(project.$id);
+    toast.promise(deleteProject(project.$id), {
+      loading: "Deleting project...",
+      success: (data) => {
+        if (data.success) {
+          router.push(`/app/teams/${project.teamId}`);
+        }
 
-    if (data.success) {
-      toast.success(data.message);
-      router.push(`/app/teams/${project.teamId}`);
-    } else {
-      toast.error(data.message);
-    }
-
-    setOpen(false);
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
+    });
   }
 
   return (

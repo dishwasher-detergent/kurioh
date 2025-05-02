@@ -69,16 +69,19 @@ function InviteForm({ className, setOpen, team }: FormProps) {
   });
 
   async function onSubmit(values: InviteTeamFormData) {
-    const data = await inviteMember(team.$id, values.email);
+    toast.promise(inviteMember(team.$id, values.email), {
+      loading: "Inviting new member...",
+      success: (data) => {
+        if (data.success) {
+          setOpen(false);
+        }
 
-    if (data.success) {
-      toast.success(data.message);
-      setOpen(false);
-    } else {
-      toast.error(data.message);
-    }
-
-    setOpen(false);
+        return data.message;
+      },
+      error: (err) => {
+        return err.message;
+      },
+    });
   }
 
   return (

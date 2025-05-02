@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
 
   const { account } = await createAdminClient();
   const session = await account.createSession(userId, secret);
+  await createUserData(userId);
 
   // Set the cookie in the response headers
   const response = NextResponse.redirect(`${request.nextUrl.origin}/app`);
@@ -24,8 +25,6 @@ export async function GET(request: NextRequest) {
     sameSite: "lax",
     secure: true,
   });
-
-  await createUserData(session.userId);
 
   return response;
 }

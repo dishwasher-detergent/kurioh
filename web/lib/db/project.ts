@@ -275,7 +275,7 @@ export async function createProject({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -454,7 +454,7 @@ export async function updateProject({
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -502,7 +502,7 @@ export async function deleteProject(id: string): Promise<Result<void>> {
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {
@@ -550,7 +550,7 @@ export async function deleteAllProjectsByTeam(
     } catch (err) {
       const error = err as Error;
 
-      // This is where you would look to something like Splunk.
+      // Logging to Vercel
       console.error(error);
 
       return {

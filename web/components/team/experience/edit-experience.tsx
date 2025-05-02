@@ -55,7 +55,7 @@ import {
   EXPERIENCE_TITLE_MAX_LENGTH,
 } from "@/constants/experience.constants";
 import { Experience } from "@/interfaces/experience.interface";
-import { updateTeamExperiences } from "@/lib/db";
+import { updateMultipleExperiences } from "@/lib/db";
 import {
   EditExperienceArrayFormData,
   editExperienceArraySchema,
@@ -146,7 +146,7 @@ export default function ExperienceForm({
 
   async function onSubmit(values: EditExperienceArrayFormData) {
     toast.promise(
-      updateTeamExperiences({
+      updateMultipleExperiences({
         teamId,
         experiences: values.experience,
       }),

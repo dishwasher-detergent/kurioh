@@ -1,12 +1,11 @@
-pre-push:
+pre-commit:
   jobs:
     - name: lint
-      tags:
-        - frontend
-      root: "/web"
+      root: "web"
+      glob: "**/*.{js,ts,jsx,tsx}"
       run: pnpm run lint
+
     - name: format
-      tags:
-        - frontend
-      root: "/web"
+      root: "web"
+      glob: "**/*.{js,ts,jsx,tsx,html}"
       run: pnpm run format

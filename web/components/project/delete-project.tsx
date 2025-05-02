@@ -53,17 +53,16 @@ export function DeleteProject({ project }: { project: Project }) {
         </DropdownMenuItem>
       }
     >
-      <DeleteForm setOpen={setOpen} project={project} />
+      <DeleteForm project={project} />
     </DyanmicDrawer>
   );
 }
 
 interface FormProps extends React.ComponentProps<"form"> {
-  setOpen: (e: boolean) => void;
   project: Project;
 }
 
-function DeleteForm({ className, setOpen, project }: FormProps) {
+function DeleteForm({ className, project }: FormProps) {
   const router = useRouter();
 
   const form = useForm<DeleteProjectFormData>({

@@ -23,7 +23,11 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
 
       const projects = await database_service.list<Project>(
         PROJECTS_COLLECTION_ID,
-        [Query.equal('teamId', team_id), Query.orderAsc('ordinal')]
+        [
+          Query.equal('teamId', team_id),
+          Query.orderAsc('ordinal'),
+          Query.equal('published', true),
+        ]
       );
 
       const experience = await database_service.list<Experience>(

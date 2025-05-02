@@ -42,30 +42,41 @@ export const Links = ({ links }: LinksProps) => {
     links &&
     links.length > 0 && (
       <div className="flex flex-row flex-wrap gap-1 rounded-lg">
-        {links.map((website, index) => {
-          if (!isValidUrl(website)) return null;
+        {links
+          .sort((a, b) =>
+            extractWebsiteName(a.toLowerCase()).localeCompare(
+              extractWebsiteName(b.toLowerCase()),
+            ),
+          )
+          .map((website, index) => {
+            if (!isValidUrl(website)) return null;
 
-          const Icon = renderSiteIcon(
-            extractWebsiteName(website.toLowerCase()),
-          );
+            const Icon = renderSiteIcon(
+              extractWebsiteName(website.toLowerCase()),
+            );
 
-          return (
-            <TooltipProvider key={index}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button asChild size="icon" variant="secondary">
-                    <a target="_blank" href={website}>
-                      {<Icon className="h-4 w-4" />}
-                    </a>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent align="center" side="bottom">
-                  <p className="capitalize">{extractWebsiteName(website)}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          );
-        })}
+            return (
+              <TooltipProvider key={index}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      size="icon"
+                      variant="secondary"
+                      className="size-8"
+                    >
+                      <a target="_blank" href={website}>
+                        {<Icon className="size-4" />}
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent align="center" side="bottom">
+                    <p className="capitalize">{extractWebsiteName(website)}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })}
       </div>
     )
   );

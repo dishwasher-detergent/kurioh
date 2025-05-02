@@ -12,7 +12,7 @@ import { Badge } from "../ui/badge";
 
 export function ProjectCard(project: Project) {
   return (
-    <Card className="break-inside-avoid-column rounded-md p-2">
+    <Card className="break-inside-avoid-column gap-4 rounded-md p-2">
       <CardContent className="p-0">
         <div className="relative min-h-10">
           <Badge variant="secondary" className="absolute top-2 left-2">
@@ -30,7 +30,7 @@ export function ProjectCard(project: Project) {
           )}
         </div>
         <div className="space-y-2 p-2">
-          <p className="truncate text-lg font-bold">{project.name}</p>
+          <p className="truncate text-xl font-bold">{project.name}</p>
           {project.tags.length > 0 && <Badges badges={project.tags} />}
           <p className="line-clamp-3 text-sm">
             {project.description ?? "No Description Added."}

@@ -82,16 +82,21 @@ export function TeamSelect() {
                         variant: "ghost",
                         size: "sm",
                       }),
-                      "flex-1 gap-2 overflow-hidden",
+                      "flex-1 justify-between gap-2 overflow-hidden",
                     )}
                   >
-                    {teams.find((x) => x.$id === teamId)?.image && (
-                      <img
-                        className="size-4 rounded-full object-fill"
-                        src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teams.find((x) => x.$id === teamId)?.image}/view?project=${PROJECT_ID}`}
-                      />
-                    )}
-                    <span className="truncate">
+                    {teams.find((x) => x.$id === teamId) &&
+                      (teams.find((x) => x.$id === teamId)?.image ? (
+                        <img
+                          className="size-4 flex-none rounded-full object-fill"
+                          src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teams.find((x) => x.$id === teamId)?.image}/view?project=${PROJECT_ID}`}
+                        />
+                      ) : (
+                        <div className="bg-foreground text-background grid size-6 flex-none place-items-center rounded-full object-fill text-xs">
+                          <p>{teams.find((x) => x.$id == teamId)?.name[0]}</p>
+                        </div>
+                      ))}
+                    <span className="hidden truncate md:inline">
                       {teams.find((x) => x.$id === teamId)?.name}
                     </span>
                   </Link>
@@ -135,6 +140,17 @@ export function TeamSelect() {
                         asChild
                       >
                         <Link href={`/app/teams/${teamItem.$id}`}>
+                          {teamItem?.image ? (
+                            <img
+                              className="size-4 flex-none rounded-full object-fill"
+                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teamItem?.image}/view?project=${PROJECT_ID}`}
+                            />
+                          ) : (
+                            <div className="bg-foreground text-background grid size-4 flex-none place-items-center rounded-full object-fill text-[.6rem]">
+                              <p>{teamItem?.name[0]}</p>
+                            </div>
+                          )}
+                          <span className="truncate">{teamItem.name}</span>
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4 flex-none",
@@ -143,13 +159,6 @@ export function TeamSelect() {
                                 : "opacity-0",
                             )}
                           />
-                          {teamItem?.image && (
-                            <img
-                              className="size-4 rounded-full object-fill"
-                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teamItem?.image}/view?project=${PROJECT_ID}`}
-                            />
-                          )}
-                          <span className="truncate">{teamItem.name}</span>
                         </Link>
                       </CommandItem>
                     ))}

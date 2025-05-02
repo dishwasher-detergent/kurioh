@@ -80,7 +80,7 @@ export function ProjectSelect() {
   return (
     <>
       {projects.length > 0 && (
-        <div className="flex flex-1 flex-col gap-1 md:flex-row">
+        <div className="flex flex-col gap-1 md:flex-row">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -89,22 +89,31 @@ export function ProjectSelect() {
                 variant="ghost"
                 role="combobox"
                 aria-expanded={open}
-                className="text-muted-foreground max-w-32 gap-2 md:max-w-48"
+                className="text-muted-foreground max-w-48 justify-between gap-2"
                 disabled={loading}
               >
-                {projects.find((x) => x.$id == projectId)?.images[0] && (
-                  <img
-                    className="size-4 rounded-full object-fill"
-                    src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projects.find((x) => x.$id == projectId)?.images[0]}/view?project=${PROJECT_ID}`}
-                  />
-                )}
-                <span className="truncate">
-                  {projects.find((x) => x.$id == projectId)?.name ??
-                    "Select Project..."}
+                <span className="inline-flex items-center gap-2 overflow-hidden">
+                  {projects.find((x) => x.$id == projectId) &&
+                    (projects.find((x) => x.$id == projectId)?.images[0] ? (
+                      <img
+                        className="size-6 flex-none rounded-full object-fill"
+                        src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projects.find((x) => x.$id == projectId)?.images[0]}/view?project=${PROJECT_ID}`}
+                      />
+                    ) : (
+                      <div className="bg-foreground text-background grid size-6 flex-none place-items-center rounded-full object-fill text-xs">
+                        <p>
+                          {projects.find((x) => x.$id == projectId)?.name[0]}
+                        </p>
+                      </div>
+                    ))}
+                  <span className="truncate">
+                    {projects.find((x) => x.$id == projectId)?.name ??
+                      "Select Project"}
+                  </span>
+                  {loading && (
+                    <LucideLoader2 className="ml-2 size-4 animate-spin" />
+                  )}
                 </span>
-                {loading && (
-                  <LucideLoader2 className="ml-2 size-4 animate-spin" />
-                )}
                 <ChevronsUpDown className="ml-2 size-4 flex-none" />
               </Button>
             </PopoverTrigger>
@@ -130,6 +139,17 @@ export function ProjectSelect() {
                         <Link
                           href={`/app/teams/${teamId}/projects/${projectItem.$id}`}
                         >
+                          {projectItem?.images[0] ? (
+                            <img
+                              className="size-4 flex-none rounded-full object-fill"
+                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projectItem?.images[0]}/view?project=${PROJECT_ID}`}
+                            />
+                          ) : (
+                            <div className="bg-foreground text-background grid size-4 flex-none place-items-center rounded-full object-fill text-[.6rem]">
+                              <p>{projectItem?.name[0]}</p>
+                            </div>
+                          )}
+                          <span className="truncate">{projectItem.name}</span>
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4 flex-none",
@@ -138,13 +158,6 @@ export function ProjectSelect() {
                                 : "opacity-0",
                             )}
                           />
-                          {projectItem?.images[0] && (
-                            <img
-                              className="size-4 rounded-full object-fill"
-                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projectItem?.images[0]}/view?project=${PROJECT_ID}`}
-                            />
-                          )}
-                          <span className="truncate">{projectItem.name}</span>
                         </Link>
                       </CommandItem>
                     ))}

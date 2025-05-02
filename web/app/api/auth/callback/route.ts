@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { createUserData } from "@/lib/auth";
-import { COOKIE_KEY } from "@/lib/constants";
+import { UserData } from "@/interfaces/user.interface";
+import { COOKIE_KEY, DATABASE_ID, USER_COLLECTION_ID } from "@/lib/constants";
 import { createAdminClient } from "@/lib/server/appwrite";
+import { Permission, Role } from "node-appwrite";
 
 export async function GET(request: NextRequest) {
   const userId = request.nextUrl.searchParams.get("userId");
@@ -12,9 +13,31 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect("/signin");
   }
 
-  const { account } = await createAdminClient();
+  const { account, database } = await createAdminClient();
   const session = await account.createSession(userId, secret);
-  await createUserData(userId);
+  const user = await account.get();
+
+  try {
+    await database.getDocument<UserData>(
+      DATABASE_ID,
+      USER_COLLECTION_ID,
+      user.$id,
+    );
+  } catch {
+    await database.createDocument<UserData>(
+      DATABASE_ID,
+      USER_COLLECTION_ID,
+      userId,
+      {
+        name: user.name,
+      },
+      [
+        Permission.read(Role.user(user.$id)),
+        Permission.write(Role.user(user.$id)),
+        Permission.read(Role.users()),
+      ],
+    );
+  }
 
   // Set the cookie in the response headers
   const response = NextResponse.redirect(`${request.nextUrl.origin}/app`);

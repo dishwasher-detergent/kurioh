@@ -147,6 +147,7 @@ export async function updateProfile({
 
       await account.updateName(data.name);
       await database.updateDocument(DATABASE_ID, USER_COLLECTION_ID, id, {
+        name: data.name,
         about: data.about,
       });
 

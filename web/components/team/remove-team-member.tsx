@@ -41,6 +41,8 @@ export function RemoveTeamMember({ userId, teamId }: RemoveTeamMemberProps) {
         if (data.success) {
           router.refresh();
           setOpen(false);
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

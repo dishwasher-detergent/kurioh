@@ -88,6 +88,8 @@ function DeleteForm({ className, project }: FormProps) {
       success: (data) => {
         if (data.success) {
           router.push(`/app/teams/${project.teamId}`);
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

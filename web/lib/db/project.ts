@@ -10,6 +10,8 @@ import { UserData } from "@/interfaces/user.interface";
 import { withAuth } from "@/lib/auth";
 import {
   DATABASE_ID,
+  MAX_PROJECT_IMAGE_LIMIT,
+  MAX_PROJECT_LIMIT,
   PROJECT_COLLECTION_ID,
   TEAM_COLLECTION_ID,
   USER_COLLECTION_ID,
@@ -223,6 +225,19 @@ export async function createProject({
     ];
 
     try {
+      const projectCount = await database.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECT_COLLECTION_ID,
+        [Query.equal("teamId", data.teamId)],
+      );
+
+      if (projectCount.total > MAX_PROJECT_LIMIT) {
+        return {
+          success: false,
+          message: `You have reached the maximum number of projects (${MAX_PROJECT_LIMIT}) for this team.`,
+        };
+      }
+
       const existingProject = await database.listDocuments<Project>(
         DATABASE_ID,
         PROJECT_COLLECTION_ID,
@@ -314,6 +329,13 @@ export async function updateProject({
         PROJECT_COLLECTION_ID,
         id,
       );
+
+      if (data.images && data.images.length > MAX_PROJECT_IMAGE_LIMIT) {
+        return {
+          success: false,
+          message: `You have reached the maximum number of images (${MAX_PROJECT_IMAGE_LIMIT}) for this project.`,
+        };
+      }
 
       // Handle ordinal changes and reordering
       if (existingProject.ordinal !== data.ordinal) {

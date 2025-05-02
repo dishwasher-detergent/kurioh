@@ -74,6 +74,8 @@ function InviteForm({ className, setOpen, team }: FormProps) {
       success: (data) => {
         if (data.success) {
           setOpen(false);
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

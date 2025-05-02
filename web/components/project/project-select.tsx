@@ -41,7 +41,11 @@ export function ProjectSelect() {
   async function fetchProjects() {
     setLoading(true);
 
-    const data = await listProjectsByTeam(teamId, [Query.orderAsc("ordinal")]);
+    const data = await listProjectsByTeam(teamId, [
+      Query.orderAsc("ordinal"),
+      Query.limit(100),
+      Query.select(["$id", "name", "images", "userId", "teamId"]),
+    ]);
 
     if (!data.success) {
       toast.error(data.message);

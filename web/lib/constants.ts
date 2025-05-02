@@ -31,3 +31,7 @@ export const COOKIE_KEY = `a_session_${PROJECT_ID}`;
 // Additional
 export const MAX_TEAM_LIMIT =
   Number(process.env.NEXT_PUBLIC_MAX_TEAM_LIMIT) || 5;
+export const MAX_PROJECT_LIMIT =
+  Number(process.env.NEXT_PUBLIC_MAX_PROJECT_LIMIT) || 25;
+export const MAX_PROJECT_IMAGE_LIMIT =
+  Number(process.env.NEXT_PUBLIC_MAX_PROJECT_IMAGE_LIMIT) || 3;

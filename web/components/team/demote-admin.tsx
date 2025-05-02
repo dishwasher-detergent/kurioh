@@ -40,6 +40,8 @@ export function DemoteMemberAdmin({ userId, teamId }: DemoteMemberAdminProps) {
       success: (data) => {
         if (data.success) {
           router.refresh();
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

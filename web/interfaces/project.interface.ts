@@ -12,6 +12,7 @@ export interface Project extends Models.Document {
   tags: string[];
   links: string[];
   published: boolean;
+  ordinal: number;
 
   userId: string;
   user?: UserData;

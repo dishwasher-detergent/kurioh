@@ -88,6 +88,8 @@ function LeaveForm({ className, setOpen, team }: FormProps) {
         if (data.success) {
           router.refresh();
           setOpen(false);
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

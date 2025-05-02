@@ -90,6 +90,8 @@ function DeleteForm({ className, team }: FormProps) {
         if (data.success) {
           await setLastVisitedTeam("");
           router.push("/app");
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

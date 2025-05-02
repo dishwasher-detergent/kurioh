@@ -77,6 +77,8 @@ function CreateForm({ className, teamId }: FormProps) {
       success: (data) => {
         if (data.success) {
           router.push(`/app/teams/${teamId}/projects/${data.data?.$id}`);
+        } else {
+          throw new Error(data.message);
         }
 
         return data.message;

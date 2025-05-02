@@ -144,11 +144,15 @@ export default function EducationForm({
         success: (data) => {
           if (data.success) {
             router.refresh();
+          } else {
+            throw new Error(data.message);
           }
 
           return data.message;
         },
-        error: "Failed to update education.",
+        error: (err) => {
+          return err.message;
+        },
       },
     );
   }

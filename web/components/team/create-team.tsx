@@ -66,6 +66,8 @@ function CreateForm({ className }: React.ComponentProps<"form">) {
         success: (data) => {
           if (data.success) {
             router.push(`/app/teams/${data.data!.$id}`);
+          } else {
+            throw new Error(data.message);
           }
 
           return data.message;

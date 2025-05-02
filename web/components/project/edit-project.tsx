@@ -76,6 +76,8 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
         success: (data) => {
           if (data.success) {
             router.refresh();
+          } else {
+            throw new Error(data.message);
           }
 
           return data.message;

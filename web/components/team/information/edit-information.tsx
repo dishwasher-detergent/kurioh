@@ -73,6 +73,8 @@ export default function InformationForm({
         success: (data) => {
           if (data.success) {
             router.refresh();
+          } else {
+            throw new Error(data.message);
           }
 
           return data.message;

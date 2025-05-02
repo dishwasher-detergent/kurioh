@@ -40,16 +40,12 @@ export function CreateTeam({ className }: { className?: string }) {
         </Button>
       }
     >
-      <CreateForm setOpen={setOpen} />
+      <CreateForm />
     </DyanmicDrawer>
   );
 }
 
-interface FormProps extends React.ComponentProps<"form"> {
-  setOpen: (e: boolean) => void;
-}
-
-function CreateForm({ className, setOpen }: FormProps) {
+function CreateForm({ className }: React.ComponentProps<"form">) {
   const router = useRouter();
 
   const form = useForm<AddTeamFormData>({

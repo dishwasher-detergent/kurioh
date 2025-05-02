@@ -54,17 +54,16 @@ export function DeleteTeam({ team }: { team: TeamData }) {
         </DropdownMenuItem>
       }
     >
-      <DeleteForm setOpen={setOpen} team={team} />
+      <DeleteForm team={team} />
     </DyanmicDrawer>
   );
 }
 
 interface FormProps extends React.ComponentProps<"form"> {
-  setOpen: (e: boolean) => void;
   team: TeamData;
 }
 
-function DeleteForm({ className, setOpen, team }: FormProps) {
+function DeleteForm({ className, team }: FormProps) {
   const router = useRouter();
 
   const form = useForm<DeleteTeamFormData>({

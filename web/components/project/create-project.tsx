@@ -49,17 +49,16 @@ export function AddProject({ teamId, className }: AddProjectProps) {
         </Button>
       }
     >
-      <CreateForm setOpen={setOpen} teamId={teamId} />
+      <CreateForm teamId={teamId} />
     </DyanmicDrawer>
   );
 }
 
 interface FormProps extends React.ComponentProps<"form"> {
-  setOpen: (e: boolean) => void;
   teamId: string;
 }
 
-function CreateForm({ className, setOpen, teamId }: FormProps) {
+function CreateForm({ className, teamId }: FormProps) {
   const router = useRouter();
 
   const form = useForm<AddProjectFormData>({

@@ -56,7 +56,7 @@ export function CopyToClipboard({
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{copied ? "Copied!" : "Copy response"}</p>
+          <p>{copied ? "Copied!" : "Copy"}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

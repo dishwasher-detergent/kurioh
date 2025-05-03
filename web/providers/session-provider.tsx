@@ -1,8 +1,9 @@
 "use client";
 
-import { getLoggedInUser } from "@/lib/client/appwrite";
 import { Client, Models } from "appwrite";
 import { createContext, ReactNode, useEffect, useState } from "react";
+
+import { getLoggedInUser } from "@/lib/browser/appwrite";
 
 interface SessionContextType {
   client: Client | null;

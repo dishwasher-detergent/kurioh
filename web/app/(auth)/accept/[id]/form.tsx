@@ -1,13 +1,13 @@
 "use client";
 
+import { LucideLoader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/userSession";
-import { createClient } from "@/lib/client/appwrite";
-import { LucideLoader2 } from "lucide-react";
-import { toast } from "sonner";
+import { createClient } from "@/lib/browser/appwrite";
 
 interface AcceptFormProps {
   teamId: string;

@@ -1,10 +1,10 @@
 "use client";
 
-import { createClient } from "@/lib/client/appwrite";
 import { Client } from "appwrite";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect, useState } from "react";
 
+import { createClient } from "@/lib/browser/appwrite";
 import { SessionContext } from "@/providers/session-provider";
 
 export const useSession = () => {

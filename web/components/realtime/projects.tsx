@@ -46,8 +46,8 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
 
     debounceTimerRef.current = setTimeout(() => {
       setSearchTerm(inputValue);
-      setCurrentCursor(undefined); // Reset cursor when search term changes
-    }, 500);
+      setCurrentCursor(undefined);
+    }, 300);
 
     return () => {
       if (debounceTimerRef.current) {
@@ -68,13 +68,17 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
 
   return (
     <div className="space-y-4">
-      <div className="relative md:w-1/3">
-        <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+      <div className="relative">
+        {loading ? (
+          <LucideLoader2 className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2 animate-spin" />
+        ) : (
+          <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+        )}
         <Input
-          placeholder="Search projects by name..."
+          placeholder="Search Projects By Name"
           value={inputValue}
           onChange={handleSearchChange}
-          className="pl-10"
+          className="max-w-80 pl-10"
           disabled={loading}
         />
       </div>

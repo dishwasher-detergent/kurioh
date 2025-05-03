@@ -29,10 +29,17 @@ export const useProjects = ({
   cursor,
 }: Props) => {
   const [projects, setProjects] = useState<Project[]>(initialProjects ?? []);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(
+    initialProjects ? false : true,
+  );
   const [hasMore, setHasMore] = useState<boolean>(false);
-  const [totalProjects, setTotalProjects] = useState<number>(0);
+  const [totalProjects, setTotalProjects] = useState<number>(
+    initialProjects?.length ?? 0,
+  );
   const [nextCursor, setNextCursor] = useState<string | undefined>(undefined);
+  const [initialLoad, setInitialLoad] = useState<boolean>(
+    !!initialProjects && !cursor && !searchTerm,
+  );
 
   const { client, loading: sessionLoading } = useSession();
 
@@ -41,6 +48,15 @@ export const useProjects = ({
   }, [sessionLoading]);
 
   useEffect(() => {
+    if (initialLoad) {
+      if (initialProjects && initialProjects.length > 0) {
+        const lastDocument = initialProjects[initialProjects.length - 1];
+        setNextCursor(lastDocument?.$id);
+        setHasMore(initialProjects.length === limit);
+      }
+      return;
+    }
+
     const fetchProjects = async () => {
       if (!teamId) return;
 
@@ -79,12 +95,16 @@ export const useProjects = ({
           setHasMore(result.data.documents.length === limit);
         } else {
           toast.error(result.message);
-          setProjects([]);
+          if (!cursor) {
+            setProjects([]);
+          }
           setHasMore(false);
           setNextCursor(undefined);
         }
       } catch (error) {
-        setProjects([]);
+        if (!cursor) {
+          setProjects([]);
+        }
         setHasMore(false);
         setNextCursor(undefined);
       } finally {
@@ -93,7 +113,13 @@ export const useProjects = ({
     };
 
     fetchProjects();
-  }, [teamId, userId, searchTerm, limit, cursor]);
+  }, [teamId, userId, searchTerm, limit, cursor, initialLoad]);
+
+  useEffect(() => {
+    if (searchTerm || cursor) {
+      setInitialLoad(false);
+    }
+  }, [searchTerm, cursor]);
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;

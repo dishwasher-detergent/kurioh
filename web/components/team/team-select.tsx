@@ -88,7 +88,7 @@ export function TeamSelect() {
                     {teams.find((x) => x.$id === teamId) &&
                       (teams.find((x) => x.$id === teamId)?.image ? (
                         <img
-                          className="size-4 flex-none rounded-full object-fill"
+                          className="size-6 flex-none rounded-full object-fill"
                           src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teams.find((x) => x.$id === teamId)?.image}/view?project=${PROJECT_ID}`}
                         />
                       ) : (

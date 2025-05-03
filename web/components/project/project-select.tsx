@@ -17,16 +17,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
 import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { listProjectsByTeam } from "@/lib/db";
 import { cn } from "@/lib/utils";
+import { DyanmicPopover } from "../ui/dynamic-popover";
 
 export function ProjectSelect() {
   const { teamId, projectId } = useParams<{
@@ -85,8 +81,11 @@ export function ProjectSelect() {
     <>
       {projects.length > 0 && (
         <div className="flex flex-col gap-1 md:flex-row">
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+          <DyanmicPopover
+            title="Select Project"
+            open={open}
+            setOpen={setOpen}
+            button={
               <Button
                 onClick={() => setOpen(!open)}
                 size="sm"
@@ -120,59 +119,58 @@ export function ProjectSelect() {
                 </span>
                 <ChevronsUpDown className="ml-2 size-4 flex-none" />
               </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0" align="start">
-              <Command>
-                <CommandInput
-                  className="h-8 text-sm"
-                  placeholder="Search project..."
-                />
-                <CommandList>
-                  <CommandEmpty>No project found.</CommandEmpty>
-                  <CommandGroup>
-                    {projects.map((projectItem) => (
-                      <CommandItem
-                        key={projectItem.$id}
-                        value={`${projectItem.name}-${projectItem.$id}`}
-                        onSelect={() => {
-                          setOpen(false);
-                        }}
-                        className="cursor-pointer text-sm"
-                        asChild
+            }
+          >
+            <Command className="bg-background">
+              <CommandInput
+                className="bg-background h-8"
+                placeholder="Search projects..."
+              />
+              <CommandList>
+                <CommandEmpty>No projects found.</CommandEmpty>
+                <CommandGroup>
+                  {projects.map((projectItem) => (
+                    <CommandItem
+                      key={projectItem.$id}
+                      value={`${projectItem.name}-${projectItem.$id}`}
+                      onSelect={() => {
+                        setOpen(false);
+                      }}
+                      className="cursor-pointer text-sm"
+                      asChild
+                    >
+                      <Link
+                        href={`/app/teams/${teamId}/projects/${projectItem.$id}`}
                       >
-                        <Link
-                          href={`/app/teams/${teamId}/projects/${projectItem.$id}`}
-                        >
-                          {projectItem?.images[0] ? (
-                            <img
-                              className="size-4 flex-none rounded-full object-fill"
-                              src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projectItem?.images[0]}/view?project=${PROJECT_ID}`}
-                            />
-                          ) : (
-                            <div className="bg-foreground text-background grid size-4 flex-none place-items-center rounded-full object-fill text-[.6rem]">
-                              <p>{projectItem?.name[0]}</p>
-                            </div>
-                          )}
-                          <span className="truncate">{projectItem.name}</span>
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4 flex-none",
-                              projectId == projectItem?.$id
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
+                        {projectItem?.images[0] ? (
+                          <img
+                            className="size-4 flex-none rounded-full object-fill"
+                            src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projectItem?.images[0]}/view?project=${PROJECT_ID}`}
                           />
-                        </Link>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-              <div className="flex border-t p-1 md:justify-start">
-                <AddProject teamId={teamId} className="w-full" />
-              </div>
-            </PopoverContent>
-          </Popover>
+                        ) : (
+                          <div className="bg-foreground text-background grid size-4 flex-none place-items-center rounded-full object-fill text-[.6rem]">
+                            <p>{projectItem?.name[0]}</p>
+                          </div>
+                        )}
+                        <span className="truncate">{projectItem.name}</span>
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4 flex-none",
+                            projectId == projectItem?.$id
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                      </Link>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+            <div className="flex border-t p-1 md:justify-start">
+              <AddProject teamId={teamId} className="w-full" />
+            </div>
+          </DyanmicPopover>
         </div>
       )}
     </>

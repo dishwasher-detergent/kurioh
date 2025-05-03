@@ -14,11 +14,13 @@ import {
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export function DyanmicPopover({
+  title,
   button,
   children,
   setOpen,
   open,
 }: {
+  title: string;
   button: string | React.ReactNode;
   children: React.ReactNode;
   setOpen: (e: boolean) => void;
@@ -30,7 +32,7 @@ export function DyanmicPopover({
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{button}</PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-[300px] max-w-full p-0" align="start">
           {children}
         </PopoverContent>
       </Popover>
@@ -41,7 +43,7 @@ export function DyanmicPopover({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{button}</DrawerTrigger>
       <DrawerContent className="max-h-[80dvh]">
-        <DrawerTitle className="sr-only">Team Select</DrawerTitle>
+        <DrawerTitle className="sr-only">{title}</DrawerTitle>
         <div className="mt-4">{children}</div>
       </DrawerContent>
     </Drawer>

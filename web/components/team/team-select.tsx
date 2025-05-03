@@ -53,7 +53,7 @@ export function TeamSelect() {
 
   useEffect(() => {
     fetchTeams();
-  }, [teamId]);
+  }, []);
 
   if (loading) {
     return <Skeleton className="h-6 w-32" />;
@@ -132,7 +132,7 @@ export function TeamSelect() {
                     {teams.map((teamItem) => (
                       <CommandItem
                         key={teamItem.$id}
-                        value={teamItem.name}
+                        value={`${teamItem.name}-${teamItem.$id}`}
                         onSelect={() => {
                           setOpen(false);
                         }}

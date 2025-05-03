@@ -62,7 +62,7 @@ export function ProjectSelect() {
     if (teamId) {
       fetchProjects();
     }
-  }, [teamId, projectId]);
+  }, [teamId]);
 
   if (loading) {
     return <Skeleton className="h-6 w-32" />;
@@ -133,7 +133,7 @@ export function ProjectSelect() {
                     {projects.map((projectItem) => (
                       <CommandItem
                         key={projectItem.$id}
-                        value={projectItem.name}
+                        value={`${projectItem.name}-${projectItem.$id}`}
                         onSelect={() => {
                           setOpen(false);
                         }}

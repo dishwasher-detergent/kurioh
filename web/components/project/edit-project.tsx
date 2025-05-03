@@ -5,7 +5,7 @@ import {
   LucideLoader2,
   LucidePartyPopper,
   LucideSave,
-  LucideUndo,
+  LucideUndo2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -274,11 +274,11 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
               disabled={form.formState.isSubmitting || !form.formState.isValid}
               onClick={() => handleSave(false)}
             >
-              Un-Publish
+              Unpublish
               {form.formState.isSubmitting ? (
                 <LucideLoader2 className="size-3.5 animate-spin" />
               ) : (
-                <LucideUndo className="size-3.5" />
+                <LucideUndo2 className="size-3.5" />
               )}
             </Button>
           </div>

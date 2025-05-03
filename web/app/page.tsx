@@ -78,6 +78,18 @@ export default function Home() {
             <Link href="#pricing">Pricing</Link>
           </Button>
           <Button
+            variant="secondary"
+            className="text-border-background rounded-none font-mono"
+            asChild
+          >
+            <a
+              href="https://github.com/dishwasher-detergent/kurioh"
+              target="_blank"
+            >
+              Github
+            </a>
+          </Button>
+          <Button
             className="text-background bg-foreground hover:bg-foreground/80 hover:text-background ml-4 rounded-none transition-all"
             asChild
           >
@@ -166,7 +178,7 @@ export default function Home() {
         </div>
       </section>
       <section id="api" className="bg-secondary text-secondary-foreground">
-        <div className="flex flex-col p-6 lg:p-12">
+        <div className="p-6 pb-0 lg:p-12 lg:pb-0">
           <h2 className="mb-4 text-3xl font-bold lg:text-5xl">
             API that just works
           </h2>
@@ -183,6 +195,8 @@ export default function Home() {
               projects, experience, and more.
             </p>
           </div>
+        </div>
+        <div className="p-0 lg:p-12 lg:pt-0">
           <SyntaxHighlighter
             language="jsx"
             style={oneDark}
@@ -215,17 +229,29 @@ export default function Home() {
           <Link href="/signup">Start free now</Link>
         </Button>
       </section>
-      <footer className="bg-background text-foreground p-6 lg:p-12">
-        <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
+      <footer className="">
+        <div className="bg-background text-foreground flex flex-col items-start justify-between p-6 lg:flex-row lg:items-center lg:p-12">
           <div>
             <h3 className="mb-2 text-2xl font-bold">KURIOH.</h3>
-            <p className="font-mono text-sm">A headless CMS for portfolios.</p>
+            <p className="mb-2 font-mono text-sm">
+              A headless CMS for portfolios.
+            </p>
           </div>
           <div className="mt-6 lg:mt-0">
             <p className="font-mono text-sm">
               © {new Date().getFullYear()} Kurioh. All rights reserved.
             </p>
           </div>
+        </div>
+        <div className="bg-card flex items-center justify-center py-2">
+          <Button variant="link" className="text-foreground font-mono" asChild>
+            <a
+              href="https://github.com/dishwasher-detergent/kurioh"
+              target="_blank"
+            >
+              Github
+            </a>
+          </Button>
         </div>
       </footer>
     </div>

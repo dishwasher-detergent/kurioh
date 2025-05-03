@@ -8,13 +8,13 @@
   --background: hsl(0, 0%, 98%);
   --foreground: hsl(340, 5%, 15%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(340, 5%, 15%);
+  --card-foreground: hsl(340, 3%, 15%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(340, 5%, 15%);
+  --popover-foreground: hsl(340, 3%, 15%);
   --primary: hsl(340, 3%, 13%);
   --primary-foreground: hsl(0, 0%, 95%);
   --secondary: hsl(340, 10%, 93%);
-  --secondary-foreground: hsl(340, 5%, 20%);
+  --secondary-foreground: hsl(340, 3%, 20%);
   --muted: hsl(340, 5%, 92%);
   --muted-foreground: hsl(340, 5%, 40%);
   --accent: hsl(340, 15%, 90%);
@@ -37,9 +37,9 @@
 .dark {
   --background: hsl(340, 3%, 13%);
   --foreground: hsl(0, 0%, 95%);
-  --card: hsl(340, 5%, 15%);
+  --card: hsl(340, 3%, 15%);
   --card-foreground: hsl(0, 0%, 95%);
-  --popover: hsl(340, 5%, 15%);
+  --popover: hsl(340, 3%, 15%);
   --popover-foreground: hsl(0, 0%, 95%);
   --primary: hsl(0, 0%, 95%);
   --primary-foreground: hsl(340, 3%, 13%);

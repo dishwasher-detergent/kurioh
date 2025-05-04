@@ -199,7 +199,6 @@ export default function InformationForm({
         />
         <Button
           type="submit"
-          size="sm"
           disabled={
             form.formState.isSubmitting ||
             !form.formState.isValid ||

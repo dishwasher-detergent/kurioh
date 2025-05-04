@@ -34,7 +34,7 @@ export function CreateTeam({ className }: { className?: string }) {
       open={open}
       setOpen={setOpen}
       button={
-        <Button size="sm" className={className}>
+        <Button className={className}>
           Create Team
           <LucidePlus className="ml-2 size-3.5" />
         </Button>

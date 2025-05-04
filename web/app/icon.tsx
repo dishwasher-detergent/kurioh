@@ -7,7 +7,7 @@ export const size = {
 export const contentType = "image/png";
 
 async function loadGoogleFont(font: string, text: string) {
-  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
+  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}:wght@700`;
   const css = await (await fetch(url)).text();
   const resource = css.match(
     /src: url\((.+)\) format\('(opentype|truetype)'\)/,
@@ -50,6 +50,7 @@ export default async function Icon() {
           name: "Rubik",
           data: await loadGoogleFont("Rubik", "K"),
           style: "normal",
+          weight: 700,
         },
       ],
     },

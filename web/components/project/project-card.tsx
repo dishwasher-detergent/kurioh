@@ -12,7 +12,7 @@ import { Badge } from "../ui/badge";
 
 export function ProjectCard(project: Project) {
   return (
-    <Card className="break-inside-avoid-column gap-4 rounded-md p-2">
+    <Card className="break-inside-avoid-column gap-4 p-2">
       <CardContent className="p-0">
         <div className="relative min-h-10">
           <Badge variant="secondary" className="absolute top-2 left-2">

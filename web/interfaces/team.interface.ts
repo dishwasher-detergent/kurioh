@@ -8,6 +8,7 @@ export interface TeamData extends Models.Document {
   title: string;
   description: string;
   image: string;
+  favicon: string;
   socials: string[];
   skills: string[];
 

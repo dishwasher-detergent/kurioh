@@ -282,6 +282,7 @@ export async function createTeam({
           title: "Welcome to your team!",
           description: "This is your team's information page.",
           image: null,
+          favicon: null,
           socials: [],
           userId: user.$id,
         },

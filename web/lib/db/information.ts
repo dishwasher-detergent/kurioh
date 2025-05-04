@@ -136,6 +136,34 @@ export async function updateInformation({
         data.image = null;
       }
 
+      if (data.favicon instanceof File) {
+        if (existingInformation.image) {
+          await deleteFile(existingInformation.image);
+        }
+
+        const image = await uploadFile({
+          data: data.favicon,
+          permissions: [
+            Permission.read(Role.team(teamId)),
+            Permission.write(Role.team(teamId)),
+          ],
+        });
+
+        if (!image.success) {
+          throw new Error(image.message);
+        }
+
+        data.favicon = image.data?.$id;
+      } else if (data.favicon === null && existingInformation.image) {
+        const image = await deleteFile(existingInformation.image);
+
+        if (!image.success) {
+          throw new Error(image.message);
+        }
+
+        data.favicon = null;
+      }
+
       const information = await database.updateDocument<TeamData>(
         DATABASE_ID,
         TEAM_COLLECTION_ID,

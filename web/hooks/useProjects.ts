@@ -10,9 +10,10 @@ import { getUserById } from "@/lib/auth";
 import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { listProjectsByTeam } from "@/lib/db/project";
 import { getTeamById } from "@/lib/team";
+import { Models } from "node-appwrite";
 
 interface Props {
-  initialProjects?: Project[];
+  initialProjects?: Models.DocumentList<Project>;
   teamId?: string;
   userId?: string;
   searchTerm?: string;
@@ -28,13 +29,15 @@ export const useProjects = ({
   limit = 5,
   cursor,
 }: Props) => {
-  const [projects, setProjects] = useState<Project[]>(initialProjects ?? []);
+  const [projects, setProjects] = useState<Project[]>(
+    initialProjects?.documents ?? [],
+  );
   const [loading, setLoading] = useState<boolean>(
     initialProjects ? false : true,
   );
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [totalProjects, setTotalProjects] = useState<number>(
-    initialProjects?.length ?? 0,
+    initialProjects?.total ?? 0,
   );
   const [nextCursor, setNextCursor] = useState<string | undefined>(undefined);
   const [initialLoad, setInitialLoad] = useState<boolean>(
@@ -49,10 +52,11 @@ export const useProjects = ({
 
   useEffect(() => {
     if (initialLoad) {
-      if (initialProjects && initialProjects.length > 0) {
-        const lastDocument = initialProjects[initialProjects.length - 1];
+      if (initialProjects && initialProjects.documents.length > 0) {
+        const lastDocument =
+          initialProjects.documents[initialProjects.documents.length - 1];
         setNextCursor(lastDocument?.$id);
-        setHasMore(initialProjects.length === limit);
+        setHasMore(initialProjects.documents.length === limit);
       }
       return;
     }

@@ -72,10 +72,7 @@ export default async function TeamPage({
           <TeamActions team={data} isAdmin={isAdmin} isOwner={isOwner} />
         </div>
       </PageHeader>
-      <Projects
-        initialProjects={projectData?.documents ?? []}
-        teamId={teamId}
-      />
+      <Projects initialProjects={projectData} teamId={teamId} />
     </>
   );
 }

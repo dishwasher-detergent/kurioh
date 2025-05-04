@@ -15,9 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProjects } from "@/hooks/useProjects";
 import { Project } from "@/interfaces/project.interface";
+import { Models } from "node-appwrite";
 
 interface ProjectsProps {
-  initialProjects?: Project[];
+  initialProjects?: Models.DocumentList<Project>;
   teamId?: string;
   userId?: string;
 }

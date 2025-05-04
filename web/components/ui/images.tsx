@@ -35,7 +35,7 @@ export function Images({ images }: ImagesProps) {
           return (
             <div
               key={image}
-              className="aspect-square h-full w-full overflow-hidden rounded-lg"
+              className="aspect-video h-full w-full overflow-hidden rounded-lg"
             >
               <img
                 className="h-full w-full object-cover"

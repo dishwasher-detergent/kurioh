@@ -6,6 +6,7 @@ import {
   LucideLoader2,
   Search,
 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { MultiCardSkeleton } from "@/components/loading/multi-card-skeleton";
@@ -22,8 +23,12 @@ interface ProjectsProps {
 }
 
 export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialSearchTerm = searchParams.get("search") || "";
+  const [inputValue, setInputValue] = useState<string>(initialSearchTerm);
+  const [searchTerm, setSearchTerm] = useState<string>(initialSearchTerm);
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(
     undefined,
   );
@@ -47,6 +52,15 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
     debounceTimerRef.current = setTimeout(() => {
       setSearchTerm(inputValue);
       setCurrentCursor(undefined);
+
+      const params = new URLSearchParams(searchParams.toString());
+      if (inputValue) {
+        params.set("search", inputValue);
+      } else {
+        params.delete("search");
+      }
+
+      router.replace(`${window.location.pathname}?${params.toString()}`);
     }, 300);
 
     return () => {
@@ -54,7 +68,7 @@ export function Projects({ initialProjects, teamId, userId }: ProjectsProps) {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [inputValue]);
+  }, [inputValue, router, searchParams]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

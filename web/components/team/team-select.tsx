@@ -122,7 +122,7 @@ export function TeamSelect() {
           >
             <Command className="bg-background">
               <CommandInput
-                className="bg-background h-8"
+                className="bg-background h-8 text-base md:text-sm"
                 placeholder="Search teams..."
               />
               <CommandList>

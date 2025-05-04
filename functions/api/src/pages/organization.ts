@@ -77,6 +77,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         description: team.description,
         socials: team.socials,
         image: team.image,
+        favicon: team.favicon,
         projects: formattedProject,
         experience: formattedExperience,
         education: formattedEducation,

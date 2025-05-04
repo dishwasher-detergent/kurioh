@@ -29,6 +29,7 @@ export interface Team extends Models.Document {
   description: string;
   socials: Social[];
   image: string;
+  favicon: string;
   userId: string;
 }
 

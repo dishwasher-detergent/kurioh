@@ -93,7 +93,6 @@ export function Request({
           <div className="space-y-2">
             {children}
             <Button
-              size="sm"
               variant="secondary"
               onClick={handleRequest}
               disabled={loading}

@@ -53,6 +53,7 @@ export default async function TeamPage({
 
   const { data: projectData } = await listProjectsByTeam(teamId, [
     Query.orderAsc("ordinal"),
+    Query.limit(5),
   ]);
 
   const { data: roles } = await getCurrentUserRoles(teamId);

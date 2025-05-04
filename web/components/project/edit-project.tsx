@@ -253,7 +253,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
         {project.published && (
           <div className="flex items-center gap-2">
             <Button
-              size="sm"
               disabled={
                 form.formState.isSubmitting ||
                 !form.formState.isValid ||
@@ -269,7 +268,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
               )}
             </Button>
             <Button
-              size="sm"
               variant="ghost"
               disabled={form.formState.isSubmitting || !form.formState.isValid}
               onClick={() => handleSave(false)}
@@ -286,7 +284,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
         {!project.published && (
           <div className="flex items-center gap-2">
             <Button
-              size="sm"
               disabled={form.formState.isSubmitting || !form.formState.isValid}
               onClick={() => handleSave(true)}
             >
@@ -298,7 +295,6 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
               )}
             </Button>
             <Button
-              size="sm"
               variant="ghost"
               disabled={
                 form.formState.isSubmitting ||

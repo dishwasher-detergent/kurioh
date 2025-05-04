@@ -88,7 +88,6 @@ export function ProjectSelect() {
             button={
               <Button
                 onClick={() => setOpen(!open)}
-                size="sm"
                 variant="ghost"
                 role="combobox"
                 aria-expanded={open}

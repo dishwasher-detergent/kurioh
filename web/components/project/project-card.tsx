@@ -29,14 +29,14 @@ export function ProjectCard(project: Project) {
             </div>
           )}
         </div>
-        <div className="space-y-2 p-2">
+        {project.tags.length > 0 && <Badges badges={project.tags} />}
+        <div className="px-2 py-4">
           <p className="truncate text-xl font-bold">{project.name}</p>
-          {project.tags.length > 0 && <Badges badges={project.tags} />}
           <p className="line-clamp-3 text-sm">
             {project.description ?? "No Description Added."}
           </p>
-          {project.links.length > 0 && <Links links={project.links} />}
         </div>
+        {project.links.length > 0 && <Links links={project.links} />}
       </CardContent>
       <CardFooter className="p-0">
         <Button asChild className="w-full" variant="secondary">

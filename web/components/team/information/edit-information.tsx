@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -54,6 +55,7 @@ export default function InformationForm({
           label: link,
           value: link,
         })) ?? [],
+      favicon: information?.favicon,
       image: information?.image,
       skills:
         information.skills?.map((skill) => ({ label: skill, value: skill })) ??
@@ -149,6 +151,20 @@ export default function InformationForm({
               <FormControl>
                 <PhotoSelector {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="favicon"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Favicon</FormLabel>
+              <FormControl>
+                <PhotoSelector {...field} />
+              </FormControl>
+              <FormDescription>Recommended Size: 32x32</FormDescription>
               <FormMessage />
             </FormItem>
           )}

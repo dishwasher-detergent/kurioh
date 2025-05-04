@@ -10,6 +10,8 @@ import {
 } from "@/constants/experience.constants";
 import {
   INFORMATION_DESCRIPTION_MAX_LENGTH,
+  INFORMATION_MAX_FAVICON_SIZE,
+  INFORMATION_MAX_FILE_SIZE,
   INFORMATION_TITLE_MAX_LENGTH,
 } from "@/constants/information.constants";
 import {
@@ -70,7 +72,28 @@ export const editInformationSchema = z.object({
   title: z.string().min(1).max(INFORMATION_TITLE_MAX_LENGTH),
   description: z.string().max(INFORMATION_DESCRIPTION_MAX_LENGTH).optional(),
   socials: z.array(linkSchema).optional(),
-  image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
+  favicon: z
+    .union([
+      z.string(),
+      z
+        .instanceof(File)
+        .refine((file) => file?.size <= INFORMATION_MAX_FAVICON_SIZE, {
+          message: `Favicon must be less than ${INFORMATION_MAX_FAVICON_SIZE / 1000}KB`,
+        }),
+      z.null(),
+    ])
+    .optional(),
+  image: z
+    .union([
+      z.string(),
+      z
+        .instanceof(File)
+        .refine((file) => file?.size <= INFORMATION_MAX_FILE_SIZE, {
+          message: `Image must be less than ${INFORMATION_MAX_FILE_SIZE / 10000}MB`,
+        }),
+      z.null(),
+    ])
+    .optional(),
   skills: z.array(tagSchema).optional(),
 });
 

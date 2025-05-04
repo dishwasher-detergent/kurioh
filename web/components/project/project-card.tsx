@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { Badges } from "@/components/ui/badges";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Images } from "@/components/ui/images";
 import { Links } from "@/components/ui/links";
 import { Project } from "@/interfaces/project.interface";
-import { Badge } from "../ui/badge";
 
 export function ProjectCard(project: Project) {
   return (

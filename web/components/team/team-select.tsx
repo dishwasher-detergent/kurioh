@@ -16,12 +16,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { DyanmicPopover } from "@/components/ui/dynamic-popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TeamData } from "@/interfaces/team.interface";
 import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
 import { listTeams } from "@/lib/team";
 import { cn } from "@/lib/utils";
-import { DyanmicPopover } from "../ui/dynamic-popover";
 
 export function TeamSelect() {
   const { teamId } = useParams<{

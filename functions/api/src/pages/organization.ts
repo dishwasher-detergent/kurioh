@@ -134,18 +134,13 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         team_id
       );
 
-      if (!team.image) {
-        return c.json({ error: 'Image not found' }, 404);
+      if (!team.favicon) {
+        return c.json({ error: 'Favicon not found' }, 404);
       }
 
-      const file = await storage_service.getFilePreview(
+      const file = await storage_service.getFileView(
         PROJECTS_BUCKET_ID,
-        team.image,
-        {
-          quality: 50,
-          width: 256,
-          height: 256,
-        }
+        team.favicon,
       );
 
       if (!file) {

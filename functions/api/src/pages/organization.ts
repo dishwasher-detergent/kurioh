@@ -147,7 +147,10 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         return c.json({ error: 'Failed to fetch image.' }, 500);
       }
 
-      c.header('Content-Type', `image/png`);
+        c.header(
+          'Content-Type',
+          `image/${ImageFormat.Png}`
+        );
       c.header('Cache-Control', `public, max-age=${cacheDuration}`);
       return c.body(file);
     } catch (error) {

@@ -85,7 +85,6 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         const team_id = c.req.param('team_id');
         const project_id = c.req.param('project_id');
         const image_id = c.req.param('image_id');
-        const queryParams = c.req.query();
 
         await database_service.get<Team>(ORGANIZATION_COLLECTION_ID, team_id);
 
@@ -100,12 +99,9 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
           return c.json({ error: 'Image not found' }, 404);
         }
 
-        const file = await storage_service.getFilePreview(
+        const file = await storage_service.getFileView(
           PROJECTS_BUCKET_ID,
-          image,
-          {
-            ...queryParams,
-          }
+          image
         );
 
         if (!file) {

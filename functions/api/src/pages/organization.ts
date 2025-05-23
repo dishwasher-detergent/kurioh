@@ -140,17 +140,14 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
 
       const file = await storage_service.getFileView(
         PROJECTS_BUCKET_ID,
-        team.favicon,
+        team.favicon
       );
 
       if (!file) {
         return c.json({ error: 'Failed to fetch image.' }, 500);
       }
 
-        c.header(
-          'Content-Type',
-          `image/${ImageFormat.Png}`
-        );
+      c.header('Content-Type', `image/${ImageFormat.Png}`);
       c.header('Cache-Control', `public, max-age=${cacheDuration}`);
       return c.body(file);
     } catch (error) {

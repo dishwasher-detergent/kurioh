@@ -7,13 +7,13 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import "./globals.css";
 
 const rubik = Rubik({
-  variable: "--font-rubik",
+  variable: "--font-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
   weight: ["100", "300", "400", "700", "200", "500", "600"],
 });

@@ -108,10 +108,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
           return c.json({ error: 'Failed to fetch image.' }, 500);
         }
 
-        c.header(
-          'Content-Type',
-          `image/${queryParams?.output ?? ImageFormat.Png}`
-        );
+        c.header('Content-Type', `image/${ImageFormat.Png}`);
         c.header('Cache-Control', `public, max-age=${cacheDuration}`);
         return c.body(file);
       } catch (error) {

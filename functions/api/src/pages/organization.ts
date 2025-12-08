@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { Query } from 'node-appwrite';
+import { ImageFormat, Query } from 'node-appwrite';
 
 import {
   EDUCATION_COLLECTION_ID,
@@ -96,19 +96,15 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
   app.get('/teams/:team_id/image', async (c) => {
     try {
       const team_id = c.req.param('team_id');
-      const queryParams = c.req.query();
 
       const team = await database_service.get<Team>(
         ORGANIZATION_COLLECTION_ID,
         team_id
       );
 
-      const file = await storage_service.getFilePreview(
+      const file = await storage_service.getFileView(
         PROJECTS_BUCKET_ID,
-        team.image,
-        {
-          ...queryParams,
-        }
+        team.image
       );
 
       if (!file) {

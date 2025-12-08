@@ -1,5 +1,4 @@
-import { Client, Databases, ImageFormat, Models, Storage } from 'node-appwrite';
-import { ImagePreview } from '../types/types.js';
+import { Client, Databases, Models, Storage } from 'node-appwrite';
 import { arrayBufferToBase64 } from './utils.js';
 
 export const ENDPOINT = process.env.APPWRITE_FUNCTION_API_ENDPOINT as string;
@@ -96,42 +95,9 @@ export const storage_service = {
     return response;
   },
 
-  async getFilePreview(bucketId: string, id: string, options?: ImagePreview) {
-    const defaultOptions = {
-      width: undefined,
-      height: undefined,
-      gravity: undefined,
-      quality: undefined,
-      borderWidth: undefined,
-      borderColor: undefined,
-      borderRadius: undefined,
-      opacity: undefined,
-      rotation: undefined,
-      background: undefined,
-      output: ImageFormat.Png,
-    };
-
-    const combinedOptions = {
-      ...defaultOptions,
-      ...options,
-    };
-
+  async getFileView(bucketId: string, id: string) {
     try {
-      const response = await storage.getFilePreview(
-        bucketId,
-        id,
-        combinedOptions.width,
-        combinedOptions.height,
-        combinedOptions.gravity,
-        combinedOptions.quality,
-        combinedOptions.borderWidth,
-        combinedOptions.borderColor,
-        combinedOptions.borderRadius,
-        combinedOptions.opacity,
-        combinedOptions.rotation,
-        combinedOptions.background,
-        combinedOptions.output
-      );
+      const response = await storage.getFileView(bucketId, id);
 
       return arrayBufferToBase64(response);
     } catch (err) {

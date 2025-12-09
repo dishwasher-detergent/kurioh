@@ -43,7 +43,7 @@ export function AddProject({ teamId, className }: AddProjectProps) {
       open={open}
       setOpen={setOpen}
       button={
-        <Button className={className}>
+        <Button className={className} size="sm">
           Add Project
           <LucidePlus className="ml-2 size-3.5" />
         </Button>

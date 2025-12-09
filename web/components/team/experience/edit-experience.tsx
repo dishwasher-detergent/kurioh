@@ -139,7 +139,7 @@ export default function ExperienceForm({
     } else {
       form.setValue(
         `experience.${index}.end_date`,
-        experience[index]?.end_date,
+        experience[index]?.end_date ?? new Date(),
       );
     }
   };

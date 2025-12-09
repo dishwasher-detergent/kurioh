@@ -1,1052 +1,972 @@
 {
-    "projectId": "portfolio-cms-ny",
-    "projectName": "Kurioh",
-    "settings": {
-        "services": {
-            "account": true,
-            "avatars": true,
-            "databases": true,
-            "locale": true,
-            "health": true,
-            "storage": true,
-            "teams": true,
-            "users": true,
-            "sites": true,
-            "functions": true,
-            "graphql": true,
-            "messaging": true
-        },
-        "auth": {
-            "methods": {
-                "jwt": true,
-                "phone": true,
-                "invites": true,
-                "anonymous": true,
-                "email-otp": true,
-                "magic-url": true,
-                "email-password": true
-            },
-            "security": {
-                "duration": 31536000,
-                "limit": 0,
-                "sessionsLimit": 10,
-                "passwordHistory": 0,
-                "passwordDictionary": false,
-                "personalDataCheck": false,
-                "sessionAlerts": false,
-                "mockNumbers": []
-            }
-        }
+  "projectId": "portfolio-cms-ny",
+  "projectName": "Kurioh",
+  "settings": {
+    "services": {
+      "account": true,
+      "avatars": true,
+      "databases": true,
+      "locale": true,
+      "health": true,
+      "storage": true,
+      "teams": true,
+      "users": true,
+      "sites": true,
+      "functions": true,
+      "graphql": true,
+      "messaging": true
     },
-    "databases": [
+    "auth": {
+      "methods": {
+        "jwt": true,
+        "phone": true,
+        "invites": true,
+        "anonymous": true,
+        "email-otp": true,
+        "magic-url": true,
+        "email-password": true
+      },
+      "security": {
+        "duration": 31536000,
+        "limit": 0,
+        "sessionsLimit": 10,
+        "passwordHistory": 0,
+        "passwordDictionary": false,
+        "personalDataCheck": false,
+        "sessionAlerts": false,
+        "mockNumbers": []
+      }
+    }
+  },
+  "databases": [
+    {
+      "$id": "portfolio",
+      "name": "portfolio",
+      "enabled": true
+    }
+  ],
+  "collections": [
+    {
+      "$id": "project",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "project",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
         {
-            "$id": "portfolio",
-            "name": "portfolio",
-            "enabled": true
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "short_description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1024,
+          "default": null
+        },
+        {
+          "key": "images",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "tags",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null
+        },
+        {
+          "key": "links",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "format": "url",
+          "default": null
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 80,
+          "default": null
+        },
+        {
+          "key": "teamId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "ordinal",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "min": -9223372036854775808,
+          "max": 9223372036854775807,
+          "default": null
+        },
+        {
+          "key": "published",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
         }
-    ],
-    "collections": [
+      ],
+      "indexes": [
         {
-            "$id": "project",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "project",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null
-                },
-                {
-                    "key": "short_description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 1024,
-                    "default": null
-                },
-                {
-                    "key": "images",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "tags",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 32,
-                    "default": null
-                },
-                {
-                    "key": "links",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "format": "url",
-                    "default": null
-                },
-                {
-                    "key": "slug",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 80,
-                    "default": null
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "ordinal",
-                    "type": "integer",
-                    "required": true,
-                    "array": false,
-                    "min": -9223372036854775808,
-                    "max": 9223372036854775807,
-                    "default": null
-                },
-                {
-                    "key": "published",
-                    "type": "boolean",
-                    "required": true,
-                    "array": false,
-                    "default": null
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
+          "key": "team",
+          "type": "key",
+          "status": "available",
+          "attributes": ["teamId"],
+          "orders": ["ASC"]
         },
         {
-            "$id": "experience",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "experience",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "title",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 512,
-                    "default": null
-                },
-                {
-                    "key": "start_date",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "end_date",
-                    "type": "datetime",
-                    "required": false,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "company",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "website",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "format": "url",
-                    "default": null
-                },
-                {
-                    "key": "skills",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 32,
-                    "default": null
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "type",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 32,
-                    "default": null
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
-        },
-        {
-            "$id": "education",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "education",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "institution",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "fieldOfStudy",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "start_date",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "end_date",
-                    "type": "datetime",
-                    "required": false,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "degree",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 32,
-                    "default": null
-                },
-                {
-                    "key": "type",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 32,
-                    "default": null
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
-        },
-        {
-            "$id": "user",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "user",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 50,
-                    "default": null
-                },
-                {
-                    "key": "about",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 256,
-                    "default": null
-                }
-            ],
-            "indexes": []
-        },
-        {
-            "$id": "team",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "team",
-            "enabled": true,
-            "documentSecurity": true,
-            "attributes": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null
-                },
-                {
-                    "key": "title",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 64,
-                    "default": null
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 512,
-                    "default": null
-                },
-                {
-                    "key": "socials",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "image",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 128,
-                    "default": null
-                },
-                {
-                    "key": "skills",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 32,
-                    "default": null
-                }
-            ],
-            "indexes": []
+          "key": "user",
+          "type": "key",
+          "status": "available",
+          "attributes": ["userId"],
+          "orders": ["ASC"]
         }
-    ],
-    "buckets": [
+      ]
+    },
+    {
+      "$id": "experience",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "experience",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
         {
-            "$id": "projects",
-            "$permissions": [
-                "create(\"users\")",
-                "read(\"users\")"
-            ],
-            "fileSecurity": true,
-            "name": "projects",
-            "enabled": true,
-            "maximumFileSize": 50000000,
-            "allowedFileExtensions": [],
-            "compression": "none",
-            "encryption": true,
-            "antivirus": true
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null
         },
         {
-            "$id": "organization",
-            "$permissions": [],
-            "fileSecurity": false,
-            "name": "organization",
-            "enabled": true,
-            "maximumFileSize": 50000000,
-            "allowedFileExtensions": [],
-            "compression": "none",
-            "encryption": true,
-            "antivirus": true
+          "key": "description",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 512,
+          "default": null
+        },
+        {
+          "key": "start_date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "end_date",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "company",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "website",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "format": "url",
+          "default": null
+        },
+        {
+          "key": "skills",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "teamId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 32,
+          "default": null
         }
-    ],
-    "teams": [],
-    "functions": [
+      ],
+      "indexes": [
         {
-            "$id": "6771997c001a806800aa",
-            "name": "api",
-            "runtime": "node-22",
-            "execute": [
-                "any"
-            ],
-            "events": [],
-            "scopes": [
-                "databases.read",
-                "collections.read",
-                "documents.read",
-                "files.read",
-                "buckets.read"
-            ],
-            "schedule": "",
-            "timeout": 15,
-            "enabled": true,
-            "logging": true,
-            "entrypoint": "dist/main.js",
-            "commands": "npm install && npm run build",
-            "path": "functions/api",
-            "specification": "s-0.5vcpu-512mb"
+          "key": "team",
+          "type": "key",
+          "status": "available",
+          "attributes": ["teamId"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "user",
+          "type": "key",
+          "status": "available",
+          "attributes": ["userId"],
+          "orders": ["ASC"]
         }
-    ],
-    "sites": [],
-    "tablesDB": [
+      ]
+    },
+    {
+      "$id": "education",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "education",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
         {
-            "$id": "portfolio",
-            "name": "portfolio",
-            "enabled": true
+          "key": "institution",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "fieldOfStudy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "start_date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "end_date",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "teamId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "degree",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 32,
+          "default": null
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 32,
+          "default": null
         }
-    ],
-    "tables": [
+      ],
+      "indexes": [
         {
-            "$id": "project",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "project",
-            "enabled": true,
-            "rowSecurity": true,
-            "columns": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "short_description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 1024,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "images",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "tags",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 32,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "links",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "format": "url",
-                    "default": null
-                },
-                {
-                    "key": "slug",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 80,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "ordinal",
-                    "type": "integer",
-                    "required": true,
-                    "array": false,
-                    "min": -9223372036854775808,
-                    "max": 9223372036854775807,
-                    "default": null
-                },
-                {
-                    "key": "published",
-                    "type": "boolean",
-                    "required": false,
-                    "array": false,
-                    "default": false
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "name",
-                    "type": "fulltext",
-                    "status": "available",
-                    "columns": [
-                        "name"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
+          "key": "team",
+          "type": "key",
+          "status": "available",
+          "attributes": ["teamId"],
+          "orders": ["ASC"]
         },
         {
-            "$id": "experience",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "experience",
-            "enabled": true,
-            "rowSecurity": true,
-            "columns": [
-                {
-                    "key": "title",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 512,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "start_date",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "end_date",
-                    "type": "datetime",
-                    "required": false,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "company",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "website",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "format": "url",
-                    "default": null
-                },
-                {
-                    "key": "skills",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 32,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "type",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 32,
-                    "default": null,
-                    "encrypt": false
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
-        },
-        {
-            "$id": "user",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "user",
-            "enabled": true,
-            "rowSecurity": true,
-            "columns": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 50,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "about",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 256,
-                    "default": null,
-                    "encrypt": false
-                }
-            ],
-            "indexes": []
-        },
-        {
-            "$id": "team",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "team",
-            "enabled": true,
-            "rowSecurity": true,
-            "columns": [
-                {
-                    "key": "name",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 64,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "title",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 64,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "description",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 512,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "socials",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "image",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "skills",
-                    "type": "string",
-                    "required": false,
-                    "array": true,
-                    "size": 32,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "favicon",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                }
-            ],
-            "indexes": []
-        },
-        {
-            "$id": "education",
-            "$permissions": [
-                "create(\"users\")"
-            ],
-            "databaseId": "portfolio",
-            "name": "education",
-            "enabled": true,
-            "rowSecurity": true,
-            "columns": [
-                {
-                    "key": "institution",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "fieldOfStudy",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "start_date",
-                    "type": "datetime",
-                    "required": true,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "end_date",
-                    "type": "datetime",
-                    "required": false,
-                    "array": false,
-                    "format": "",
-                    "default": null
-                },
-                {
-                    "key": "userId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "teamId",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 128,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "degree",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 32,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "type",
-                    "type": "string",
-                    "required": false,
-                    "array": false,
-                    "size": 32,
-                    "default": null,
-                    "encrypt": false
-                },
-                {
-                    "key": "test",
-                    "type": "point",
-                    "required": false,
-                    "array": false,
-                    "default": [
-                        0,
-                        0
-                    ]
-                }
-            ],
-            "indexes": [
-                {
-                    "key": "team",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "teamId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                },
-                {
-                    "key": "user",
-                    "type": "key",
-                    "status": "available",
-                    "columns": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
+          "key": "user",
+          "type": "key",
+          "status": "available",
+          "attributes": ["userId"],
+          "orders": ["ASC"]
         }
-    ]
+      ]
+    },
+    {
+      "$id": "user",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "user",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 50,
+          "default": null
+        },
+        {
+          "key": "about",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 256,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "team",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "team",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 64,
+          "default": null
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 512,
+          "default": null
+        },
+        {
+          "key": "socials",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "image",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null
+        },
+        {
+          "key": "skills",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null
+        }
+      ],
+      "indexes": []
+    }
+  ],
+  "buckets": [
+    {
+      "$id": "projects",
+      "$permissions": ["create(\"users\")", "read(\"users\")"],
+      "fileSecurity": true,
+      "name": "projects",
+      "enabled": true,
+      "maximumFileSize": 50000000,
+      "allowedFileExtensions": [],
+      "compression": "none",
+      "encryption": true,
+      "antivirus": true
+    },
+    {
+      "$id": "organization",
+      "$permissions": [],
+      "fileSecurity": false,
+      "name": "organization",
+      "enabled": true,
+      "maximumFileSize": 50000000,
+      "allowedFileExtensions": [],
+      "compression": "none",
+      "encryption": true,
+      "antivirus": true
+    }
+  ],
+  "teams": [],
+  "functions": [
+    {
+      "$id": "6771997c001a806800aa",
+      "name": "api",
+      "runtime": "node-22",
+      "execute": ["any"],
+      "events": [],
+      "scopes": [
+        "databases.read",
+        "collections.read",
+        "documents.read",
+        "files.read",
+        "buckets.read"
+      ],
+      "schedule": "",
+      "timeout": 15,
+      "enabled": true,
+      "logging": true,
+      "entrypoint": "dist/main.js",
+      "commands": "npm install && npm run build",
+      "path": "functions/api",
+      "specification": "s-0.5vcpu-512mb"
+    }
+  ],
+  "sites": [],
+  "tablesDB": [
+    {
+      "$id": "portfolio",
+      "name": "portfolio",
+      "enabled": true
+    }
+  ],
+  "tables": [
+    {
+      "$id": "project",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "project",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "short_description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1024,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "images",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "tags",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "links",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "format": "url",
+          "default": null
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 80,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "teamId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "ordinal",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "min": -9223372036854775808,
+          "max": 9223372036854775807,
+          "default": null
+        },
+        {
+          "key": "published",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "team",
+          "type": "key",
+          "status": "available",
+          "columns": ["teamId"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "user",
+          "type": "key",
+          "status": "available",
+          "columns": ["userId"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "name",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["name"],
+          "orders": ["ASC"]
+        }
+      ]
+    },
+    {
+      "$id": "experience",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "experience",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 512,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "start_date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "end_date",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "company",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "website",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "format": "url",
+          "default": null
+        },
+        {
+          "key": "skills",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "teamId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 32,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "team",
+          "type": "key",
+          "status": "available",
+          "columns": ["teamId"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "user",
+          "type": "key",
+          "status": "available",
+          "columns": ["userId"],
+          "orders": ["ASC"]
+        }
+      ]
+    },
+    {
+      "$id": "user",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "user",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "about",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 256,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "team",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "team",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 64,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 64,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 512,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "socials",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "image",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "skills",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 32,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "favicon",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "education",
+      "$permissions": ["create(\"users\")"],
+      "databaseId": "portfolio",
+      "name": "education",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "institution",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "fieldOfStudy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "start_date",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "end_date",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "format": "",
+          "default": null
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "teamId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 128,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "degree",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 32,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 32,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "test",
+          "type": "point",
+          "required": false,
+          "array": false,
+          "default": [0, 0]
+        }
+      ],
+      "indexes": [
+        {
+          "key": "team",
+          "type": "key",
+          "status": "available",
+          "columns": ["teamId"],
+          "orders": ["ASC"]
+        },
+        {
+          "key": "user",
+          "type": "key",
+          "status": "available",
+          "columns": ["userId"],
+          "orders": ["ASC"]
+        }
+      ]
+    }
+  ]
 }

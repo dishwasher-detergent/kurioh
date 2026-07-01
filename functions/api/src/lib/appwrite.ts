@@ -1,23 +1,19 @@
 import { Client, Databases, Models, Storage } from 'node-appwrite';
 import { arrayBufferToBase64 } from './utils.js';
 
-export const ENDPOINT = process.env.APPWRITE_FUNCTION_API_ENDPOINT as string;
-export const PROJECT_ID = process.env.APPWRITE_FUNCTION_PROJECT_ID as string;
-export const API_KEY = process.env.API_KEY as string;
-export const DATABASE_ID = process.env.DATABASE_ID as string;
+export const ENDPOINT = process.env.APPWRITE_ENDPOINT as string;
+export const PROJECT_ID = process.env.APPWRITE_PROJECT_ID as string;
+export const API_KEY = process.env.KEY as string;
+export const DATABASE_ID = process.env.DB_ID as string;
 
 // Collections
-export const EXPERIENCE_COLLECTION_ID = process.env
-  .EXPERIENCE_COLLECTION_ID as string;
-export const ORGANIZATION_COLLECTION_ID = process.env
-  .ORGANIZATION_COLLECTION_ID as string;
-export const PROJECTS_COLLECTION_ID = process.env
-  .PROJECTS_COLLECTION_ID as string;
-export const EDUCATION_COLLECTION_ID = process.env
-  .EDUCATION_COLLECTION_ID as string;
+export const EXPERIENCE_COLLECTION_ID = process.env.EXPERIENCE_ID as string;
+export const ORGANIZATION_COLLECTION_ID = process.env.ORGANIZATION_ID as string;
+export const PROJECTS_COLLECTION_ID = process.env.PROJECTS_ID as string;
+export const EDUCATION_COLLECTION_ID = process.env.EDUCATION_ID as string;
 
 // Buckets
-export const PROJECTS_BUCKET_ID = process.env.PROJECTS_BUCKET_ID as string;
+export const PROJECTS_BUCKET_ID = process.env.BUCKET_ID as string;
 
 const client = new Client()
   .setEndpoint(ENDPOINT)
@@ -57,8 +53,6 @@ export const database_service = {
     collectionId: string,
     queries: string[] = []
   ) {
-    console.log(client.config);
-
     const response = await database.listDocuments<T>(
       DATABASE_ID,
       collectionId,

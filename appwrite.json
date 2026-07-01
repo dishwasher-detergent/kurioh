@@ -1,5 +1,5 @@
 {
-  "projectId": "portfolio-cms-ny",
+  "projectId": "kurioh",
   "projectName": "Kurioh",
   "settings": {
     "services": {
@@ -458,7 +458,7 @@
       "fileSecurity": true,
       "name": "projects",
       "enabled": true,
-      "maximumFileSize": 50000000,
+      "maximumFileSize": 30000000,
       "allowedFileExtensions": [],
       "compression": "none",
       "encryption": true,
@@ -470,7 +470,7 @@
       "fileSecurity": false,
       "name": "organization",
       "enabled": true,
-      "maximumFileSize": 50000000,
+      "maximumFileSize": 30000000,
       "allowedFileExtensions": [],
       "compression": "none",
       "encryption": true,
@@ -478,30 +478,6 @@
     }
   ],
   "teams": [],
-  "functions": [
-    {
-      "$id": "6771997c001a806800aa",
-      "name": "api",
-      "runtime": "node-22",
-      "execute": ["any"],
-      "events": [],
-      "scopes": [
-        "databases.read",
-        "collections.read",
-        "documents.read",
-        "files.read",
-        "buckets.read"
-      ],
-      "schedule": "",
-      "timeout": 15,
-      "enabled": true,
-      "logging": true,
-      "entrypoint": "dist/main.js",
-      "commands": "npm install && npm run build",
-      "path": "functions/api",
-      "specification": "s-0.5vcpu-512mb"
-    }
-  ],
   "sites": [],
   "tablesDB": [
     {

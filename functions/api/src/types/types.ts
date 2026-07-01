@@ -1,12 +1,5 @@
 import { ImageFormat, ImageGravity, Models } from 'node-appwrite';
 
-export interface Context {
-  req: any;
-  res: any;
-  log: (msg: any) => void;
-  error: (msg: any) => void;
-}
-
 export interface Project extends Models.Document {
   title: string;
   short_description: string;

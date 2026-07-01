@@ -12,7 +12,7 @@
   "dependencies": {
     "@hono/node-server": "^1.14.1",
     "hono": "^4.7.7",
-    "node-appwrite": "^16.0.0"
+    "node-appwrite": "^22.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

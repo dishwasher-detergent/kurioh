@@ -46,17 +46,17 @@ This directory includes a `Dockerfile` that installs, builds (via `tsup`), and r
 
 ## ⚙️ Environment Variables
 
-| Variable              | Description                                    |
-| ---------------------- | ----------------------------------------------- |
-| `PORT`                  | Port the server listens on (default `3000`)     |
-| `APPWRITE_ENDPOINT`     | Appwrite API endpoint, e.g. `https://cloud.appwrite.io/v1` |
-| `APPWRITE_PROJECT_ID`   | Appwrite project ID                             |
-| `KEY`                   | Appwrite API key with database/storage read access |
-| `DB_ID`                 | Appwrite database ID                            |
-| `EXPERIENCE_ID`         | Experience collection ID                        |
-| `ORGANIZATION_ID`       | Team/organization collection ID                 |
-| `PROJECTS_ID`           | Projects collection ID                          |
-| `EDUCATION_ID`          | Education collection ID                         |
-| `BUCKET_ID`             | Storage bucket ID for project/team images        |
+| Variable              | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `PORT`                | Port the server listens on (default `3000`)                |
+| `APPWRITE_ENDPOINT`   | Appwrite API endpoint, e.g. `https://cloud.appwrite.io/v1` |
+| `APPWRITE_PROJECT_ID` | Appwrite project ID                                        |
+| `KEY`                 | Appwrite API key with database/storage read access         |
+| `DB_ID`               | Appwrite database ID                                       |
+| `EXPERIENCE_ID`       | Experience collection ID                                   |
+| `ORGANIZATION_ID`     | Team/organization collection ID                            |
+| `PROJECTS_ID`         | Projects collection ID                                     |
+| `EDUCATION_ID`        | Education collection ID                                    |
+| `BUCKET_ID`           | Storage bucket ID for project/team images                  |
 
 See `.env.example` for a template.

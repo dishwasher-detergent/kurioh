@@ -1,4 +1,10 @@
-import { AppwriteException, Client, Models, Storage, TablesDB } from 'node-appwrite';
+import {
+  AppwriteException,
+  Client,
+  Models,
+  Storage,
+  TablesDB,
+} from 'node-appwrite';
 import { NotFoundError } from './utils.js';
 
 export const ENDPOINT = process.env.APPWRITE_ENDPOINT as string;

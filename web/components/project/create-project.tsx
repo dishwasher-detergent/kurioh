@@ -24,6 +24,7 @@ import {
   DESCRIPTION_MAX_LENGTH,
   NAME_MAX_LENGTH,
 } from "@/constants/project.constants";
+import { Project } from "@/interfaces/project.interface";
 import { createProject } from "@/lib/db";
 import { AddProjectFormData, addProjectSchema } from "@/lib/db/schemas";
 import { cn } from "@/lib/utils";
@@ -31,9 +32,10 @@ import { cn } from "@/lib/utils";
 interface AddProjectProps {
   teamId: string;
   className?: string;
+  onCreated?: (project: Project) => void;
 }
 
-export function AddProject({ teamId, className }: AddProjectProps) {
+export function AddProject({ teamId, className, onCreated }: AddProjectProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -49,16 +51,17 @@ export function AddProject({ teamId, className }: AddProjectProps) {
         </Button>
       }
     >
-      <CreateForm teamId={teamId} />
+      <CreateForm teamId={teamId} onCreated={onCreated} />
     </DyanmicDrawer>
   );
 }
 
 interface FormProps extends React.ComponentProps<"form"> {
   teamId: string;
+  onCreated?: (project: Project) => void;
 }
 
-function CreateForm({ className, teamId }: FormProps) {
+function CreateForm({ className, teamId, onCreated }: FormProps) {
   const router = useRouter();
 
   const form = useForm<AddProjectFormData>({
@@ -76,6 +79,9 @@ function CreateForm({ className, teamId }: FormProps) {
       loading: "Creating project...",
       success: (data) => {
         if (data.success) {
+          if (data.data) {
+            onCreated?.(data.data);
+          }
           router.push(`/app/teams/${teamId}/projects/${data.data?.$id}`);
         } else {
           throw new Error(data.message);

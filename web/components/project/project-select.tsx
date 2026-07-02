@@ -72,6 +72,9 @@ export function ProjectSelect() {
         <AddProject
           teamId={teamId}
           className="text-foreground hover:bg-accent hover:text-accent-foreground bg-card"
+          onCreated={(project) =>
+            setProjects((prev) => [...prev, project])
+          }
         />
       </div>
     );
@@ -167,7 +170,13 @@ export function ProjectSelect() {
               </CommandList>
             </Command>
             <div className="flex border-t p-1 md:justify-start">
-              <AddProject teamId={teamId} className="w-full" />
+              <AddProject
+                teamId={teamId}
+                className="w-full"
+                onCreated={(project) =>
+                  setProjects((prev) => [...prev, project])
+                }
+              />
             </div>
           </DyanmicPopover>
         </div>

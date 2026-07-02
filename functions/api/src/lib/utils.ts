@@ -17,13 +17,8 @@ export function throwIfMissing(obj: any, keys: string[]) {
 }
 
 /**
- * Converts an array buffer to a base64 string.
- * @param arrayBuffer
- * @returns A base 64 string.
+ * Thrown by database_service.get when the requested row does not exist.
+ * Lets route handlers distinguish "not found" from unexpected failures
+ * and return a 404 with a meaningful message instead of a generic 500.
  */
-export function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
-  const bytes = new Uint8Array(arrayBuffer);
-  let binary = '';
-  bytes.forEach((byte) => (binary += String.fromCharCode(byte)));
-  return btoa(binary);
-}
+export class NotFoundError extends Error {}

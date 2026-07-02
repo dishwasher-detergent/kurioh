@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Context, Hono } from 'hono';
 import { ImageFormat, Query } from 'node-appwrite';
 import {
   ORGANIZATION_COLLECTION_ID,
@@ -7,7 +7,17 @@ import {
   database_service,
   storage_service,
 } from '../lib/appwrite.js';
+import { NotFoundError } from '../lib/utils.js';
 import { Project, Team } from '../types/types.js';
+
+function handleError(c: Context, error: unknown, fallbackMessage: string) {
+  if (error instanceof NotFoundError) {
+    return c.json({ error: error.message }, 404);
+  }
+
+  console.error(error);
+  return c.json({ error: fallbackMessage }, 500);
+}
 
 export function Projects(app: Hono, cacheDuration: number = 1440) {
   app.get('/teams/:team_id/projects', async (c) => {
@@ -23,9 +33,9 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         ]
       );
 
-      const formattedProjects = projects.documents.map((project) => ({
+      const formattedProjects = projects.rows.map((project) => ({
         id: project.$id,
-        team: project.team_id,
+        team: project.teamId,
         title: project.title,
         shortDescription: project.short_description,
         description: project.description,
@@ -38,9 +48,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         'Cache-Control': `public, max-age=${cacheDuration}`,
       });
     } catch (error) {
-      console.error(error);
-
-      return c.json({ error: 'Failed to fetch projects data.' }, 500);
+      return handleError(c, error, 'Failed to fetch projects data.');
     }
   });
 
@@ -49,16 +57,21 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
       const team_id = c.req.param('team_id');
       const project_id = c.req.param('project_id');
 
-      await database_service.get<Team>(ORGANIZATION_COLLECTION_ID, team_id);
+      await database_service.get<Team>(
+        ORGANIZATION_COLLECTION_ID,
+        team_id,
+        'Team not found'
+      );
 
       const project = await database_service.get<Project>(
         PROJECTS_COLLECTION_ID,
-        project_id
+        project_id,
+        'Project not found'
       );
 
       const formattedProject = {
         id: project.$id,
-        team: project.team_id,
+        team: project.teamId,
         title: project.title,
         slug: project.slug,
         shortDescription: project.short_description,
@@ -72,9 +85,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         'Cache-Control': `public, max-age=${cacheDuration}`,
       });
     } catch (error) {
-      console.error(error);
-
-      return c.json({ error: 'Failed to fetch project data.' }, 500);
+      return handleError(c, error, 'Failed to fetch project data.');
     }
   });
 
@@ -86,14 +97,19 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         const project_id = c.req.param('project_id');
         const image_id = c.req.param('image_id');
 
-        await database_service.get<Team>(ORGANIZATION_COLLECTION_ID, team_id);
+        await database_service.get<Team>(
+          ORGANIZATION_COLLECTION_ID,
+          team_id,
+          'Team not found'
+        );
 
         const project = await database_service.get<Project>(
           PROJECTS_COLLECTION_ID,
-          project_id
+          project_id,
+          'Project not found'
         );
 
-        const image = project.images.filter((x) => x === image_id)[0];
+        const image = project.images.find((x) => x === image_id);
 
         if (!image) {
           return c.json({ error: 'Image not found' }, 404);
@@ -112,9 +128,7 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         c.header('Cache-Control', `public, max-age=${cacheDuration}`);
         return c.body(file);
       } catch (error) {
-        console.error(error);
-
-        return c.json({ error: 'Failed to fetch image.' }, 500);
+        return handleError(c, error, 'Failed to fetch image.');
       }
     }
   );

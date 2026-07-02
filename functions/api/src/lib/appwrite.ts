@@ -1,5 +1,5 @@
-import { Client, Databases, Models, Storage } from 'node-appwrite';
-import { arrayBufferToBase64 } from './utils.js';
+import { AppwriteException, Client, Models, Storage, TablesDB } from 'node-appwrite';
+import { NotFoundError } from './utils.js';
 
 export const ENDPOINT = process.env.APPWRITE_ENDPOINT as string;
 export const PROJECT_ID = process.env.APPWRITE_PROJECT_ID as string;
@@ -20,7 +20,7 @@ const client = new Client()
   .setProject(PROJECT_ID)
   .setKey(API_KEY);
 
-const database = new Databases(client);
+const database = new TablesDB(client);
 const storage = new Storage(client);
 
 export const database_service = {
@@ -30,16 +30,27 @@ export const database_service = {
    * @template {T} - The type of the document to retrieve.
    * @param {string} collectionId - The ID of the collection where the document is stored.
    * @param {string} id - The ID of the document to retrieve.
+   * @param {string} [notFoundMessage] - Message used for the NotFoundError thrown when the row doesn't exist.
    * @returns A promise that resolves to the retrieved document.
+   * @throws {NotFoundError} When no row with the given ID exists in the collection.
    */
-  async get<T extends Models.Document>(collectionId: string, id: string) {
-    const response = await database.getDocument<T>(
-      DATABASE_ID,
-      collectionId,
-      id
-    );
-
-    return response;
+  async get<T extends Models.Row>(
+    collectionId: string,
+    id: string,
+    notFoundMessage = 'Resource not found'
+  ) {
+    try {
+      return await database.getRow<T>({
+        databaseId: DATABASE_ID,
+        tableId: collectionId,
+        rowId: id,
+      });
+    } catch (error) {
+      if (error instanceof AppwriteException && error.code === 404) {
+        throw new NotFoundError(notFoundMessage);
+      }
+      throw error;
+    }
   },
 
   /**
@@ -49,15 +60,15 @@ export const database_service = {
    * @param {string} collectionId - The ID of the collection to retrieve documents from.
    * @returns A promise that resolves to an array of documents of type T.
    */
-  async list<T extends Models.Document>(
+  async list<T extends Models.Row>(
     collectionId: string,
     queries: string[] = []
   ) {
-    const response = await database.listDocuments<T>(
-      DATABASE_ID,
-      collectionId,
-      queries
-    );
+    const response = await database.listRows<T>({
+      databaseId: DATABASE_ID,
+      tableId: collectionId,
+      queries,
+    });
 
     return response;
   },
@@ -93,7 +104,7 @@ export const storage_service = {
     try {
       const response = await storage.getFileView(bucketId, id);
 
-      return arrayBufferToBase64(response);
+      return response;
     } catch (err) {
       return null;
     }

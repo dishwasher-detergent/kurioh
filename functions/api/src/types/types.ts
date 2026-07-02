@@ -1,6 +1,6 @@
 import { ImageFormat, ImageGravity, Models } from 'node-appwrite';
 
-export interface Project extends Models.Document {
+export interface Project extends Models.Row {
   title: string;
   short_description: string;
   description: string;
@@ -16,7 +16,7 @@ export interface Social {
   value: string;
 }
 
-export interface Team extends Models.Document {
+export interface Team extends Models.Row {
   title: string;
   name: string;
   description: string;
@@ -26,7 +26,7 @@ export interface Team extends Models.Document {
   userId: string;
 }
 
-export interface Experience extends Models.Document {
+export interface Experience extends Models.Row {
   title: string;
   description: string;
   start_date: Date;
@@ -39,7 +39,7 @@ export interface Experience extends Models.Document {
   teamId: string;
 }
 
-export interface Education extends Models.Document {
+export interface Education extends Models.Row {
   institution: string;
   type: string;
   fieldOfStudy: string;

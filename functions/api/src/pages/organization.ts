@@ -40,9 +40,9 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         [Query.equal('teamId', team_id)]
       );
 
-      const formattedProject = projects.documents.map((project) => ({
+      const formattedProject = projects.rows.map((project) => ({
         id: project.$id,
-        title: project.name,
+        title: project.title,
         shortDescription: project.short_description,
         description: project.description,
         images: project.images,
@@ -50,7 +50,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         links: project.links,
       }));
 
-      const formattedExperience = experience.documents.map((exp) => ({
+      const formattedExperience = experience.rows.map((exp) => ({
         title: exp.title,
         description: exp.description,
         skills: exp.skills,
@@ -61,7 +61,7 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
         website: exp.website,
       }));
 
-      const formattedEducation = education.documents.map((edu) => ({
+      const formattedEducation = education.rows.map((edu) => ({
         institution: edu.institution,
         type: edu.type,
         fieldOfStudy: edu.fieldOfStudy,

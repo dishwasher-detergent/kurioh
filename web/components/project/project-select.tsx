@@ -72,9 +72,7 @@ export function ProjectSelect() {
         <AddProject
           teamId={teamId}
           className="text-foreground hover:bg-accent hover:text-accent-foreground bg-card"
-          onCreated={(project) =>
-            setProjects((prev) => [...prev, project])
-          }
+          onCreated={(project) => setProjects((prev) => [...prev, project])}
         />
       </div>
     );

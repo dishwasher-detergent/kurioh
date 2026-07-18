@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
-import { ID } from "appwrite";
+import { getStorageFileUrl } from "@/lib/constants";
 import { LucideImagePlus, LucideLoader2, LucideTrash } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -31,7 +30,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
 
     const urlImage = URL.createObjectURL(file);
     const imageObject = {
-      id: ID.unique(),
+      id: crypto.randomUUID(),
       url: urlImage,
     };
 
@@ -62,7 +61,7 @@ export function PhotoSelector({ value, onChange }: ImageArrayInputProps) {
 
     setPreview({
       id: id,
-      url: `${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${value}/view?project=${PROJECT_ID}`,
+      url: getStorageFileUrl(value as string),
     });
   }, []);
 

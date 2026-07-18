@@ -1,6 +1,5 @@
-import { ImageFormat, ImageGravity, Models } from 'node-appwrite';
-
-export interface Project extends Models.Row {
+export interface Project {
+  id: string;
   title: string;
   short_description: string;
   description: string;
@@ -16,7 +15,8 @@ export interface Social {
   value: string;
 }
 
-export interface Team extends Models.Row {
+export interface Team {
+  id: string;
   title: string;
   name: string;
   description: string;
@@ -26,7 +26,8 @@ export interface Team extends Models.Row {
   userId: string;
 }
 
-export interface Experience extends Models.Row {
+export interface Experience {
+  id: string;
   title: string;
   description: string;
   start_date: Date;
@@ -39,7 +40,8 @@ export interface Experience extends Models.Row {
   teamId: string;
 }
 
-export interface Education extends Models.Row {
+export interface Education {
+  id: string;
   institution: string;
   type: string;
   fieldOfStudy: string;
@@ -48,18 +50,4 @@ export interface Education extends Models.Row {
   end_date: Date;
   userId: string;
   teamId: string;
-}
-
-export interface ImagePreview {
-  width?: number;
-  height?: number;
-  gravity?: ImageGravity;
-  quality?: number;
-  borderWidth?: number;
-  borderColor?: string;
-  borderRadius?: number;
-  opacity?: number;
-  rotation?: number;
-  background?: string;
-  output?: ImageFormat;
 }

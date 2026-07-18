@@ -1,42 +1,56 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { ID, Models, Permission, Query, Role } from "node-appwrite";
 
 import { Experience } from "@/interfaces/experience.interface";
-import { Result } from "@/interfaces/result.interface";
+import { DocumentList, Result } from "@/interfaces/result.interface";
 import { withAuth } from "@/lib/auth";
-import { DATABASE_ID, EXPERIENCE_COLLECTION_ID } from "@/lib/constants";
-import { createSessionClient } from "@/lib/server/appwrite";
+import { db } from "@/lib/db/client";
+import { experience } from "@/lib/db/schema";
 import { EditExperienceFormData } from "./schemas";
+
+function toExperience(row: typeof experience.$inferSelect): Experience {
+  return {
+    $id: row.id,
+    title: row.title,
+    description: row.description,
+    start_date: row.startDate,
+    end_date: row.endDate as Date,
+    company: row.company,
+    type: row.type ?? "",
+    website: row.website ? new URL(row.website) : (undefined as unknown as URL),
+    skills: row.skills ?? [],
+    userId: row.userId,
+    teamId: row.teamId,
+  };
+}
 
 /**
  * Get a list of experiences for a team
  * @param {string} teamId The ID of the team
- * @param {string[]} queries The queries to filter the experiences
- * @returns {Promise<Result<Models.DocumentList<Experience>>>} The list of experiences
+ * @returns {Promise<Result<DocumentList<Experience>>>} The list of experiences
  */
 export async function listExperiences(
   teamId: string,
-  queries: string[] = [],
-): Promise<Result<Models.DocumentList<Experience>>> {
+): Promise<Result<DocumentList<Experience>>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
     return unstable_cache(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async (teamId, queries, userId) => {
+      async (teamId, userId) => {
         try {
-          const experiences = await database.listDocuments<Experience>(
-            DATABASE_ID,
-            EXPERIENCE_COLLECTION_ID,
-            [Query.equal("teamId", teamId), ...queries],
-          );
+          const rows = await db
+            .select()
+            .from(experience)
+            .where(eq(experience.teamId, teamId));
 
           return {
             success: true,
             message: "Experiences successfully retrieved.",
-            data: experiences,
+            data: {
+              documents: rows.map(toExperience),
+              total: rows.length,
+            },
           };
         } catch (err) {
           const error = err as Error;
@@ -51,77 +65,57 @@ export async function listExperiences(
       },
       ["experiences", teamId],
       {
-        tags: [
-          "experiences",
-          `experiences:team-${teamId}`,
-          `experiences:team-${teamId}:${queries.join("-")}`,
-        ],
+        tags: ["experiences", `experiences:team-${teamId}`],
         revalidate: 600,
       },
-    )(teamId, queries, user.$id);
+    )(teamId, user.$id);
   });
 }
 
 /**
  * Create an experience
  * @param {Object} params The parameters for creating an experience
- * @param {string} [params.id] The ID of the experience (optional)
  * @param {EditExperienceFormData} params.data The experience data
  * @param {string} params.teamId The ID of the team
- * @param {string[]} [params.permissions] The permissions for the experience (optional)
  * @returns {Promise<Result<Experience>>} The created experience
  */
 export async function createExperience({
-  id = ID.unique(),
   data,
   teamId,
-  permissions = [],
 }: {
-  id?: string;
   data: EditExperienceFormData;
   teamId: string;
-  permissions?: string[];
 }): Promise<Result<Experience>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
-    permissions = [
-      ...permissions,
-      Permission.read(Role.user(user.$id)),
-      Permission.write(Role.user(user.$id)),
-      Permission.read(Role.team(teamId)),
-      Permission.write(Role.team(teamId)),
-    ];
-
     try {
-      const experience = await database.createDocument<Experience>(
-        DATABASE_ID,
-        EXPERIENCE_COLLECTION_ID,
-        id,
-        {
-          ...data,
-          website:
-            data.website && data.website != ""
-              ? new URL(data.website)
-              : undefined,
+      const [row] = await db
+        .insert(experience)
+        .values({
+          id: crypto.randomUUID(),
+          title: data.title,
+          description: data.description,
+          startDate: data.start_date,
+          endDate: data.end_date,
+          company: data.company,
+          type: data.type,
+          website: data.website && data.website !== "" ? data.website : null,
           skills:
             data.skills?.map((skill) =>
               typeof skill === "string" ? skill : skill.value,
-            ) || [],
+            ) ?? [],
           userId: user.$id,
           teamId,
-        },
-        permissions,
-      );
+        })
+        .returning();
 
       revalidateTag(`experiences:team-${teamId}`);
-      revalidateTag(`experience:${experience.$id}`);
+      revalidateTag(`experience:${row.id}`);
       revalidateTag(`team:${teamId}`);
 
       return {
         success: true,
         message: "Experience successfully created.",
-        data: experience,
+        data: toExperience(row),
       };
     } catch (err) {
       const error = err as Error;
@@ -142,50 +136,51 @@ export async function createExperience({
  * @param {Object} params The parameters for updating an experience
  * @param {string} params.id The ID of the experience
  * @param {EditExperienceFormData} params.data The experience data
- * @param {string[]} [params.permissions] The permissions for the experience (optional)
  * @returns {Promise<Result<Experience>>} The updated experience
  */
 export async function updateExperience({
   id,
   data,
-  permissions = undefined,
 }: {
   id: string;
   data: EditExperienceFormData;
-  permissions?: string[];
 }): Promise<Result<Experience>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
     try {
-      await database.getDocument<Experience>(
-        DATABASE_ID,
-        EXPERIENCE_COLLECTION_ID,
-        id,
-      );
-
-      delete data.id;
-
-      const experience = await database.updateDocument<Experience>(
-        DATABASE_ID,
-        EXPERIENCE_COLLECTION_ID,
-        id,
-        {
-          ...data,
+      const [row] = await db
+        .update(experience)
+        .set({
+          title: data.title,
+          description: data.description,
+          startDate: data.start_date,
+          endDate: data.end_date,
+          company: data.company,
+          type: data.type,
+          website: data.website && data.website !== "" ? data.website : null,
+          skills: data.skills?.map((x) =>
+            typeof x === "string" ? x : x.value,
+          ),
           userId: user.$id,
-          skills: data.skills?.map((x) => x.label) || [],
-        },
-        permissions,
-      );
+          updatedAt: new Date(),
+        })
+        .where(eq(experience.id, id))
+        .returning();
 
-      revalidateTag(`experiences:team-${experience.teamId}`);
-      revalidateTag(`experience:${experience.$id}`);
-      revalidateTag(`team:${experience.teamId}`);
+      if (!row) {
+        return {
+          success: false,
+          message: "Experience not found.",
+        };
+      }
+
+      revalidateTag(`experiences:team-${row.teamId}`);
+      revalidateTag(`experience:${row.id}`);
+      revalidateTag(`team:${row.teamId}`);
 
       return {
         success: true,
         message: "Experience successfully updated.",
-        data: experience,
+        data: toExperience(row),
       };
     } catch (err) {
       const error = err as Error;
@@ -210,25 +205,27 @@ export async function deleteExperience(
   id: string,
 ): Promise<Result<Experience>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     try {
-      const experience = await database.getDocument<Experience>(
-        DATABASE_ID,
-        EXPERIENCE_COLLECTION_ID,
-        id,
-      );
+      const [row] = await db
+        .delete(experience)
+        .where(eq(experience.id, id))
+        .returning();
 
-      await database.deleteDocument(DATABASE_ID, EXPERIENCE_COLLECTION_ID, id);
+      if (!row) {
+        return {
+          success: false,
+          message: "Experience not found.",
+        };
+      }
 
-      revalidateTag(`experiences:team-${experience.teamId}`);
-      revalidateTag(`experience:${experience.$id}`);
-      revalidateTag(`team:${experience.teamId}`);
+      revalidateTag(`experiences:team-${row.teamId}`);
+      revalidateTag(`experience:${row.id}`);
+      revalidateTag(`team:${row.teamId}`);
 
       return {
         success: true,
         message: "Experience successfully deleted.",
-        data: experience,
+        data: toExperience(row),
       };
     } catch (err) {
       const error = err as Error;
@@ -348,23 +345,8 @@ export async function deleteAllExperienceByTeam(
   teamId: string,
 ): Promise<Result<void>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     try {
-      let response;
-      const queries = [Query.limit(50), Query.equal("teamId", teamId)];
-
-      do {
-        response = await database.listDocuments<Experience>(
-          DATABASE_ID,
-          EXPERIENCE_COLLECTION_ID,
-          queries,
-        );
-
-        await Promise.all(
-          response.documents.map((document) => deleteExperience(document.$id)),
-        );
-      } while (response.documents.length > 0);
+      await db.delete(experience).where(eq(experience.teamId, teamId));
 
       revalidateTag(`experiences:team-${teamId}`);
 

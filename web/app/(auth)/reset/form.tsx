@@ -26,8 +26,7 @@ export function ResetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const secret = searchParams.get("secret");
-  const userId = searchParams.get("userId");
+  const token = searchParams.get("token");
 
   const form = useForm<NewPasswordFormData>({
     mode: "onChange",
@@ -38,17 +37,17 @@ export function ResetForm() {
     },
   });
 
-  if (!secret || !userId) {
+  if (!token) {
     router.push("/signin");
     return null;
   }
 
   async function onSubmit(values: NewPasswordFormData) {
-    if (!userId || !secret) {
+    if (!token) {
       return;
     }
 
-    const result = await resetPassword(userId, secret, values.password);
+    const result = await resetPassword(token, values.password);
     toast.error(result.message);
   }
 

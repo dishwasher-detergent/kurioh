@@ -1,19 +1,14 @@
 "use client";
 
-import { Query } from "appwrite";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useSession } from "@/hooks/userSession";
+import { DocumentList } from "@/interfaces/result.interface";
 import { Project } from "@/interfaces/project.interface";
-import { getUserById } from "@/lib/auth";
-import { DATABASE_ID, PROJECT_COLLECTION_ID } from "@/lib/constants";
 import { listProjectsByTeam } from "@/lib/db/project";
-import { getTeamById } from "@/lib/team";
-import { Models } from "node-appwrite";
 
 interface Props {
-  initialProjects?: Models.DocumentList<Project>;
+  initialProjects?: DocumentList<Project>;
   teamId?: string;
   userId?: string;
   searchTerm?: string;
@@ -24,7 +19,6 @@ interface Props {
 export const useProjects = ({
   initialProjects,
   teamId,
-  userId,
   searchTerm,
   limit = 5,
   cursor,
@@ -44,12 +38,6 @@ export const useProjects = ({
     !!initialProjects && !cursor && !searchTerm,
   );
 
-  const { client, loading: sessionLoading } = useSession();
-
-  useEffect(() => {
-    setLoading(sessionLoading);
-  }, [sessionLoading]);
-
   useEffect(() => {
     if (initialLoad) {
       if (initialProjects && initialProjects.documents.length > 0) {
@@ -67,21 +55,11 @@ export const useProjects = ({
       setLoading(true);
 
       try {
-        const queries = [Query.orderAsc("ordinal")];
-
-        if (searchTerm && searchTerm.trim() !== "") {
-          queries.push(Query.search("name", searchTerm));
-        }
-
-        queries.push(Query.limit(limit));
-
-        if (cursor) {
-          queries.push(Query.cursorAfter(cursor));
-        }
-
-        console.log("queries", queries);
-
-        const result = await listProjectsByTeam(teamId, queries);
+        const result = await listProjectsByTeam(teamId, {
+          search: searchTerm,
+          limit,
+          cursorId: cursor,
+        });
 
         if (result.success && result.data) {
           if (cursor) {
@@ -105,7 +83,7 @@ export const useProjects = ({
           setHasMore(false);
           setNextCursor(undefined);
         }
-      } catch (error) {
+      } catch {
         if (!cursor) {
           setProjects([]);
         }
@@ -117,85 +95,14 @@ export const useProjects = ({
     };
 
     fetchProjects();
-  }, [teamId, userId, searchTerm, limit, cursor, initialLoad]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamId, searchTerm, limit, cursor, initialLoad]);
 
   useEffect(() => {
     if (searchTerm || cursor) {
       setInitialLoad(false);
     }
   }, [searchTerm, cursor]);
-
-  useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-
-    if (client) {
-      unsubscribe = client.subscribe<Project>(
-        `databases.${DATABASE_ID}.collections.${PROJECT_COLLECTION_ID}.documents`,
-        async (response) => {
-          if (teamId && response.payload.teamId !== teamId) return;
-          if (userId && response.payload.userId !== userId) return;
-
-          if (searchTerm === undefined) {
-            if (
-              response.events.includes(
-                "databases.*.collections.*.documents.*.create",
-              )
-            ) {
-              const { data } = await getUserById(response.payload.userId);
-              const { data: teamData } = await getTeamById(
-                response.payload.teamId,
-              );
-
-              setProjects((prev) => [
-                ...prev,
-                {
-                  ...response.payload,
-                  user: data,
-                  team: teamData,
-                },
-              ]);
-
-              setTotalProjects((prev) => prev + 1);
-            }
-
-            if (
-              response.events.includes(
-                "databases.*.collections.*.documents.*.update",
-              )
-            ) {
-              const { data } = await getUserById(response.payload.userId);
-              const { data: teamData } = await getTeamById(
-                response.payload.teamId,
-              );
-
-              setProjects((prev) =>
-                prev.map((x) =>
-                  x.$id === response.payload.$id
-                    ? { user: data, ...response.payload, team: teamData }
-                    : x,
-                ),
-              );
-            }
-
-            if (
-              response.events.includes(
-                "databases.*.collections.*.documents.*.delete",
-              )
-            ) {
-              setProjects((prev) =>
-                prev.filter((x) => x.$id !== response.payload.$id),
-              );
-              setTotalProjects((prev) => prev - 1);
-            }
-          }
-        },
-      );
-    }
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [client, teamId, userId, searchTerm]);
 
   return { projects, loading, hasMore, totalProjects, nextCursor };
 };

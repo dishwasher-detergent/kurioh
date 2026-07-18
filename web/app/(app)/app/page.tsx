@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { CreateTeam } from "@/components/team/create-team";
-import { getLoggedInUser } from "@/lib/auth";
+import { getLastVisitedTeam, getLoggedInUser } from "@/lib/auth";
 import { listTeams } from "@/lib/team";
 
 export default async function Home() {
@@ -11,8 +11,10 @@ export default async function Home() {
     redirect("/login");
   }
 
-  if (user.prefs.lastVisitedTeam && user.prefs.lastVisitedTeam !== "") {
-    redirect(`/app/teams/${user.prefs.lastVisitedTeam}`);
+  const lastVisitedTeam = await getLastVisitedTeam();
+
+  if (lastVisitedTeam) {
+    redirect(`/app/teams/${lastVisitedTeam}`);
   } else {
     const orgs = await listTeams();
 

@@ -1,113 +1,116 @@
 "use server";
 
-import { revalidateTag, unstable_cache } from "next/cache";
-import { ID, Models, Permission, Query, Role } from "node-appwrite";
+import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 
 import {
   ADMIN_ROLE,
   MEMBER_ROLE,
   OWNER_ROLE,
 } from "@/constants/team.constants";
-import { Experience } from "@/interfaces/experience.interface";
 import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
-import { UserData, UserMemberData } from "@/interfaces/user.interface";
-import { createUserData, withAuth } from "@/lib/auth";
-import {
-  DATABASE_ID,
-  EXPERIENCE_COLLECTION_ID,
-  HOSTNAME,
-  MAX_TEAM_LIMIT,
-  PROJECT_BUCKET_ID,
-  TEAM_COLLECTION_ID,
-  USER_COLLECTION_ID,
-} from "@/lib/constants";
+import { UserMemberData } from "@/interfaces/user.interface";
+import { withAuth } from "@/lib/auth";
+import { auth } from "@/lib/auth/server";
+import { MAX_TEAM_LIMIT } from "@/lib/constants";
 import {
   deleteAllEducationByTeam,
   deleteAllExperienceByTeam,
   deleteAllProjectsByTeam,
 } from "@/lib/db";
-import { createAdminClient, createSessionClient } from "@/lib/server/appwrite";
+import { db } from "@/lib/db/client";
+import { profile, teamProfile } from "@/lib/db/schema";
 import { AddTeamFormData, EditTeamFormData } from "./schemas";
+
+async function toUserMemberData(
+  members: { userId: string; role: string; createdAt: Date | string }[],
+): Promise<UserMemberData[]> {
+  return Promise.all(
+    members.map(async (member) => {
+      const [data] = await db
+        .select()
+        .from(profile)
+        .where(eq(profile.id, member.userId));
+
+      return {
+        $id: member.userId,
+        name: data?.name ?? "",
+        about: data?.about ?? "",
+        roles: [member.role],
+        confirmed: true,
+        joinedAt: String(member.createdAt),
+      };
+    }),
+  );
+}
+
+function toTeamData(
+  organization: { id: string; name: string; ownerId?: string },
+  teamProfileRow: typeof teamProfile.$inferSelect | undefined,
+  members?: UserMemberData[],
+): TeamData {
+  console.log("test4");
+
+  return {
+    $id: organization.id,
+    name: organization.name,
+    title: teamProfileRow?.title ?? "",
+    description: teamProfileRow?.description ?? "",
+    image: teamProfileRow?.image ?? "",
+    favicon: teamProfileRow?.favicon ?? "",
+    socials: teamProfileRow?.socials ?? [],
+    skills: teamProfileRow?.skills ?? [],
+    userId: organization.ownerId ?? "",
+    members,
+  };
+}
 
 /**
  * Get a team by ID
  * @param {string} id The team ID
- * @returns {Promise<Result<TeamData>} The team
+ * @returns {Promise<Result<TeamData>>} The team
  */
 export async function getTeamById(id: string): Promise<Result<TeamData>> {
   return withAuth(async () => {
-    const { database, team } = await createSessionClient();
+    try {
+      const { data: organization, error } =
+        await auth.organization.getFullOrganization({
+          query: { organizationId: id },
+        });
 
-    return unstable_cache(
-      async (id) => {
-        try {
-          const data = await database.getDocument<TeamData>(
-            DATABASE_ID,
-            TEAM_COLLECTION_ID,
-            id,
-          );
+      if (error || !organization) {
+        throw new Error(error?.message ?? "Team not found.");
+      }
 
-          const experience = await database.listDocuments<Experience>(
-            DATABASE_ID,
-            EXPERIENCE_COLLECTION_ID,
-            [Query.equal("teamId", id), Query.orderDesc("start_date")],
-          );
+      const [teamProfileRow] = await db
+        .select()
+        .from(teamProfile)
+        .where(eq(teamProfile.id, id));
 
-          const memberships = await team.listMemberships(data.$id);
+      const owner = organization.members.find((m) => m.role === OWNER_ROLE);
+      const members = await toUserMemberData(organization.members);
 
-          const userIds = memberships.memberships.map(
-            (member) => member.userId,
-          );
-          const uniqueUserIds = Array.from(new Set(userIds));
+      return {
+        success: true,
+        message: "Team successfully retrieved.",
+        data: toTeamData(
+          { ...organization, ownerId: owner?.userId },
+          teamProfileRow,
+          members,
+        ),
+      };
+    } catch (err) {
+      const error = err as Error;
 
-          const users = await database.listDocuments<UserData>(
-            DATABASE_ID,
-            USER_COLLECTION_ID,
-            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
-          );
+      // Logging to Vercel
+      console.error(error);
 
-          const usersMembershipData: UserMemberData[] = users.documents.map(
-            (user) => {
-              const member = memberships.memberships.filter(
-                (member) => member.userId === user.$id,
-              )[0];
-              return {
-                ...user,
-                roles: member.roles,
-                confirmed: member.confirm,
-                joinedAt: member.joined,
-              };
-            },
-          );
-
-          return {
-            success: true,
-            message: "Team successfully retrieved.",
-            data: {
-              ...data,
-              experience: experience.documents,
-              members: usersMembershipData,
-            },
-          };
-        } catch (err) {
-          const error = err as Error;
-
-          // Logging to Vercel
-          console.error(error);
-
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      ["team", id],
-      {
-        tags: ["team", `team:${id}`],
-        revalidate: 600,
-      },
-    )(id);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   });
 }
 
@@ -120,174 +123,119 @@ export async function listTeamMembers(
   teamId: string,
 ): Promise<Result<UserMemberData[]>> {
   return withAuth(async () => {
-    const { database, team } = await createSessionClient();
+    try {
+      const { data, error } = await auth.organization.listMembers({
+        query: { organizationId: teamId },
+      });
 
-    return unstable_cache(
-      async (teamId) => {
-        try {
-          const memberships = await team.listMemberships(teamId);
+      if (error || !data) {
+        throw new Error(error?.message ?? "Failed to list team members.");
+      }
 
-          const userIds = memberships.memberships.map(
-            (member) => member.userId,
-          );
-          const uniqueUserIds = Array.from(new Set(userIds));
+      return {
+        success: true,
+        message: "Team members successfully retrieved.",
+        data: await toUserMemberData(data.members),
+      };
+    } catch (err) {
+      const error = err as Error;
 
-          const users = await database.listDocuments<UserData>(
-            DATABASE_ID,
-            USER_COLLECTION_ID,
-            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
-          );
+      // Logging to Vercel
+      console.error(error);
 
-          const usersMembershipData: UserMemberData[] = users.documents.map(
-            (user) => {
-              const member = memberships.memberships.filter(
-                (member) => member.userId === user.$id,
-              )[0];
-              return {
-                ...user,
-                roles: member.roles,
-                confirmed: member.confirm,
-                joinedAt: member.joined,
-              };
-            },
-          );
-
-          return {
-            success: true,
-            message: "Team members successfully retrieved.",
-            data: usersMembershipData,
-          };
-        } catch (err) {
-          const error = err as Error;
-
-          // Logging to Vercel
-          console.error(error);
-
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      [`team-members`, teamId],
-      {
-        tags: ["team-members", `team:${teamId}`],
-        revalidate: 600,
-      },
-    )(teamId);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   });
 }
 
 /**
- * List all teams
- * @returns {Promise<Result<TeamData[]>} The teams
+ * List all teams the current user belongs to
+ * @returns {Promise<Result<TeamData[]>>} The teams
  */
 export async function listTeams(): Promise<Result<TeamData[]>> {
-  return withAuth(async (user) => {
-    const { database } = await createSessionClient();
+  return withAuth(async () => {
+    try {
+      const { data, error } = await auth.organization.list();
 
-    return unstable_cache(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async (userId) => {
-        try {
-          const data = await database.listDocuments<TeamData>(
-            DATABASE_ID,
-            TEAM_COLLECTION_ID,
-          );
+      if (error || !data) {
+        throw new Error(error?.message ?? "Failed to list teams.");
+      }
 
-          return {
-            success: true,
-            message: "Teams successfully retrieved.",
-            data: data.documents,
-          };
-        } catch (err) {
-          const error = err as Error;
+      const teamProfileRows = await db.select().from(teamProfile);
+      const teamProfileMap = new Map(
+        teamProfileRows.map((row) => [row.id, row]),
+      );
 
-          // Logging to Vercel
-          console.error(error);
+      return {
+        success: true,
+        message: "Teams successfully retrieved.",
+        data: data.map((organization) =>
+          toTeamData(organization, teamProfileMap.get(organization.id)),
+        ),
+      };
+    } catch (err) {
+      console.log("test5");
 
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      ["teams"],
-      {
-        tags: ["teams"],
-        revalidate: 600,
-      },
-    )(user.$id);
+      const error = err as Error;
+
+      // Logging to Vercel
+      console.error(error);
+
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   });
 }
 
 /**
  * Create a team
  * @param {Object} params The parameters for creating a team
- * @param {string} [params.id] The ID of the team (optional)
  * @param {AddTeamFormData} params.data The team data
- * @param {string[]} [params.permissions] The permissions for the team (optional)
  * @returns {Promise<Result<TeamData>>} The created team
  */
 export async function createTeam({
-  id = ID.unique(),
   data,
-  permissions = [],
 }: {
-  id?: string;
   data: AddTeamFormData;
-  permissions?: string[];
 }): Promise<Result<TeamData>> {
   return withAuth(async (user) => {
-    const { database, team } = await createSessionClient();
-
-    permissions = [
-      ...permissions,
-      Permission.read(Role.user(user.$id)),
-      Permission.write(Role.user(user.$id)),
-    ];
-
     try {
-      const existingTeams = await database.listDocuments<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        [Query.select(["$id"])],
-      );
+      const { data: existingTeams, error: listError } =
+        await auth.organization.list();
 
-      if (existingTeams.total >= MAX_TEAM_LIMIT) {
+      if (listError) {
+        throw new Error(listError.message);
+      }
+
+      if ((existingTeams?.length ?? 0) >= MAX_TEAM_LIMIT) {
         throw new Error(
           `You have reached the maximum amount of teams you are allowed to join and/or own. (${MAX_TEAM_LIMIT})`,
         );
       }
 
-      const teamResponse = await team.create(id, data.name, [
-        ADMIN_ROLE,
-        OWNER_ROLE,
-        MEMBER_ROLE,
-      ]);
+      const { data: organization, error } = await auth.organization.create({
+        name: data.name,
+        slug: `${data.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`,
+      });
 
-      permissions = [
-        ...permissions,
-        Permission.read(Role.team(teamResponse.$id)),
-        Permission.update(Role.team(teamResponse.$id)),
-        Permission.delete(Role.team(teamResponse.$id, ADMIN_ROLE)),
-      ];
+      if (error || !organization) {
+        throw new Error(error?.message ?? "Failed to create team.");
+      }
 
-      const teamData = await database.createDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        teamResponse.$id,
-        {
-          name: data.name,
-          title: "Welcome to your team!",
-          description: "This is your team's information page.",
-          image: null,
-          favicon: null,
-          socials: [],
-          userId: user.$id,
-        },
-        permissions,
-      );
+      await db.insert(teamProfile).values({
+        id: organization.id,
+        title: "Welcome to your team!",
+        description: "This is your team's information page.",
+        image: null,
+        favicon: null,
+        socials: [],
+        skills: [],
+      });
 
       revalidateTag("teams");
       revalidateTag("information");
@@ -295,7 +243,7 @@ export async function createTeam({
       return {
         success: true,
         message: "Team successfully created.",
-        data: teamData,
+        data: toTeamData({ ...organization, ownerId: user.$id }, undefined),
       };
     } catch (err) {
       const error = err as Error;
@@ -313,40 +261,35 @@ export async function createTeam({
 
 /**
  * Update a team
- * @param {Object} params The parameters for creating a team
- * @param {string} [params.id] The ID of the team
+ * @param {Object} params The parameters for updating a team
+ * @param {string} params.id The ID of the team
  * @param {EditTeamFormData} params.data The team data
- * @param {string[]} [params.permissions] The permissions for the team (optional)
  * @returns {Promise<Result<TeamData>>} The updated team
  */
 export async function updateTeam({
   id,
   data,
-  permissions = undefined,
 }: {
   id: string;
   data: EditTeamFormData;
-  permissions?: string[];
 }): Promise<Result<TeamData>> {
-  return withAuth(async (user) => {
-    const { database, team } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      await checkUserRole(id, user.$id, [ADMIN_ROLE, OWNER_ROLE]);
+      await checkUserRole(id, [ADMIN_ROLE, OWNER_ROLE]);
 
-      await database.getDocument<TeamData>(DATABASE_ID, TEAM_COLLECTION_ID, id);
+      const { data: organization, error } = await auth.organization.update({
+        organizationId: id,
+        data: { name: data.name },
+      });
 
-      await team.updateName(id, data.name);
+      if (error || !organization) {
+        throw new Error(error?.message ?? "Failed to update team.");
+      }
 
-      const teamData = await database.updateDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        id,
-        {
-          name: data.name,
-        },
-        permissions,
-      );
+      const [teamProfileRow] = await db
+        .select()
+        .from(teamProfile)
+        .where(eq(teamProfile.id, id));
 
       revalidateTag("teams");
       revalidateTag(`team:${id}`);
@@ -354,7 +297,7 @@ export async function updateTeam({
       return {
         success: true,
         message: "Team successfully updated.",
-        data: teamData,
+        data: toTeamData(organization, teamProfileRow),
       };
     } catch (err) {
       const error = err as Error;
@@ -373,24 +316,19 @@ export async function updateTeam({
  * @returns {Promise<Result<TeamData>>} The deleted team
  */
 export async function deleteTeam(id: string): Promise<Result<TeamData>> {
-  return withAuth(async (user) => {
-    const { database, team, storage } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      await checkUserRole(id, user.$id, [OWNER_ROLE]);
+      await checkUserRole(id, [OWNER_ROLE]);
 
-      const teamData = await database.getDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        id,
-      );
+      const { error } = await auth.organization.delete({
+        organizationId: id,
+      });
 
-      await team.delete(id);
-      await database.deleteDocument(DATABASE_ID, TEAM_COLLECTION_ID, id);
-
-      if (teamData.image) {
-        await storage.deleteFile(PROJECT_BUCKET_ID, teamData.image);
+      if (error) {
+        throw new Error(error.message);
       }
+
+      await db.delete(teamProfile).where(eq(teamProfile.id, id));
 
       await deleteAllProjectsByTeam(id);
       await deleteAllExperienceByTeam(id);
@@ -398,7 +336,6 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
 
       revalidateTag("teams");
       revalidateTag(`team:${id}`);
-
       revalidateTag(`informations:team-${id}`);
 
       return {
@@ -425,40 +362,26 @@ export async function deleteTeam(id: string): Promise<Result<TeamData>> {
  * @returns {Promise<Result<string>>} The ID of another team the user is in.
  */
 export async function leaveTeam(teamId: string): Promise<Result<string>> {
-  return withAuth(async (user) => {
-    const { database, team } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      const memberships = await team.listMemberships(teamId, [
-        Query.equal("userId", user.$id),
-      ]);
+      const { error } = await auth.organization.leave({
+        organizationId: teamId,
+      });
 
-      const membership = memberships.memberships[0];
-
-      if (!membership) {
-        throw new Error("You are not a member of this team.");
+      if (error) {
+        throw new Error(error.message);
       }
 
-      if (membership.roles.includes(OWNER_ROLE)) {
-        throw new Error("You cannot leave a team you own.");
-      }
-
-      await team.deleteMembership(teamId, membership.$id);
-
-      const data = await database.listDocuments<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        [Query.orderDesc("$createdAt"), Query.limit(1)],
-      );
+      const { data: remainingTeams } = await auth.organization.list();
 
       revalidateTag("teams");
       revalidateTag(`team:${teamId}`);
 
-      if (data.documents.length > 0) {
+      if (remainingTeams && remainingTeams.length > 0) {
         return {
           success: true,
           message: `You've left the team!`,
-          data: data.documents[0].$id,
+          data: remainingTeams[0].id,
         };
       }
 
@@ -490,33 +413,19 @@ export async function inviteMember(
   teamId: string,
   email: string,
 ): Promise<Result<void>> {
-  return withAuth(async (user) => {
-    const { team, users } = await createAdminClient();
-
+  return withAuth(async () => {
     try {
-      await checkUserRole(teamId, user.$id, [
-        MEMBER_ROLE,
-        ADMIN_ROLE,
-        OWNER_ROLE,
-      ]);
+      await checkUserRole(teamId, [MEMBER_ROLE, ADMIN_ROLE, OWNER_ROLE]);
 
-      const exists = await users.list([Query.equal("email", email)]);
-
-      if (exists.total == 0) {
-        throw new Error("User is not a current member of the platform.");
-      }
-
-      const data = await team.createMembership(
-        teamId,
-        [MEMBER_ROLE],
+      const { error } = await auth.organization.inviteMember({
+        organizationId: teamId,
         email,
-        undefined,
-        undefined,
-        `http://${HOSTNAME}/accept/${teamId}`,
-        email.split("@")[0],
-      );
+        role: MEMBER_ROLE,
+      });
 
-      await createUserData(data.userId);
+      if (error) {
+        throw new Error(error.message);
+      }
 
       revalidateTag(`team:${teamId}`);
 
@@ -548,34 +457,28 @@ export async function removeMember(
   userId: string,
 ): Promise<Result<void>> {
   return withAuth(async (user) => {
-    const { team } = await createAdminClient();
-
     try {
       if (userId === user.$id) {
         throw new Error("You cannot remove yourself from the team.");
       }
 
-      const userMembership = await team.listMemberships(teamId, [
-        Query.equal("userId", user.$id),
-      ]);
-      const currentUserRole = userMembership.memberships[0]?.roles[0];
+      const roles = await getCurrentUserRoles(teamId);
+      const currentUserRole = roles.data?.[0];
 
-      const memberToRemove = await team.listMemberships(teamId, [
-        Query.equal("userId", userId),
-      ]);
-      const membership = memberToRemove.memberships[0];
+      const { data: members } = await auth.organization.listMembers({
+        query: { organizationId: teamId },
+      });
+      const membership = members?.members.find((m) => m.userId === userId);
 
       if (!membership) {
         throw new Error("User is not a member of this team.");
       }
 
-      const memberRole = membership.roles[0];
-
-      if (membership.roles.includes(OWNER_ROLE)) {
+      if (membership.role === OWNER_ROLE) {
         throw new Error("You cannot remove the owner of the team.");
       }
 
-      if (memberRole === ADMIN_ROLE && currentUserRole !== OWNER_ROLE) {
+      if (membership.role === ADMIN_ROLE && currentUserRole !== OWNER_ROLE) {
         throw new Error("Only team owners can remove admin members.");
       }
 
@@ -585,12 +488,20 @@ export async function removeMember(
         );
       }
 
-      await team.deleteMembership(teamId, membership.$id);
+      const { error } = await auth.organization.removeMember({
+        organizationId: teamId,
+        memberIdOrEmail: membership.id,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
       revalidateTag(`team:${teamId}`);
 
       return {
         success: true,
-        message: `${membership.userName} has been removed from the team.`,
+        message: `Member has been removed from the team.`,
       };
     } catch (err) {
       const error = err as Error;
@@ -606,28 +517,35 @@ export async function removeMember(
 /**
  * Promote a team member to admin
  * @param {string} teamId The team ID
- * @param {string} userId The membership ID to promote
+ * @param {string} userId The user ID to promote
  * @returns {Promise<Result<void>>}
  */
 export async function promoteToAdmin(
   teamId: string,
   userId: string,
 ): Promise<Result<void>> {
-  return withAuth(async (user) => {
-    const { team } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      await checkUserRole(teamId, user.$id, [OWNER_ROLE]);
+      await checkUserRole(teamId, [OWNER_ROLE]);
 
-      const userMembership = await team.listMemberships(teamId, [
-        Query.equal("userId", userId),
-      ]);
-      const currentRoles = userMembership.memberships[0]?.roles;
-      const membership = userMembership.memberships[0];
-      await team.updateMembership(teamId, membership.$id, [
-        ...currentRoles,
-        ADMIN_ROLE,
-      ]);
+      const { data: members } = await auth.organization.listMembers({
+        query: { organizationId: teamId },
+      });
+      const membership = members?.members.find((m) => m.userId === userId);
+
+      if (!membership) {
+        throw new Error("User is not a member of this team.");
+      }
+
+      const { error } = await auth.organization.updateMemberRole({
+        organizationId: teamId,
+        memberId: membership.id,
+        role: ADMIN_ROLE,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
 
       revalidateTag(`team:${teamId}`);
 
@@ -652,27 +570,35 @@ export async function promoteToAdmin(
 /**
  * Remove admin role from a team member
  * @param {string} teamId The team ID
- * @param {string} userId The membership ID to demote
+ * @param {string} userId The user ID to demote
  * @returns {Promise<Result<void>>}
  */
 export async function removeAdminRole(
   teamId: string,
   userId: string,
 ): Promise<Result<void>> {
-  return withAuth(async (user) => {
-    const { team } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      await checkUserRole(teamId, user.$id, [OWNER_ROLE]);
+      await checkUserRole(teamId, [OWNER_ROLE]);
 
-      const userMembership = await team.listMemberships(teamId, [
-        Query.equal("userId", userId),
-      ]);
-      const currentRoles = userMembership.memberships[0]?.roles;
-      const membership = userMembership.memberships[0];
-      await team.updateMembership(teamId, membership.$id, [
-        ...currentRoles.filter((x) => x != ADMIN_ROLE),
-      ]);
+      const { data: members } = await auth.organization.listMembers({
+        query: { organizationId: teamId },
+      });
+      const membership = members?.members.find((m) => m.userId === userId);
+
+      if (!membership) {
+        throw new Error("User is not a member of this team.");
+      }
+
+      const { error } = await auth.organization.updateMemberRole({
+        organizationId: teamId,
+        memberId: membership.id,
+        role: MEMBER_ROLE,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
 
       revalidateTag(`team:${teamId}`);
 
@@ -702,18 +628,20 @@ export async function removeAdminRole(
 export async function getCurrentUserRoles(
   teamId: string,
 ): Promise<Result<string[]>> {
-  return withAuth(async (user) => {
-    const { team } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      const userMembership = await team.listMemberships(teamId, [
-        Query.equal("userId", user.$id),
-      ]);
+      const { data, error } = await auth.organization.getActiveMember({
+        query: { organizationId: teamId },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
 
       return {
         success: true,
         message: "User roles successfully retrieved.",
-        data: userMembership.memberships[0]?.roles || [],
+        data: data?.role ? [data.role] : [],
       };
     } catch (err) {
       const error = err as Error;
@@ -730,34 +658,22 @@ export async function getCurrentUserRoles(
 }
 
 /**
- * Check if user has required role for team action
- * @param team The team client
+ * Check if the current user has one of the required roles for a team action
  * @param teamId The team ID
- * @param userId The user ID
  * @param requiredRoles Array of allowed roles
- * @returns Role if authorized, throws error if not
+ * @throws Error if the user doesn't have any of the required roles
  */
 export async function checkUserRole(
   teamId: string,
-  userId: string,
   requiredRoles: string[],
-): Promise<Models.MembershipList> {
-  const { team } = await createSessionClient();
+): Promise<void> {
+  const { data, error } = await auth.organization.getActiveMember({
+    query: { organizationId: teamId },
+  });
 
-  const userMembership = await team.listMemberships(teamId, [
-    Query.equal("userId", userId),
-  ]);
-
-  const currentUserRoles = userMembership.memberships[0]?.roles;
-
-  if (
-    !currentUserRoles ||
-    !currentUserRoles.some((role) => requiredRoles.includes(role))
-  ) {
+  if (error || !data || !requiredRoles.includes(data.role)) {
     throw new Error(
       `You must be ${requiredRoles.join(" or ")} to perform this action.`,
     );
   }
-
-  return userMembership;
 }

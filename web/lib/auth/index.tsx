@@ -1,14 +1,14 @@
 "use server";
 
-import { revalidateTag, unstable_cache } from "next/cache";
-import { cookies, headers } from "next/headers";
+import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
-import { ID, Models, OAuthProvider, Permission, Role } from "node-appwrite";
 
 import { AuthResponse, Response, Result } from "@/interfaces/result.interface";
 import { User, UserData } from "@/interfaces/user.interface";
-import { COOKIE_KEY, DATABASE_ID, USER_COLLECTION_ID } from "@/lib/constants";
-import { createAdminClient, createSessionClient } from "@/lib/server/appwrite";
+import { auth } from "@/lib/auth/server";
+import { db } from "@/lib/db/client";
+import { profile } from "@/lib/db/schema";
 import {
   ResetPasswordFormData,
   SignInFormData,
@@ -16,17 +16,31 @@ import {
   UpdateProfileFormData,
 } from "./schemas";
 
+export interface SessionUser {
+  $id: string;
+  name: string;
+  email: string;
+  emailVerification: boolean;
+}
+
 /**
  * Retrieves the currently logged-in user.
- *
- * @returns {Promise<Models.User<Models.Preferences> | null>} A promise that resolves to the account information
- * of the logged-in user, or null if no user is logged in.
+ * @returns {Promise<SessionUser | null>} The logged-in user, or null if no user is logged in.
  */
-export async function getLoggedInUser(): Promise<Models.User<Models.Preferences> | null> {
+export async function getLoggedInUser(): Promise<SessionUser | null> {
   try {
-    const { account } = await createSessionClient();
+    const { data: session } = await auth.getSession();
 
-    return await account.get();
+    if (!session?.user) {
+      return null;
+    }
+
+    return {
+      $id: session.user.id,
+      name: session.user.name,
+      email: session.user.email,
+      emailVerification: session.user.emailVerified,
+    };
   } catch {
     return null;
   }
@@ -34,91 +48,77 @@ export async function getLoggedInUser(): Promise<Models.User<Models.Preferences>
 
 /**
  * Get the current user
- * @returns {Promise<Result<User>} The current user
+ * @returns {Promise<Result<User>>} The current user
  */
 export async function getUserData(): Promise<Result<User>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
+    try {
+      const [data] = await db
+        .select()
+        .from(profile)
+        .where(eq(profile.id, user.$id));
 
-    return unstable_cache(
-      async (id) => {
-        try {
-          const data = await database.getDocument<UserData>(
-            DATABASE_ID,
-            USER_COLLECTION_ID,
-            id,
-          );
+      return {
+        success: true,
+        message: "User successfully retrieved.",
+        data: {
+          ...user,
+          $id: user.$id,
+          name: data?.name ?? user.name,
+          about: data?.about ?? "",
+        },
+      };
+    } catch (err) {
+      const error = err as Error;
 
-          return {
-            success: true,
-            message: "Projects successfully retrieved.",
-            data: {
-              ...user,
-              ...data,
-            },
-          };
-        } catch (err) {
-          const error = err as Error;
+      // Logging to Vercel
+      console.error(error);
 
-          // Logging to Vercel
-          console.error(error);
-
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      ["user"],
-      {
-        tags: ["user", `user:${user.$id}`],
-        revalidate: 600,
-      },
-    )(user.$id);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   });
 }
 
 /**
- * Get the current user by ID
+ * Get a user by ID
  * @param {string} id The user ID
- * @returns {Promise<Result<UserData>} The current user
+ * @returns {Promise<Result<UserData>>} The user
  */
 export async function getUserById(id: string): Promise<Result<UserData>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
+    try {
+      const [data] = await db.select().from(profile).where(eq(profile.id, id));
 
-    return unstable_cache(
-      async (id) => {
-        try {
-          const data = await database.getDocument<UserData>(
-            DATABASE_ID,
-            USER_COLLECTION_ID,
-            id,
-          );
+      if (!data) {
+        return {
+          success: false,
+          message: "User not found.",
+        };
+      }
 
-          return {
-            success: true,
-            message: "Projects successfully retrieved.",
-            data,
-          };
-        } catch (err) {
-          const error = err as Error;
+      return {
+        success: true,
+        message: "User successfully retrieved.",
+        data: {
+          $id: data.id,
+          name: data.name,
+          about: data.about ?? "",
+        },
+      };
+    } catch (err) {
+      const error = err as Error;
 
-          // Logging to Vercel
-          console.error(error);
+      // Logging to Vercel
+      console.error(error);
 
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      ["user", id],
-      {
-        tags: ["user", `user:${id}`],
-        revalidate: 600,
-      },
-    )(id);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   });
 }
 
@@ -135,21 +135,14 @@ export async function updateProfile({
   id: string;
   data: UpdateProfileFormData;
 }): Promise<Response> {
-  return withAuth(async (user) => {
-    const { account, database } = await createSessionClient();
-
+  return withAuth(async () => {
     try {
-      await database.getDocument<UserData>(
-        DATABASE_ID,
-        USER_COLLECTION_ID,
-        user.$id,
-      );
+      await auth.updateUser({ name: data.name });
 
-      await account.updateName(data.name);
-      await database.updateDocument(DATABASE_ID, USER_COLLECTION_ID, id, {
-        name: data.name,
-        about: data.about,
-      });
+      await db
+        .update(profile)
+        .set({ name: data.name, about: data.about })
+        .where(eq(profile.id, id));
 
       revalidateTag("user");
       revalidateTag("user-logs");
@@ -173,47 +166,7 @@ export async function updateProfile({
 }
 
 /**
- * Get a list of logs
- * @returns {Promise<Result<Models.LogList>>} The list of logs
- */
-export async function getUserLogs(): Promise<Result<Models.LogList>> {
-  return withAuth(async () => {
-    const { account } = await createSessionClient();
-
-    return unstable_cache(
-      async () => {
-        try {
-          const logs = await account.listLogs();
-
-          return {
-            success: true,
-            message: "Projects successfully retrieved.",
-            data: logs,
-          };
-        } catch (err) {
-          const error = err as Error;
-
-          // Logging to Vercel
-          console.error(error);
-
-          return {
-            success: false,
-            message: error.message,
-          };
-        }
-      },
-      ["user-logs"],
-      {
-        tags: ["user-logs"],
-        revalidate: 600,
-      },
-    )();
-  });
-}
-
-/**
  * Logs out the currently logged-in user.
- * @returns {Promise<boolean>} A promise that resolves to true if the user is logged in, false otherwise.
  */
 export async function logOut(): Promise<boolean> {
   await deleteSession();
@@ -222,10 +175,7 @@ export async function logOut(): Promise<boolean> {
 }
 
 export async function deleteSession(): Promise<void> {
-  const { account } = await createSessionClient();
-
-  account.deleteSession("current");
-  (await cookies()).delete(COOKIE_KEY);
+  await auth.signOut();
 
   revalidateTag("logged_in_user");
 }
@@ -238,32 +188,19 @@ export async function deleteSession(): Promise<void> {
 export async function signInWithEmail(
   formData: SignInFormData,
 ): Promise<AuthResponse> {
-  const email = formData.email;
-  const password = formData.password;
+  const { error } = await auth.signIn.email({
+    email: formData.email,
+    password: formData.password,
+  });
 
-  const { account } = await createAdminClient();
-
-  try {
-    const session = await account.createEmailPasswordSession(email, password);
-
-    revalidateTag("logged_in_user");
-    (await cookies()).set(COOKIE_KEY, session.secret, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "strict",
-      secure: true,
-    });
-  } catch (err) {
-    const error = err as Error;
-
-    // Logging to Vercel
-    console.error(error);
-
+  if (error) {
     return {
       success: false,
-      message: error.message,
+      message: error.message ?? "Failed to sign in. Try again.",
     };
   }
+
+  revalidateTag("logged_in_user");
 
   return redirect("/app", RedirectType.push);
 }
@@ -276,83 +213,60 @@ export async function signInWithEmail(
 export async function signUpWithEmail(
   formData: SignUpFormData,
 ): Promise<AuthResponse> {
-  const name = formData.name;
-  const email = formData.email;
-  const password = formData.password;
+  const { data, error } = await auth.signUp.email({
+    email: formData.email,
+    password: formData.password,
+    name: formData.name,
+  });
 
-  const { account } = await createAdminClient();
+  if (error || !data?.user) {
+    return {
+      success: false,
+      message: error?.message ?? "Failed to create account.",
+    };
+  }
 
   revalidateTag("logged_in_user");
 
-  try {
-    const id = ID.unique();
-    await account.create(id, email, password, name);
-    const session = await account.createEmailPasswordSession(email, password);
-
-    (await cookies()).set(COOKIE_KEY, session.secret, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "strict",
-      secure: true,
-    });
-
-    await createUserData(session.userId);
-  } catch (err) {
-    const error = err as Error;
-
-    // Logging to Vercel
-    console.error(error);
-
-    return {
-      success: false,
-      message: error.message,
-    };
-  }
+  await createUserProfile(data.user.id, data.user.name);
 
   return redirect("/app");
 }
 
 /**
- * Signs up a user with GitHub OAuth.
+ * Signs in/up a user with GitHub OAuth.
  * @returns {Promise<void>} A promise that resolves to a redirect to the GitHub OAuth page.
  */
 export async function signUpWithGithub(): Promise<void> {
-  const { account } = await createAdminClient();
-  const origin = (await headers()).get("origin");
+  const { data, error } = await auth.signIn.social({
+    provider: "github",
+    callbackURL: "/app",
+  });
 
-  const redirectUrl = await account.createOAuth2Token(
-    OAuthProvider.Github,
-    `${origin}/api/auth/callback`,
-    `${origin}/signup`,
-  );
+  if (error || !data?.url) {
+    throw new Error(error?.message ?? "Failed to start GitHub sign-in.");
+  }
 
-  return redirect(redirectUrl);
+  redirect(data.url);
 }
 
 /**
- * Signs up a user with Google OAuth.
+ * Sends a password recovery email.
  * @param {ResetPasswordFormData} formData
  * @returns {Promise<AuthResponse>} A promise that resolves to an authentication response.
  */
 export async function createPasswordRecovery(
   formData: ResetPasswordFormData,
 ): Promise<AuthResponse> {
-  const email = formData.email;
+  const { error } = await auth.requestPasswordReset({
+    email: formData.email,
+    redirectTo: "/reset",
+  });
 
-  const { account } = await createAdminClient();
-  const origin = (await headers()).get("origin");
-
-  try {
-    await account.createRecovery(email, `${origin}/reset`);
-  } catch (err) {
-    const error = err as Error;
-
-    // Logging to Vercel
-    console.error(error);
-
+  if (error) {
     return {
       success: false,
-      message: error.message,
+      message: error.message ?? "Failed to send recovery email.",
     };
   }
 
@@ -361,20 +275,57 @@ export async function createPasswordRecovery(
 
 /**
  * Resets a user's password.
- * @param {string} id
  * @param {string} token
  * @param {string} password
  * @returns {Promise<AuthResponse>} A promise that resolves to an authentication response.
  */
 export async function resetPassword(
-  id: string,
   token: string,
   password: string,
 ): Promise<AuthResponse> {
-  const { account } = await createAdminClient();
+  const { error } = await auth.resetPassword({
+    newPassword: password,
+    token,
+  });
 
+  if (error) {
+    return {
+      success: false,
+      message: error.message ?? "Failed to reset password.",
+    };
+  }
+
+  return redirect("/signin");
+}
+
+/**
+ * Creates the app-specific profile row for a user if it doesn't already exist.
+ * @param userId the user ID
+ * @param name the user's name
+ */
+export async function createUserProfile(
+  userId: string,
+  name: string,
+): Promise<Result<UserData>> {
   try {
-    await account.updateRecovery(id, token, password);
+    const [existing] = await db
+      .select()
+      .from(profile)
+      .where(eq(profile.id, userId));
+
+    if (existing) {
+      return {
+        success: true,
+        message: "Profile already exists.",
+      };
+    }
+
+    await db.insert(profile).values({ id: userId, name, about: "" });
+
+    return {
+      success: true,
+      message: "Profile successfully created.",
+    };
   } catch (err) {
     const error = err as Error;
 
@@ -386,54 +337,27 @@ export async function resetPassword(
       message: error.message,
     };
   }
-
-  return redirect("/signin");
 }
 
 /**
- * Creates user data in the database if it doesn't already exist.
- * @param userId the user ID
- * @param name the user's name
- * @returns {Promise<Result<UserData>>} A promise that resolves to a result object indicating success or failure.
+ * Get the last visited team for the current user
+ * @returns {Promise<string | null>} The last visited team ID, if any
  */
-export async function createUserData(
-  userId: string,
-): Promise<Result<UserData>> {
-  return withAuth(async (user) => {
-    const { database } = await createAdminClient();
+export async function getLastVisitedTeam(): Promise<string | null> {
+  const result = await withAuth(async (user) => {
+    const [data] = await db
+      .select()
+      .from(profile)
+      .where(eq(profile.id, user.$id));
 
-    try {
-      await database.getDocument<UserData>(
-        DATABASE_ID,
-        USER_COLLECTION_ID,
-        userId,
-      );
-
-      return {
-        success: true,
-        message: "User data already exists.",
-      };
-    } catch {
-      await database.createDocument<UserData>(
-        DATABASE_ID,
-        USER_COLLECTION_ID,
-        userId,
-        {
-          name: user.name,
-        },
-        [
-          Permission.read(Role.user(userId)),
-          Permission.write(Role.user(userId)),
-          Permission.read(Role.users()),
-        ],
-      );
-
-      return {
-        success: true,
-        message: "User data successfully created.",
-      };
-    }
+    return {
+      success: true,
+      message: "Last visited team retrieved.",
+      data: data?.lastVisitedTeamId ?? null,
+    };
   });
+
+  return result.data ?? null;
 }
 
 /**
@@ -444,13 +368,12 @@ export async function createUserData(
 export async function setLastVisitedTeam(
   teamId: string | null,
 ): Promise<Result<void>> {
-  return withAuth(async () => {
-    const { account } = await createSessionClient();
-
+  return withAuth(async (user) => {
     try {
-      await account.updatePrefs({
-        lastVisitedTeam: teamId,
-      });
+      await db
+        .update(profile)
+        .set({ lastVisitedTeamId: teamId })
+        .where(eq(profile.id, user.$id));
 
       return {
         success: true,
@@ -470,9 +393,7 @@ export async function setLastVisitedTeam(
   });
 }
 
-type AuthenticatedFunction<T> = (
-  user: Models.User<Models.Preferences>,
-) => Promise<Result<T>>;
+type AuthenticatedFunction<T> = (user: SessionUser) => Promise<Result<T>>;
 
 export async function withAuth<T>(
   fn: AuthenticatedFunction<T>,

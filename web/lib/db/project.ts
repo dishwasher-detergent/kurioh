@@ -1,106 +1,117 @@
 "use server";
 
+import { and, asc, eq, gt, ilike } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { ID, Models, Permission, Query, Role } from "node-appwrite";
 
+import { DocumentList, Result } from "@/interfaces/result.interface";
 import { Project } from "@/interfaces/project.interface";
-import { Result } from "@/interfaces/result.interface";
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData } from "@/interfaces/user.interface";
 import { withAuth } from "@/lib/auth";
-import {
-  DATABASE_ID,
-  MAX_PROJECT_IMAGE_LIMIT,
-  MAX_PROJECT_LIMIT,
-  PROJECT_COLLECTION_ID,
-  TEAM_COLLECTION_ID,
-  USER_COLLECTION_ID,
-} from "@/lib/constants";
-import { createSessionClient } from "@/lib/server/appwrite";
+import { MAX_PROJECT_IMAGE_LIMIT, MAX_PROJECT_LIMIT } from "@/lib/constants";
+import { db } from "@/lib/db/client";
+import { profile, project, teamProfile } from "@/lib/db/schema";
 import { deleteFile, uploadFile } from "@/lib/storage";
 import { createSlug } from "@/lib/utils";
 import { AddProjectFormData, EditProjectFormData } from "./schemas";
 
+function toProject(row: typeof project.$inferSelect): Project {
+  return {
+    $id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description ?? "",
+    shortDescription: row.shortDescription ?? "",
+    images: row.images ?? [],
+    tags: row.tags ?? [],
+    links: row.links ?? [],
+    published: row.published,
+    ordinal: row.ordinal,
+    userId: row.userId,
+    teamId: row.teamId,
+  };
+}
+
+async function attachUserAndTeam(item: Project): Promise<Project> {
+  const [userRow] = await db
+    .select({ id: profile.id, name: profile.name })
+    .from(profile)
+    .where(eq(profile.id, item.userId));
+
+  const [teamRow] = await db
+    .select({ id: teamProfile.id })
+    .from(teamProfile)
+    .where(eq(teamProfile.id, item.teamId));
+
+  return {
+    ...item,
+    user: userRow
+      ? ({ $id: userRow.id, name: userRow.name, about: "" } as UserData)
+      : undefined,
+    team: teamRow ? ({ $id: teamRow.id } as unknown as TeamData) : undefined,
+  };
+}
+
+export interface ListProjectsOptions {
+  search?: string;
+  limit?: number;
+  cursorId?: string;
+}
+
 /**
- * Get a list of projects
- * @param {string[]} queries The queries to filter the projects
- * @returns {Promise<Result<Models.DocumentList<Project>>>} The list of projects
+ * Get a list of projects for a team
+ * @param {string} id The ID of the team
+ * @param {ListProjectsOptions} options The query options
+ * @returns {Promise<Result<DocumentList<Project>>>} The list of projects
  */
 export async function listProjectsByTeam(
   id: string,
-  queries: string[] = [],
-): Promise<Result<Models.DocumentList<Project>>> {
+  options: ListProjectsOptions = {},
+): Promise<Result<DocumentList<Project>>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
+    const { search, limit = 5, cursorId } = options;
 
     return unstable_cache(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async (queries, id, userId) => {
+      async (id, search, limit, cursorId, userId) => {
         try {
-          const projects = await database.listDocuments<Project>(
-            DATABASE_ID,
-            PROJECT_COLLECTION_ID,
-            [Query.equal("teamId", id), ...queries],
-          );
+          let cursorOrdinal: number | undefined;
 
-          if (!projects.documents.length) {
-            return {
-              success: true,
-              message: "No projects found.",
-              data: projects,
-            };
+          if (cursorId) {
+            const [cursorRow] = await db
+              .select({ ordinal: project.ordinal })
+              .from(project)
+              .where(eq(project.id, cursorId));
+            cursorOrdinal = cursorRow?.ordinal;
           }
 
-          const userIds = projects.documents.map((project) => project.userId);
-          const uniqueUserIds = Array.from(new Set(userIds));
+          const conditions = [eq(project.teamId, id)];
 
-          const teamIds = projects.documents.map((project) => project.teamId);
-          const uniqueTeamIds = Array.from(new Set(teamIds));
+          if (search) {
+            conditions.push(ilike(project.name, `%${search}%`));
+          }
 
-          const users = await database.listDocuments<UserData>(
-            DATABASE_ID,
-            USER_COLLECTION_ID,
-            [Query.equal("$id", uniqueUserIds), Query.select(["$id", "name"])],
+          if (cursorOrdinal !== undefined) {
+            conditions.push(gt(project.ordinal, cursorOrdinal));
+          }
+
+          const rows = await db
+            .select()
+            .from(project)
+            .where(and(...conditions))
+            .orderBy(asc(project.ordinal))
+            .limit(limit);
+
+          const total = await db.$count(project, eq(project.teamId, id));
+
+          const documents = await Promise.all(
+            rows.map((row) => attachUserAndTeam(toProject(row))),
           );
-
-          const teams = await database.listDocuments<TeamData>(
-            DATABASE_ID,
-            TEAM_COLLECTION_ID,
-            [Query.equal("$id", uniqueTeamIds), Query.select(["$id", "name"])],
-          );
-
-          const userMap = users.documents.reduce<Record<string, UserData>>(
-            (acc, user) => {
-              if (user) {
-                acc[user.$id] = user;
-              }
-              return acc;
-            },
-            {},
-          );
-
-          const teamMap = teams.documents.reduce<Record<string, TeamData>>(
-            (acc, team) => {
-              if (team) {
-                acc[team.$id] = team;
-              }
-              return acc;
-            },
-            {},
-          );
-
-          const newProjects = projects.documents.map((project) => ({
-            ...project,
-            user: userMap[project.userId],
-            team: teamMap[project.teamId],
-          }));
-
-          projects.documents = newProjects;
 
           return {
             success: true,
             message: "Projects successfully retrieved.",
-            data: projects,
+            data: { documents, total },
           };
         } catch (err) {
           const error = err as Error;
@@ -117,60 +128,43 @@ export async function listProjectsByTeam(
       {
         tags: [
           "projects",
-          `projects:${queries.join("-")}`,
+          `projects:${search ?? ""}-${limit}-${cursorId ?? ""}`,
           `projects:team-${id}`,
         ],
         revalidate: 600,
       },
-    )(queries, id, user.$id);
+    )(id, search, limit, cursorId, user.$id);
   });
 }
 
 /**
  * Get a project by ID
  * @param {string} projectId The ID of the project
- * @param {string[]} queries The queries to filter the project
  * @returns {Promise<Result<Project>>} The project
  */
 export async function getProjectById(
   projectId: string,
-  queries: string[] = [],
 ): Promise<Result<Project>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     return unstable_cache(
-      async (projectId, queries) => {
+      async (projectId) => {
         try {
-          const project = await database.getDocument<Project>(
-            DATABASE_ID,
-            PROJECT_COLLECTION_ID,
-            projectId,
-            queries,
-          );
+          const [row] = await db
+            .select()
+            .from(project)
+            .where(eq(project.id, projectId));
 
-          const userRes = await database.getDocument<UserData>(
-            DATABASE_ID,
-            USER_COLLECTION_ID,
-            project.userId,
-            [Query.select(["$id", "name"])],
-          );
-
-          const teamRes = await database.getDocument<TeamData>(
-            DATABASE_ID,
-            TEAM_COLLECTION_ID,
-            project.teamId,
-            [Query.select(["$id", "name"])],
-          );
+          if (!row) {
+            return {
+              success: false,
+              message: "Project not found.",
+            };
+          }
 
           return {
             success: true,
             message: "Project successfully retrieved.",
-            data: {
-              ...project,
-              user: userRes,
-              team: teamRes,
-            },
+            data: await attachUserAndTeam(toProject(row)),
           };
         } catch (err) {
           const error = err as Error;
@@ -185,107 +179,65 @@ export async function getProjectById(
       },
       ["projects", projectId],
       {
-        tags: [
-          "projects",
-          `project:${projectId}`,
-          `project:${projectId}:${queries.join("-")}`,
-        ],
+        tags: ["projects", `project:${projectId}`],
         revalidate: 600,
       },
-    )(projectId, queries);
+    )(projectId);
   });
 }
 
 /**
  * Create a project
  * @param {Object} params The parameters for creating a project
- * @param {string} [params.id] The ID of the project (optional)
  * @param {AddProjectFormData} params.data The project data
- * @param {string[]} [params.permissions] The permissions for the project (optional)
  * @returns {Promise<Result<Project>>} The created project
  */
 export async function createProject({
-  id = ID.unique(),
   data,
-  permissions = [],
 }: {
-  id?: string;
   data: AddProjectFormData;
-  permissions?: string[];
 }): Promise<Result<Project>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
-    permissions = [
-      ...permissions,
-      Permission.read(Role.user(user.$id)),
-      Permission.write(Role.user(user.$id)),
-      Permission.read(Role.team(data.teamId)),
-      Permission.write(Role.team(data.teamId)),
-    ];
-
     try {
-      const projectCount = await database.listDocuments<Project>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID,
-        [Query.equal("teamId", data.teamId)],
+      const projectCount = await db.$count(
+        project,
+        eq(project.teamId, data.teamId),
       );
 
-      if (projectCount.total > MAX_PROJECT_LIMIT) {
+      if (projectCount > MAX_PROJECT_LIMIT) {
         return {
           success: false,
           message: `You have reached the maximum number of projects (${MAX_PROJECT_LIMIT}) for this team.`,
         };
       }
 
-      const existingProject = await database.listDocuments<Project>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID,
-        [
-          Query.orderDesc("ordinal"),
-          Query.limit(1),
-          Query.equal("teamId", data.teamId),
-          Query.select(["ordinal"]),
-        ],
-      );
+      const [lastProject] = await db
+        .select({ ordinal: project.ordinal })
+        .from(project)
+        .where(eq(project.teamId, data.teamId))
+        .orderBy(asc(project.ordinal))
+        .limit(1);
 
-      const project = await database.createDocument<Project>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID,
-        id,
-        {
-          ...data,
+      const [row] = await db
+        .insert(project)
+        .values({
+          id: crypto.randomUUID(),
+          name: data.name,
+          description: data.description,
           slug: createSlug(data.name),
-          ordinal: existingProject.documents[0]?.ordinal + 1 || 1,
+          teamId: data.teamId,
           userId: user.$id,
-        },
-        permissions,
-      );
-
-      const userRes = await database.getDocument<UserData>(
-        DATABASE_ID,
-        USER_COLLECTION_ID,
-        project.userId,
-        [Query.select(["$id", "name"])],
-      );
-
-      const teamRes = await database.getDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        project.teamId,
-        [Query.select(["$id", "name"])],
-      );
+          ordinal: (lastProject?.ordinal ?? 0) + 1,
+          published: false,
+        })
+        .returning();
 
       revalidateTag("projects");
 
       return {
         success: true,
         message: "Project successfully created.",
-        data: {
-          ...project,
-          user: userRes,
-          team: teamRes,
-        },
+        data: await attachUserAndTeam(toProject(row)),
       };
     } catch (err) {
       const error = err as Error;
@@ -303,32 +255,34 @@ export async function createProject({
 
 /**
  * Update a project
- * @param {Object} params The parameters for creating a project
- * @param {string} [params.id] The ID of the project
+ * @param {Object} params The parameters for updating a project
+ * @param {string} params.id The ID of the project
+ * @param {string} params.teamId The ID of the team
  * @param {EditProjectFormData} params.data The project data
- * @param {string[]} [params.permissions] The permissions for the project (optional)
  * @returns {Promise<Result<Project>>} The updated project
  */
 export async function updateProject({
   id,
   teamId,
   data,
-  permissions = undefined,
 }: {
   id: string;
   teamId: string;
   data: EditProjectFormData;
-  permissions?: string[];
 }): Promise<Result<Project>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
     try {
-      const existingProject = await database.getDocument<Project>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID,
-        id,
-      );
+      const [existingProject] = await db
+        .select()
+        .from(project)
+        .where(eq(project.id, id));
+
+      if (!existingProject) {
+        return {
+          success: false,
+          message: "Project not found.",
+        };
+      }
 
       if (data.images && data.images.length > MAX_PROJECT_IMAGE_LIMIT) {
         return {
@@ -339,56 +293,48 @@ export async function updateProject({
 
       // Handle ordinal changes and reordering
       if (existingProject.ordinal !== data.ordinal) {
-        // Get all projects for this team to manage ordinals
-        const allProjects = await database.listDocuments<Project>(
-          DATABASE_ID,
-          PROJECT_COLLECTION_ID,
-          [Query.equal("teamId", teamId), Query.orderAsc("ordinal")],
-        );
+        const allProjects = await db
+          .select()
+          .from(project)
+          .where(eq(project.teamId, teamId))
+          .orderBy(asc(project.ordinal));
 
         const oldOrdinal = existingProject.ordinal;
         const newOrdinal = data.ordinal;
 
-        // Update other projects' ordinals based on move direction
         if (oldOrdinal < newOrdinal) {
-          // Moving down: Projects between old and new positions move up
-          for (const project of allProjects.documents) {
+          for (const proj of allProjects) {
             if (
-              project.$id !== id &&
-              project.ordinal > oldOrdinal &&
-              project.ordinal <= newOrdinal
+              proj.id !== id &&
+              proj.ordinal > oldOrdinal &&
+              proj.ordinal <= newOrdinal
             ) {
-              await database.updateDocument(
-                DATABASE_ID,
-                PROJECT_COLLECTION_ID,
-                project.$id,
-                { ordinal: project.ordinal - 1 },
-              );
+              await db
+                .update(project)
+                .set({ ordinal: proj.ordinal - 1 })
+                .where(eq(project.id, proj.id));
             }
           }
         } else if (oldOrdinal > newOrdinal) {
-          // Moving up: Projects between new and old positions move down
-          for (const project of allProjects.documents) {
+          for (const proj of allProjects) {
             if (
-              project.$id !== id &&
-              project.ordinal >= newOrdinal &&
-              project.ordinal < oldOrdinal
+              proj.id !== id &&
+              proj.ordinal >= newOrdinal &&
+              proj.ordinal < oldOrdinal
             ) {
-              await database.updateDocument(
-                DATABASE_ID,
-                PROJECT_COLLECTION_ID,
-                project.$id,
-                { ordinal: project.ordinal + 1 },
-              );
+              await db
+                .update(project)
+                .set({ ordinal: proj.ordinal + 1 })
+                .where(eq(project.id, proj.id));
             }
           }
         }
       }
 
+      let images = existingProject.images ?? [];
+
       if (data.images) {
-        const existingImageIds = Array.isArray(existingProject.images)
-          ? existingProject.images
-          : [];
+        const existingImageIds = existingProject.images ?? [];
         const newImageIds: string[] = [];
 
         const imageIdsToKeep = data.images.filter(
@@ -403,13 +349,7 @@ export async function updateProject({
 
         for (const img of data.images) {
           if (img instanceof File) {
-            const uploadResult = await uploadFile({
-              data: img,
-              permissions: [
-                Permission.read(Role.team(teamId)),
-                Permission.write(Role.team(teamId)),
-              ],
-            });
+            const uploadResult = await uploadFile({ data: img });
 
             if (!uploadResult.success) {
               throw new Error(uploadResult.message);
@@ -423,42 +363,29 @@ export async function updateProject({
           }
         }
 
-        // Update the images array with the final set of image IDs
-        data.images = newImageIds;
+        images = newImageIds;
       }
 
-      const project = await database.updateDocument<Project>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID,
-        id,
-        {
-          ...data,
-          tags:
-            data.tags?.map((tag) =>
-              typeof tag === "string" ? tag : tag.value,
-            ) || [],
-          links:
-            data.links?.map((link) =>
-              typeof link === "string" ? link : link.value,
-            ) || [],
+      const [row] = await db
+        .update(project)
+        .set({
+          name: data.name,
+          description: data.description,
+          shortDescription: data.short_description,
+          tags: data.tags?.map((tag) =>
+            typeof tag === "string" ? tag : tag.value,
+          ),
+          links: data.links?.map((link) =>
+            typeof link === "string" ? link : link.value,
+          ),
+          images,
+          ordinal: data.ordinal,
+          published: data.published,
           userId: user.$id,
-        },
-        permissions,
-      );
-
-      const userRes = await database.getDocument<UserData>(
-        DATABASE_ID,
-        USER_COLLECTION_ID,
-        project.userId,
-        [Query.select(["$id", "name"])],
-      );
-
-      const teamRes = await database.getDocument<TeamData>(
-        DATABASE_ID,
-        TEAM_COLLECTION_ID,
-        project.teamId,
-        [Query.select(["$id", "name"])],
-      );
+          updatedAt: new Date(),
+        })
+        .where(eq(project.id, id))
+        .returning();
 
       revalidateTag("projects");
       revalidateTag(`project:${id}`);
@@ -467,11 +394,7 @@ export async function updateProject({
       return {
         success: true,
         message: "Project successfully updated.",
-        data: {
-          ...project,
-          user: userRes,
-          team: teamRes,
-        },
+        data: await attachUserAndTeam(toProject(row)),
       };
     } catch (err) {
       const error = err as Error;
@@ -494,17 +417,18 @@ export async function updateProject({
  */
 export async function deleteProject(id: string): Promise<Result<void>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     try {
-      const project = await database.getDocument<Project>(
-        DATABASE_ID,
-        PROJECT_COLLECTION_ID,
-        id,
-      );
+      const [row] = await db.select().from(project).where(eq(project.id, id));
 
-      if (project.images) {
-        for (const imageId of project.images) {
+      if (!row) {
+        return {
+          success: false,
+          message: "Project not found.",
+        };
+      }
+
+      if (row.images) {
+        for (const imageId of row.images) {
           const image = await deleteFile(imageId);
 
           if (!image.success) {
@@ -513,9 +437,9 @@ export async function deleteProject(id: string): Promise<Result<void>> {
         }
       }
 
-      await database.deleteDocument(DATABASE_ID, PROJECT_COLLECTION_ID, id);
+      await db.delete(project).where(eq(project.id, id));
 
-      revalidateTag(`projects:team-${project.teamId}`);
+      revalidateTag(`projects:team-${row.teamId}`);
 
       return {
         success: true,
@@ -537,7 +461,6 @@ export async function deleteProject(id: string): Promise<Result<void>> {
 
 /**
  * Delete all projects by team ID
-
  * @param teamId The ID of the team
  * @returns {Promise<Result<void>>} The deleted project
  */
@@ -545,23 +468,13 @@ export async function deleteAllProjectsByTeam(
   teamId: string,
 ): Promise<Result<void>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     try {
-      let response;
-      const queries = [Query.limit(50), Query.equal("teamId", teamId)];
+      const rows = await db
+        .select({ id: project.id })
+        .from(project)
+        .where(eq(project.teamId, teamId));
 
-      do {
-        response = await database.listDocuments<Project>(
-          DATABASE_ID,
-          PROJECT_COLLECTION_ID,
-          queries,
-        );
-
-        await Promise.all(
-          response.documents.map((document) => deleteProject(document.$id)),
-        );
-      } while (response.documents.length > 0);
+      await Promise.all(rows.map((row) => deleteProject(row.id)));
 
       revalidateTag(`projects:team-${teamId}`);
 

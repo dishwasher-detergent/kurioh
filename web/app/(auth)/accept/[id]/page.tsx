@@ -2,16 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AcceptForm } from "./form";
 
 export default async function Invite({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<{
-    teamId: string;
-    membershipId: string;
-    userId: string;
-    secret: string;
-  }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { teamId, membershipId, userId, secret } = await searchParams;
+  const { id } = await params;
 
   return (
     <Card className="bg-background w-full max-w-sm">
@@ -19,12 +14,7 @@ export default async function Invite({
         <CardTitle className="mt-2 text-2xl">Accept Team Invite</CardTitle>
       </CardHeader>
       <CardContent>
-        <AcceptForm
-          teamId={teamId}
-          membershipId={membershipId}
-          userId={userId}
-          secret={secret}
-        />
+        <AcceptForm invitationId={id} />
       </CardContent>
     </Card>
   );

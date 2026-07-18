@@ -53,7 +53,7 @@ export default function EditProject({ project, teamId }: ProjectFormProps) {
     defaultValues: {
       name: project.name ?? "",
       description: project.description ?? undefined,
-      short_description: project.short_description ?? undefined,
+      short_description: project.shortDescription ?? undefined,
       tags: project.tags?.map((tag) => ({ label: tag, value: tag })),
       links: project.links?.map((link) => ({ label: link, value: link })),
       images: project.images,

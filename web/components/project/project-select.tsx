@@ -3,7 +3,6 @@
 import { Check, ChevronsUpDown, LucideLoader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Query } from "node-appwrite";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -20,7 +19,7 @@ import {
 import { DyanmicPopover } from "@/components/ui/dynamic-popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Project as ProjectInterface } from "@/interfaces/project.interface";
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
+import { getStorageFileUrl } from "@/lib/constants";
 import { listProjectsByTeam } from "@/lib/db";
 import { cn } from "@/lib/utils";
 
@@ -37,11 +36,7 @@ export function ProjectSelect() {
   async function fetchProjects() {
     setLoading(true);
 
-    const data = await listProjectsByTeam(teamId, [
-      Query.orderAsc("ordinal"),
-      Query.limit(100),
-      Query.select(["$id", "name", "images", "userId", "teamId"]),
-    ]);
+    const data = await listProjectsByTeam(teamId, { limit: 100 });
 
     if (!data.success) {
       toast.error(data.message);
@@ -100,7 +95,10 @@ export function ProjectSelect() {
                     (projects.find((x) => x.$id == projectId)?.images[0] ? (
                       <img
                         className="size-6 flex-none rounded-full object-fill"
-                        src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projects.find((x) => x.$id == projectId)?.images[0]}/view?project=${PROJECT_ID}`}
+                        src={getStorageFileUrl(
+                          projects.find((x) => x.$id == projectId)?.images[0] ??
+                            "",
+                        )}
                       />
                     ) : (
                       <div className="bg-foreground text-background grid size-6 flex-none place-items-center rounded-full object-fill text-xs">
@@ -145,7 +143,9 @@ export function ProjectSelect() {
                         {projectItem?.images[0] ? (
                           <img
                             className="size-4 flex-none rounded-full object-fill"
-                            src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${projectItem?.images[0]}/view?project=${PROJECT_ID}`}
+                            src={getStorageFileUrl(
+                              projectItem?.images[0] ?? "",
+                            )}
                           />
                         ) : (
                           <div className="bg-foreground text-background grid size-4 flex-none place-items-center rounded-full object-fill text-[.6rem]">

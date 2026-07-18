@@ -1,83 +1,91 @@
+import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { ImageFormat, Query } from 'node-appwrite';
 
+import { db } from '../lib/db.js';
 import {
-  EDUCATION_COLLECTION_ID,
-  EXPERIENCE_COLLECTION_ID,
-  ORGANIZATION_COLLECTION_ID,
-  PROJECTS_BUCKET_ID,
-  PROJECTS_COLLECTION_ID,
-  database_service,
-  storage_service,
-} from '../lib/appwrite.js';
-import { Education, Experience, Project, Team } from '../types/types.js';
+  education,
+  experience,
+  organization,
+  project,
+  teamProfile,
+} from '../lib/schema.js';
+import { getStorageFileUrl } from '../lib/storage.js';
 
 export function Teams(app: Hono, cacheDuration: number = 1440) {
   app.get('/teams/:team_id', async (c) => {
     try {
       const team_id = c.req.param('team_id');
-      const team = await database_service.get<Team>(
-        ORGANIZATION_COLLECTION_ID,
-        team_id
-      );
 
-      const projects = await database_service.list<Project>(
-        PROJECTS_COLLECTION_ID,
-        [
-          Query.equal('teamId', team_id),
-          Query.orderAsc('ordinal'),
-          Query.equal('published', true),
-        ]
-      );
+      const [org] = await db
+        .select()
+        .from(organization)
+        .where(eq(organization.id, team_id));
 
-      const experience = await database_service.list<Experience>(
-        EXPERIENCE_COLLECTION_ID,
-        [Query.equal('teamId', team_id)]
-      );
+      if (!org) {
+        return c.json({ error: 'Team not found.' }, 404);
+      }
 
-      const education = await database_service.list<Education>(
-        EDUCATION_COLLECTION_ID,
-        [Query.equal('teamId', team_id)]
-      );
+      const [teamProfileRow] = await db
+        .select()
+        .from(teamProfile)
+        .where(eq(teamProfile.id, team_id));
 
-      const formattedProject = projects.rows.map((project) => ({
-        id: project.$id,
-        title: project.title,
-        shortDescription: project.short_description,
-        description: project.description,
-        images: project.images,
-        tags: project.tags,
-        links: project.links,
-      }));
+      const projects = await db
+        .select()
+        .from(project)
+        .where(eq(project.teamId, team_id));
 
-      const formattedExperience = experience.rows.map((exp) => ({
+      const experiences = await db
+        .select()
+        .from(experience)
+        .where(eq(experience.teamId, team_id));
+
+      const educations = await db
+        .select()
+        .from(education)
+        .where(eq(education.teamId, team_id));
+
+      const formattedProject = projects
+        .filter((p) => p.published)
+        .sort((a, b) => a.ordinal - b.ordinal)
+        .map((p) => ({
+          id: p.id,
+          title: p.name,
+          shortDescription: p.shortDescription,
+          description: p.description,
+          images: p.images,
+          tags: p.tags,
+          links: p.links,
+        }));
+
+      const formattedExperience = experiences.map((exp) => ({
         title: exp.title,
         description: exp.description,
         skills: exp.skills,
-        startDate: exp.start_date,
-        endDate: exp.end_date,
+        startDate: exp.startDate,
+        endDate: exp.endDate,
         company: exp.company,
         type: exp.type,
         website: exp.website,
       }));
 
-      const formattedEducation = education.rows.map((edu) => ({
+      const formattedEducation = educations.map((edu) => ({
         institution: edu.institution,
         type: edu.type,
         fieldOfStudy: edu.fieldOfStudy,
         degree: edu.degree,
-        startDate: edu.start_date,
-        graduationDate: edu.end_date,
+        startDate: edu.startDate,
+        graduationDate: edu.endDate,
       }));
 
       const prunedResponse = {
-        id: team.$id,
-        name: team.name,
-        title: team.title,
-        description: team.description,
-        socials: team.socials,
-        image: team.image,
-        favicon: team.favicon,
+        id: org.id,
+        name: org.name,
+        title: teamProfileRow?.title ?? '',
+        description: teamProfileRow?.description ?? '',
+        socials: teamProfileRow?.socials ?? [],
+        image: teamProfileRow?.image ?? '',
+        favicon: teamProfileRow?.favicon ?? '',
         projects: formattedProject,
         experience: formattedExperience,
         education: formattedEducation,
@@ -97,23 +105,17 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
     try {
       const team_id = c.req.param('team_id');
 
-      const team = await database_service.get<Team>(
-        ORGANIZATION_COLLECTION_ID,
-        team_id
-      );
+      const [teamProfileRow] = await db
+        .select()
+        .from(teamProfile)
+        .where(eq(teamProfile.id, team_id));
 
-      const file = await storage_service.getFileView(
-        PROJECTS_BUCKET_ID,
-        team.image
-      );
-
-      if (!file) {
-        return c.json({ error: 'Failed to fetch image.' }, 500);
+      if (!teamProfileRow?.image) {
+        return c.json({ error: 'Image not found' }, 404);
       }
 
-      c.header('Content-Type', `image/png`);
       c.header('Cache-Control', `public, max-age=${cacheDuration}`);
-      return c.body(file);
+      return c.redirect(getStorageFileUrl(teamProfileRow.image), 302);
     } catch (error) {
       console.error(error);
 
@@ -125,27 +127,17 @@ export function Teams(app: Hono, cacheDuration: number = 1440) {
     try {
       const team_id = c.req.param('team_id');
 
-      const team = await database_service.get<Team>(
-        ORGANIZATION_COLLECTION_ID,
-        team_id
-      );
+      const [teamProfileRow] = await db
+        .select()
+        .from(teamProfile)
+        .where(eq(teamProfile.id, team_id));
 
-      if (!team.favicon) {
+      if (!teamProfileRow?.favicon) {
         return c.json({ error: 'Favicon not found' }, 404);
       }
 
-      const file = await storage_service.getFileView(
-        PROJECTS_BUCKET_ID,
-        team.favicon
-      );
-
-      if (!file) {
-        return c.json({ error: 'Failed to fetch image.' }, 500);
-      }
-
-      c.header('Content-Type', `image/${ImageFormat.Png}`);
       c.header('Cache-Control', `public, max-age=${cacheDuration}`);
-      return c.body(file);
+      return c.redirect(getStorageFileUrl(teamProfileRow.favicon), 302);
     } catch (error) {
       console.error(error);
 

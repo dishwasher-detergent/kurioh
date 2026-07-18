@@ -1,43 +1,54 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { ID, Models, Permission, Query, Role } from "node-appwrite";
 
 import { Education } from "@/interfaces/education.interface";
-import { Result } from "@/interfaces/result.interface";
+import { DocumentList, Result } from "@/interfaces/result.interface";
 import { withAuth } from "@/lib/auth";
-import { DATABASE_ID, EDUCATION_COLLECTION_ID } from "@/lib/constants";
-import { createSessionClient } from "@/lib/server/appwrite";
+import { db } from "@/lib/db/client";
+import { education } from "@/lib/db/schema";
 import { EditEducationFormData } from "./schemas";
 
+function toEducation(row: typeof education.$inferSelect): Education {
+  return {
+    $id: row.id,
+    institution: row.institution,
+    type: row.type ?? "",
+    fieldOfStudy: row.fieldOfStudy,
+    degree: row.degree,
+    start_date: row.startDate,
+    end_date: row.endDate as Date,
+    userId: row.userId,
+    teamId: row.teamId,
+  };
+}
+
 /**
-import { Education } from "@/interfaces/education.interface";
  * Get a list of educations for a team
  * @param {string} teamId The ID of the team
- * @param {string[]} queries The queries to filter the educations
- * @returns {Promise<Result<Models.DocumentList<Education>>>} The list of educations
+ * @returns {Promise<Result<DocumentList<Education>>>} The list of educations
  */
 export async function listEducations(
   teamId: string,
-  queries: string[] = [],
-): Promise<Result<Models.DocumentList<Education>>> {
+): Promise<Result<DocumentList<Education>>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
     return unstable_cache(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async (teamId, queries, userId) => {
+      async (teamId, userId) => {
         try {
-          const educations = await database.listDocuments<Education>(
-            DATABASE_ID,
-            EDUCATION_COLLECTION_ID,
-            [Query.equal("teamId", teamId), ...queries],
-          );
+          const rows = await db
+            .select()
+            .from(education)
+            .where(eq(education.teamId, teamId));
 
           return {
             success: true,
             message: "Educations successfully retrieved.",
-            data: educations,
+            data: {
+              documents: rows.map(toEducation),
+              total: rows.length,
+            },
           };
         } catch (err) {
           const error = err as Error;
@@ -52,69 +63,52 @@ export async function listEducations(
       },
       ["educations", teamId],
       {
-        tags: [
-          "educations",
-          `educations:team-${teamId}`,
-          `educations:team-${teamId}:${queries.join("-")}`,
-        ],
+        tags: ["educations", `educations:team-${teamId}`],
         revalidate: 600,
       },
-    )(teamId, queries, user.$id);
+    )(teamId, user.$id);
   });
 }
 
 /**
  * Create an education
  * @param {Object} params The parameters for creating an education
- * @param {string} [params.id] The ID of the education (optional)
  * @param {EditEducationFormData} params.data The education data
  * @param {string} params.teamId The ID of the team
- * @param {string[]} [params.permissions] The permissions for the education (optional)
  * @returns {Promise<Result<Education>>} The created education
  */
 export async function createEducation({
-  id = ID.unique(),
   data,
   teamId,
-  permissions = [],
 }: {
-  id?: string;
   data: EditEducationFormData;
   teamId: string;
-  permissions?: string[];
 }): Promise<Result<Education>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
-    permissions = [
-      ...permissions,
-      Permission.read(Role.user(user.$id)),
-      Permission.write(Role.user(user.$id)),
-      Permission.read(Role.team(teamId)),
-      Permission.write(Role.team(teamId)),
-    ];
-
     try {
-      const education = await database.createDocument<Education>(
-        DATABASE_ID,
-        EDUCATION_COLLECTION_ID,
-        id,
-        {
-          ...data,
+      const [row] = await db
+        .insert(education)
+        .values({
+          id: crypto.randomUUID(),
+          institution: data.institution,
+          fieldOfStudy: data.fieldOfStudy,
+          startDate: data.start_date,
+          endDate: data.end_date,
+          degree: data.degree,
+          type: data.type,
           userId: user.$id,
           teamId,
-        },
-        permissions,
-      );
+        })
+        .returning();
 
       revalidateTag(`educations:team-${teamId}`);
-      revalidateTag(`education:${education.$id}`);
+      revalidateTag(`education:${row.id}`);
       revalidateTag(`team:${teamId}`);
 
       return {
         success: true,
         message: "Education successfully created.",
-        data: education,
+        data: toEducation(row),
       };
     } catch (err) {
       const error = err as Error;
@@ -135,49 +129,47 @@ export async function createEducation({
  * @param {Object} params The parameters for updating an education
  * @param {string} params.id The ID of the education
  * @param {EditEducationFormData} params.data The education data
- * @param {string[]} [params.permissions] The permissions for the education (optional)
  * @returns {Promise<Result<Education>>} The updated education
  */
 export async function updateEducation({
   id,
   data,
-  permissions = undefined,
 }: {
   id: string;
   data: EditEducationFormData;
-  permissions?: string[];
 }): Promise<Result<Education>> {
   return withAuth(async (user) => {
-    const { database } = await createSessionClient();
-
     try {
-      await database.getDocument<Education>(
-        DATABASE_ID,
-        EDUCATION_COLLECTION_ID,
-        id,
-      );
-
-      delete data.id;
-
-      const education = await database.updateDocument<Education>(
-        DATABASE_ID,
-        EDUCATION_COLLECTION_ID,
-        id,
-        {
-          ...data,
+      const [row] = await db
+        .update(education)
+        .set({
+          institution: data.institution,
+          fieldOfStudy: data.fieldOfStudy,
+          startDate: data.start_date,
+          endDate: data.end_date,
+          degree: data.degree,
+          type: data.type,
           userId: user.$id,
-        },
-        permissions,
-      );
+          updatedAt: new Date(),
+        })
+        .where(eq(education.id, id))
+        .returning();
 
-      revalidateTag(`educations:team-${education.teamId}`);
-      revalidateTag(`education:${education.$id}`);
-      revalidateTag(`team:${education.teamId}`);
+      if (!row) {
+        return {
+          success: false,
+          message: "Education not found.",
+        };
+      }
+
+      revalidateTag(`educations:team-${row.teamId}`);
+      revalidateTag(`education:${row.id}`);
+      revalidateTag(`team:${row.teamId}`);
 
       return {
         success: true,
         message: "Education successfully updated.",
-        data: education,
+        data: toEducation(row),
       };
     } catch (err) {
       const error = err as Error;
@@ -200,25 +192,27 @@ export async function updateEducation({
  */
 export async function deleteEducation(id: string): Promise<Result<Education>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     try {
-      const education = await database.getDocument<Education>(
-        DATABASE_ID,
-        EDUCATION_COLLECTION_ID,
-        id,
-      );
+      const [row] = await db
+        .delete(education)
+        .where(eq(education.id, id))
+        .returning();
 
-      await database.deleteDocument(DATABASE_ID, EDUCATION_COLLECTION_ID, id);
+      if (!row) {
+        return {
+          success: false,
+          message: "Education not found.",
+        };
+      }
 
-      revalidateTag(`educations:team-${education.teamId}`);
-      revalidateTag(`education:${education.$id}`);
-      revalidateTag(`team:${education.teamId}`);
+      revalidateTag(`educations:team-${row.teamId}`);
+      revalidateTag(`education:${row.id}`);
+      revalidateTag(`team:${row.teamId}`);
 
       return {
         success: true,
         message: "Education successfully deleted.",
-        data: education,
+        data: toEducation(row),
       };
     } catch (err) {
       const error = err as Error;
@@ -336,23 +330,8 @@ export async function deleteAllEducationByTeam(
   teamId: string,
 ): Promise<Result<void>> {
   return withAuth(async () => {
-    const { database } = await createSessionClient();
-
     try {
-      let response;
-      const queries = [Query.limit(50), Query.equal("teamId", teamId)];
-
-      do {
-        response = await database.listDocuments<Education>(
-          DATABASE_ID,
-          EDUCATION_COLLECTION_ID,
-          queries,
-        );
-
-        await Promise.all(
-          response.documents.map((document) => deleteEducation(document.$id)),
-        );
-      } while (response.documents.length > 0);
+      await db.delete(education).where(eq(education.teamId, teamId));
 
       revalidateTag(`education:team-${teamId}`);
 

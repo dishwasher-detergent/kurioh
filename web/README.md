@@ -1,16 +1,13 @@
-# 🚀 Appwrite NextJS Starter
+# 🚀 Kurioh
 
-A starter template for building web applications with Next.js and Appwrite.
+A Next.js web application backed by Neon Postgres (database), Neon Auth (authentication), and Neon Object Storage (files).
 
 ## 📚 Overview
 
-This starter template provides everything you need to build a
-modern web application with Next.js and Appwrite. It includes a
+This project provides everything you need to build a
+modern web application with Next.js, Neon Postgres, and Neon Auth. It includes a
 full authentication system, user profile management, and a clean,
 responsive UI.
-
-Perfect for quickly bootstrapping your next project without
-spending time on repetitive setup tasks.
 
 ## ✨ Features
 
@@ -21,7 +18,6 @@ spending time on repetitive setup tasks.
 - 📊 **Data Management**
   - ✏️ Complete CRUD Operations Examples
   - 📁 File Storage Implementations
-  - ⚡ Realtime Updates
   - 🔄 Cache Invalidation
 - 👥 **Team Management**
   - 🏢 Create and Manage Teams
@@ -41,21 +37,11 @@ spending time on repetitive setup tasks.
 
 - 📦 [Node.js 22.x or later](https://nodejs.org/en/download)
 - 🔧 [pnpm](https://pnpm.io/)
-- ☁️ [Appwrite](https://cloud.appwrite.io)
+- ☁️ A [Neon](https://neon.tech) project with Neon Auth (Managed Better Auth), the Organization plugin, and an Object Storage bucket (`public_read` access mode) enabled
 
 ## ⚙️ Installation
 
-1. Clone this repository:
-
-```bash
-git clone https://github.com/diswasher-detergent/appwrite-nextjs-starter.git
-```
-
-2. Navigate to the project:
-
-```bash
-cd appwrite-nextjs-starter
-```
+1. Clone this repository and navigate to the `web` directory.
 
 2. Install dependencies:
 
@@ -63,75 +49,40 @@ cd appwrite-nextjs-starter
 pnpm install
 ```
 
-3. Create a `.env` file based on the .`env.sample` file:
+3. Create a `.env` file based on `.env.example`:
 
-   - Create an API key in Appwrite, with the permissions `session.write` and upadte the `.env` with that key.
+   - `DATABASE_URL` — from the Neon Console (Connection Details).
+   - `NEON_AUTH_BASE_URL` / `NEON_AUTH_COOKIE_SECRET` — from the Neon Console (Auth). Generate the secret with `openssl rand -base64 32`.
+   - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_ENDPOINT_URL_S3` / `AWS_REGION` / `NEON_STORAGE_BUCKET` — S3-compatible credentials for your Neon Object Storage bucket (configure the bucket as `public_read` so uploaded images are directly viewable).
+   - `NEXT_PUBLIC_STORAGE_URL` — the public base URL for reading objects (`<endpoint>/<bucket>`), used client-side to build image URLs.
 
-4. Start the development server:
+4. Push the database schema:
+
+```bash
+pnpm db:migrate
+```
+
+5. Start the development server:
 
 ```bash
 pnpm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-## 🚢 Deploying Project using the Appwrite CLI
+## 🔑 Adding GitHub OAuth
 
-[Appwrite CLI](https://appwrite.io/docs/tooling/command-line/installation) allows you to automate and streamline your Appwrite workflows.
-
-### 📥 Installation
-
-Install the Appwrite CLI globally:
-
-```bash
-npm install -g appwrite-cli
-```
-
-### 🔧 Setup
-
-1. Login to your Appwrite account:
-
-```bash
-appwrite login
-```
-
-### 🚀 Push to Appwrite
-
-1. Deploy the project:
-
-```bash
-appwrite push settings
-```
-
-2. Deploy the database:
-
-```bash
-appwrite push collections
-```
-
-3. Deploy the bucket:
-
-```bash
-appwrite push buckets
-```
-
-## 🔑 Adding GitHub OAuth to Appwrite
+GitHub OAuth is configured in Neon:
 
 1. 🔗 Go to your [GitHub Developer Settings](https://github.com/settings/apps) and create a new App.
 
-2. 🔄 Set the **Authorization callback URL** to:
-
-```
-https://cloud.appwrite.io/v1/account/sessions/oauth2/callback/github/appwrite-nextjs-starter
-```
+2. 🔄 Set the **Authorization callback URL** to your Neon Auth callback (see the Neon Console for the exact URL for your project).
 
 3. 🔐 After creating the OAuth App, you'll receive a **Client ID** and need to generate a **Client Secret**.
 
-4. ⚙️ In your Appwrite Console, navigate to **Auth** → **Settings** → **OAuth2 Providers**.
+4. ⚙️ In the Neon Console, navigate to **Auth** → **Providers**.
 
 5. ✅ Enable the GitHub provider and enter the **Client ID** and **Client Secret** from GitHub.
-
-6. 💾 Save your changes.
 
 ## 👥 Contributing
 

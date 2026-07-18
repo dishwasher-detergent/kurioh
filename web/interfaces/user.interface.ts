@@ -1,6 +1,5 @@
-import { Models } from "node-appwrite";
-
-export interface UserData extends Models.Document {
+export interface UserData {
+  $id: string;
   about: string;
   name: string;
 }
@@ -11,4 +10,7 @@ export interface UserMemberData extends UserData {
   joinedAt: string;
 }
 
-export interface User extends Models.User<Models.Preferences>, UserData {}
+export interface User extends UserData {
+  email: string;
+  emailVerification?: boolean;
+}

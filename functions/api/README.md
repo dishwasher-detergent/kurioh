@@ -1,6 +1,6 @@
 # api
 
-A standalone [Hono](https://hono.dev) API backend that reads content from Appwrite (databases + storage) and serves it over HTTP. Designed to be deployed as a Docker container on [Coolify](https://coolify.io).
+A standalone [Hono](https://hono.dev) API backend that reads content from Neon Postgres and serves it over HTTP, with images served from Neon Object Storage. Designed to be deployed as a Docker container on [Coolify](https://coolify.io).
 
 ## 🧰 Usage
 
@@ -46,17 +46,10 @@ This directory includes a `Dockerfile` that installs, builds (via `tsup`), and r
 
 ## ⚙️ Environment Variables
 
-| Variable              | Description                                                |
-| --------------------- | ---------------------------------------------------------- |
-| `PORT`                | Port the server listens on (default `3000`)                |
-| `APPWRITE_ENDPOINT`   | Appwrite API endpoint, e.g. `https://cloud.appwrite.io/v1` |
-| `APPWRITE_PROJECT_ID` | Appwrite project ID                                        |
-| `KEY`                 | Appwrite API key with database/storage read access         |
-| `DB_ID`               | Appwrite database ID                                       |
-| `EXPERIENCE_ID`       | Experience collection ID                                   |
-| `ORGANIZATION_ID`     | Team/organization collection ID                            |
-| `PROJECTS_ID`         | Projects collection ID                                     |
-| `EDUCATION_ID`        | Education collection ID                                    |
-| `BUCKET_ID`           | Storage bucket ID for project/team images                  |
+| Variable       | Description                                                                                                                                              |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PORT`         | Port the server listens on (default `3000`)                                                                                                              |
+| `DATABASE_URL` | Neon Postgres connection string                                                                                                                          |
+| `STORAGE_URL`  | Public base URL for reading objects from the Neon Object Storage bucket (`public_read`), i.e. `<endpoint>/<bucket>` — image/favicon routes redirect here |
 
 See `.env.example` for a template.

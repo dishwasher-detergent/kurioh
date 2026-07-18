@@ -35,13 +35,9 @@ import {
 
 interface InformationFormProps {
   information: TeamData;
-  teamId: string;
 }
 
-export default function InformationForm({
-  information,
-  teamId,
-}: InformationFormProps) {
+export default function InformationForm({ information }: InformationFormProps) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof editInformationSchema>>({
@@ -68,7 +64,6 @@ export default function InformationForm({
       updateInformation({
         id: information.$id,
         data: values,
-        teamId,
       }),
       {
         loading: "Saving information...",

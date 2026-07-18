@@ -19,7 +19,7 @@ import {
 import { DyanmicPopover } from "@/components/ui/dynamic-popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TeamData } from "@/interfaces/team.interface";
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
+import { getStorageFileUrl } from "@/lib/constants";
 import { listTeams } from "@/lib/team";
 import { cn } from "@/lib/utils";
 
@@ -88,7 +88,7 @@ export function TeamSelect() {
                       (teams.find((x) => x.$id === teamId)?.image ? (
                         <img
                           className="size-6 flex-none rounded-full object-fill"
-                          src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teams.find((x) => x.$id === teamId)?.image}/view?project=${PROJECT_ID}`}
+                          src={`${getStorageFileUrl(teams.find((x) => x.$id === teamId)?.image ?? "")}`}
                         />
                       ) : (
                         <div className="bg-foreground text-background grid size-6 flex-none place-items-center rounded-full object-fill text-xs">
@@ -142,7 +142,7 @@ export function TeamSelect() {
                         {teamItem?.image ? (
                           <img
                             className="size-4 flex-none rounded-full object-fill"
-                            src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${teamItem?.image}/view?project=${PROJECT_ID}`}
+                            src={`${getStorageFileUrl(teamItem?.image ?? "")}`}
                           />
                         ) : (
                           <div className="bg-foreground text-background grid size-4 flex-none place-items-center rounded-full object-fill text-[.6rem]">

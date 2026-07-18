@@ -1,14 +1,10 @@
+import { and, eq } from 'drizzle-orm';
 import { Context, Hono } from 'hono';
-import { ImageFormat, Query } from 'node-appwrite';
-import {
-  ORGANIZATION_COLLECTION_ID,
-  PROJECTS_BUCKET_ID,
-  PROJECTS_COLLECTION_ID,
-  database_service,
-  storage_service,
-} from '../lib/appwrite.js';
+
+import { db } from '../lib/db.js';
+import { organization, project } from '../lib/schema.js';
+import { getStorageFileUrl } from '../lib/storage.js';
 import { NotFoundError } from '../lib/utils.js';
-import { Project, Team } from '../types/types.js';
 
 function handleError(c: Context, error: unknown, fallbackMessage: string) {
   if (error instanceof NotFoundError) {
@@ -24,25 +20,23 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
     try {
       const team_id = c.req.param('team_id');
 
-      const projects = await database_service.list<Project>(
-        PROJECTS_COLLECTION_ID,
-        [
-          Query.equal('teamId', team_id),
-          Query.orderAsc('ordinal'),
-          Query.equal('published', true),
-        ]
-      );
+      const projects = await db
+        .select()
+        .from(project)
+        .where(and(eq(project.teamId, team_id), eq(project.published, true)));
 
-      const formattedProjects = projects.rows.map((project) => ({
-        id: project.$id,
-        team: project.teamId,
-        title: project.title,
-        shortDescription: project.short_description,
-        description: project.description,
-        images: project.images,
-        tags: project.tags,
-        links: project.links,
-      }));
+      const formattedProjects = projects
+        .sort((a, b) => a.ordinal - b.ordinal)
+        .map((p) => ({
+          id: p.id,
+          team: p.teamId,
+          title: p.name,
+          shortDescription: p.shortDescription,
+          description: p.description,
+          images: p.images,
+          tags: p.tags,
+          links: p.links,
+        }));
 
       return c.json(formattedProjects, 200, {
         'Cache-Control': `public, max-age=${cacheDuration}`,
@@ -57,28 +51,34 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
       const team_id = c.req.param('team_id');
       const project_id = c.req.param('project_id');
 
-      await database_service.get<Team>(
-        ORGANIZATION_COLLECTION_ID,
-        team_id,
-        'Team not found'
-      );
+      const [org] = await db
+        .select()
+        .from(organization)
+        .where(eq(organization.id, team_id));
 
-      const project = await database_service.get<Project>(
-        PROJECTS_COLLECTION_ID,
-        project_id,
-        'Project not found'
-      );
+      if (!org) {
+        throw new NotFoundError('Team not found');
+      }
+
+      const [p] = await db
+        .select()
+        .from(project)
+        .where(eq(project.id, project_id));
+
+      if (!p) {
+        throw new NotFoundError('Project not found');
+      }
 
       const formattedProject = {
-        id: project.$id,
-        team: project.teamId,
-        title: project.title,
-        slug: project.slug,
-        shortDescription: project.short_description,
-        description: project.description,
-        images: project.images,
-        tags: project.tags,
-        links: project.links,
+        id: p.id,
+        team: p.teamId,
+        title: p.name,
+        slug: p.slug,
+        shortDescription: p.shortDescription,
+        description: p.description,
+        images: p.images,
+        tags: p.tags,
+        links: p.links,
       };
 
       return c.json(formattedProject, 200, {
@@ -97,36 +97,32 @@ export function Projects(app: Hono, cacheDuration: number = 1440) {
         const project_id = c.req.param('project_id');
         const image_id = c.req.param('image_id');
 
-        await database_service.get<Team>(
-          ORGANIZATION_COLLECTION_ID,
-          team_id,
-          'Team not found'
-        );
+        const [org] = await db
+          .select()
+          .from(organization)
+          .where(eq(organization.id, team_id));
 
-        const project = await database_service.get<Project>(
-          PROJECTS_COLLECTION_ID,
-          project_id,
-          'Project not found'
-        );
+        if (!org) {
+          throw new NotFoundError('Team not found');
+        }
 
-        const image = project.images.find((x) => x === image_id);
+        const [p] = await db
+          .select()
+          .from(project)
+          .where(eq(project.id, project_id));
+
+        if (!p) {
+          throw new NotFoundError('Project not found');
+        }
+
+        const image = (p.images ?? []).find((x) => x === image_id);
 
         if (!image) {
           return c.json({ error: 'Image not found' }, 404);
         }
 
-        const file = await storage_service.getFileView(
-          PROJECTS_BUCKET_ID,
-          image
-        );
-
-        if (!file) {
-          return c.json({ error: 'Failed to fetch image.' }, 500);
-        }
-
-        c.header('Content-Type', `image/${ImageFormat.Png}`);
         c.header('Cache-Control', `public, max-age=${cacheDuration}`);
-        return c.body(file);
+        return c.redirect(getStorageFileUrl(image), 302);
       } catch (error) {
         return handleError(c, error, 'Failed to fetch image.');
       }

@@ -1,15 +1,13 @@
 "use client";
 
-import { Client, Models } from "appwrite";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
-import { getLoggedInUser } from "@/lib/browser/appwrite";
+import { getLoggedInUser, SessionUser } from "@/lib/auth";
 
 interface SessionContextType {
-  client: Client | null;
-  user: Models.User<Models.Preferences> | null;
+  user: SessionUser | null;
   loading: boolean;
-  setUser: (user: Models.User<Models.Preferences> | null) => void;
+  setUser: (user: SessionUser | null) => void;
   refreshUser: () => Promise<void>;
 }
 
@@ -22,13 +20,22 @@ export function SessionProvider({
   initialUser = null,
 }: {
   children: ReactNode;
-  initialUser?: Models.User<Models.Preferences> | null;
+  initialUser?: SessionUser | null;
 }) {
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
-    initialUser,
-  );
+  const [user, setUser] = useState<SessionUser | null>(initialUser);
   const [loading, setLoading] = useState(initialUser === null);
-  const [client, setClient] = useState<Client | null>(null);
+
+  const refreshUser = async () => {
+    setLoading(true);
+    try {
+      const response = await getLoggedInUser();
+      setUser(response);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (initialUser) {
@@ -36,40 +43,11 @@ export function SessionProvider({
       return;
     }
 
-    const loadUser = async () => {
-      try {
-        const response = await getLoggedInUser();
-        setUser(response.user);
-        setClient(response.client);
-      } catch (error) {
-        setUser(null);
-        setClient(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUser();
+    refreshUser();
   }, [initialUser]);
 
-  const refreshUser = async () => {
-    setLoading(true);
-    try {
-      const response = await getLoggedInUser();
-      setUser(response.user);
-      setClient(response.client);
-    } catch (error) {
-      setUser(null);
-      setClient(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <SessionContext.Provider
-      value={{ user, loading, setUser, refreshUser, client }}
-    >
+    <SessionContext.Provider value={{ user, loading, setUser, refreshUser }}>
       {children}
     </SessionContext.Provider>
   );

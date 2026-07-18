@@ -1,4 +1,4 @@
-import { ENDPOINT, PROJECT_BUCKET_ID, PROJECT_ID } from "@/lib/constants";
+import { getStorageFileUrl } from "@/lib/constants";
 import { LucideImage } from "lucide-react";
 
 export interface ImagesProps {
@@ -13,7 +13,7 @@ export function Images({ images }: ImagesProps) {
       <div className="aspect-square w-full overflow-hidden rounded-lg">
         <img
           className="h-full w-full object-cover"
-          src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${images[0]}/view?project=${PROJECT_ID}`}
+          src={getStorageFileUrl(images[0])}
           alt="Project image."
         />
       </div>
@@ -39,7 +39,7 @@ export function Images({ images }: ImagesProps) {
             >
               <img
                 className="h-full w-full object-cover"
-                src={`${ENDPOINT}/storage/buckets/${PROJECT_BUCKET_ID}/files/${image}/view?project=${PROJECT_ID}`}
+                src={getStorageFileUrl(image)}
                 alt="Project image."
               />
             </div>

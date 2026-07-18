@@ -1,39 +1,27 @@
-"use server";
-
 import { NextRequest, NextResponse } from "next/server";
 
-import { createSessionClient } from "@/lib/server/appwrite";
-import { COOKIE_KEY } from "@/lib/constants";
+import { auth } from "@/lib/auth/server";
 
-const protectedRoutes = ["/app"];
-const publicRoutes = ["/signin", "/signup"];
+const neonAuthMiddleware = auth.middleware({
+  loginUrl: "/signin",
+});
 
 export default async function middleware(req: NextRequest) {
-  const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
-  const isPublicRoute = publicRoutes.includes(path);
-  const cookieSession = req.cookies.get(COOKIE_KEY)?.value;
-
-  let user = null;
-
-  try {
-    const { account } = await createSessionClient(cookieSession);
-    user = await account.get();
-  } catch {
-    user = null;
+  // Server Actions (e.g. client components calling a "use server" function
+  // directly) POST to the current page URL. @neondatabase/auth's middleware
+  // re-checks the session by forwarding the *original* request method to the
+  // upstream get-session endpoint instead of forcing GET, so it 400s/fails
+  // for POSTs and incorrectly redirects even with a valid session cookie —
+  // breaking the action's response. Server Actions are already gated by
+  // `withAuth()` at the function level, so it's safe to skip this
+  // page-redirect middleware for them.
+  if (req.headers.has("next-action")) {
+    return NextResponse.next();
   }
 
-  if (isProtectedRoute && !user) {
-    return NextResponse.redirect(new URL("/signin", req.nextUrl));
-  }
-
-  if (isPublicRoute && user) {
-    return NextResponse.redirect(new URL("/app", req.nextUrl));
-  }
-
-  return NextResponse.next();
+  return neonAuthMiddleware(req);
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/app"],
 };

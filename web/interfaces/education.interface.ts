@@ -1,9 +1,8 @@
-import { Models } from "node-appwrite";
-
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData } from "@/interfaces/user.interface";
 
-export interface Education extends Models.Document {
+export interface Education {
+  $id: string;
   institution: string;
   type: string;
   fieldOfStudy: string;

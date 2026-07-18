@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { SignInFooter } from "@/components/signin-footer";
 import {
   Card,
@@ -7,9 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { auth } from "@/lib/auth/server";
 import { SignInForm } from "./form";
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  const { data: session } = await auth.getSession();
+
+  if (session?.user) {
+    redirect("/app");
+  }
+
   return (
     <Card className="bg-background w-full max-w-sm">
       <CardHeader>

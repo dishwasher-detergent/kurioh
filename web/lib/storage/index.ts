@@ -1,51 +1,44 @@
 "use server";
 
-import { ID, Models, Permission, Role } from "node-appwrite";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { Result } from "@/interfaces/result.interface";
 import { withAuth } from "@/lib/auth";
-import { PROJECT_BUCKET_ID } from "@/lib/constants";
-import { createSessionClient } from "@/lib/server/appwrite";
+import { STORAGE_BUCKET } from "@/lib/constants";
+import { s3 } from "@/lib/server/storage";
 
 /**
  * Uploads a file.
  * @param {Object} params The parameters for creating a file
  * @param {string} [params.id] The ID of the file
  * @param {File} params.data The file data
- * @param {string[]} [params.permissions] The permissions for the file (optional)
- * @returns {Promise<Result<Models.File>>} The file
+ * @returns {Promise<Result<{ $id: string }>>} The uploaded object's key
  */
 export async function uploadFile({
-  id = ID.unique(),
+  id = crypto.randomUUID(),
   data,
-  permissions = [],
 }: {
   id?: string;
   data: File;
-  permissions?: string[];
-}): Promise<Result<Models.File>> {
-  return withAuth(async (user) => {
-    const { storage } = await createSessionClient();
-
-    permissions = [
-      ...permissions,
-      Permission.read(Role.user(user.$id)),
-      Permission.write(Role.user(user.$id)),
-      Permission.read(Role.any()),
-    ];
-
+}): Promise<Result<{ $id: string }>> {
+  return withAuth(async () => {
     try {
-      const response = await storage.createFile(
-        PROJECT_BUCKET_ID,
-        id,
-        data,
-        permissions,
+      const key = `${id}`;
+      const buffer = Buffer.from(await data.arrayBuffer());
+
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: STORAGE_BUCKET,
+          Key: key,
+          Body: buffer,
+          ContentType: data.type || undefined,
+        }),
       );
 
       return {
         success: true,
         message: "File uploaded successfully.",
-        data: response,
+        data: { $id: key },
       };
     } catch (err) {
       const error = err as Error;
@@ -63,15 +56,15 @@ export async function uploadFile({
 
 /**
  * Deletes a file.
- * @param {string} id
+ * @param {string} key
  * @returns {Promise<Result<undefined>>} A promise that resolves to a result object.
  */
-export async function deleteFile(id: string): Promise<Result<undefined>> {
+export async function deleteFile(key: string): Promise<Result<undefined>> {
   return withAuth(async () => {
-    const { storage } = await createSessionClient();
-
     try {
-      await storage.deleteFile(PROJECT_BUCKET_ID, id);
+      await s3.send(
+        new DeleteObjectCommand({ Bucket: STORAGE_BUCKET, Key: key }),
+      );
 
       return {
         success: true,

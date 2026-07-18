@@ -1,8 +1,7 @@
-import { Models } from "node-appwrite";
-
 import { UserData, UserMemberData } from "@/interfaces/user.interface";
 
-export interface TeamData extends Models.Document {
+export interface TeamData {
+  $id: string;
   name: string;
   members?: UserMemberData[];
   title: string;
@@ -15,5 +14,3 @@ export interface TeamData extends Models.Document {
   userId: string;
   user?: UserData;
 }
-
-export interface Team extends Models.Team<Models.Preferences>, TeamData {}

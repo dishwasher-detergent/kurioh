@@ -14,11 +14,11 @@ import { ProjectCard } from "@/components/project/project-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProjects } from "@/hooks/useProjects";
+import { DocumentList } from "@/interfaces/result.interface";
 import { Project } from "@/interfaces/project.interface";
-import { Models } from "node-appwrite";
 
 interface ProjectsProps {
-  initialProjects?: Models.DocumentList<Project>;
+  initialProjects?: DocumentList<Project>;
   teamId?: string;
   userId?: string;
 }

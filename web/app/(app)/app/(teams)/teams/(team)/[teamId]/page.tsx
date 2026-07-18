@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Query } from "node-appwrite";
 
 import { AddProject } from "@/components/project/create-project";
 import { Projects } from "@/components/realtime/projects";
@@ -51,10 +50,9 @@ export default async function TeamPage({
 
   await setLastVisitedTeam(teamId);
 
-  const { data: projectData } = await listProjectsByTeam(teamId, [
-    Query.orderAsc("ordinal"),
-    Query.limit(5),
-  ]);
+  const { data: projectData } = await listProjectsByTeam(teamId, {
+    limit: 5,
+  });
 
   const { data: roles } = await getCurrentUserRoles(teamId);
 

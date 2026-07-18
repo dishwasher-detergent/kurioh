@@ -33,7 +33,7 @@ export default async function TeamInformation({
           <TeamActions team={data} isAdmin={isAdmin} isOwner={isOwner} />
         </div>
       </PageHeader>
-      <InformationForm information={data} teamId={data.$id} />
+      <InformationForm information={data} />
     </>
   );
 }

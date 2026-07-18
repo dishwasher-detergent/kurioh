@@ -7,17 +7,7 @@ import { Home } from './pages/home.js';
 import { Teams } from './pages/organization.js';
 import { Projects } from './pages/project.js';
 
-throwIfMissing(process.env, [
-  'APPWRITE_ENDPOINT',
-  'APPWRITE_PROJECT_ID',
-  'KEY',
-  'DB_ID',
-  'EXPERIENCE_ID',
-  'ORGANIZATION_ID',
-  'PROJECTS_ID',
-  'EDUCATION_ID',
-  'BUCKET_ID',
-]);
+throwIfMissing(process.env, ['DATABASE_URL', 'STORAGE_URL']);
 
 const cache = 0; //24 hours in seconds
 

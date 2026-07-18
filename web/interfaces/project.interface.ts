@@ -1,9 +1,8 @@
-import { Models } from "node-appwrite";
-
 import { TeamData } from "@/interfaces/team.interface";
 import { UserData } from "@/interfaces/user.interface";
 
-export interface Project extends Models.Document {
+export interface Project {
+  $id: string;
   name: string;
   slug: string;
   description: string;

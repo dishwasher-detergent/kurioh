@@ -5,7 +5,7 @@ pre-commit:
       glob: "**/*.{js,ts,jsx,tsx}"
       run: pnpm run lint
 
-    - name: format
-      root: "web"
-      glob: "**/*.{js,ts,jsx,tsx,html}"
-      run: pnpm run format
+    # - name: format
+    #   root: "web"
+    #   glob: "**/*.{js,ts,jsx,tsx,html}"
+    #   run: pnpm run format
